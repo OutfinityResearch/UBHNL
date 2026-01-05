@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UBH Architecture</title>
+  </head>
+  <body>
+    <h1>Architecture Overview</h1>
+    <p>UBH is a minimal kernel over {0,1} with XOR/AND/CONST gates and SAT/XOR solving.</p>
+
+    <h2>Layers</h2>
+    <ol>
+      <li>Core IR: wires + XOR/AND/CONST DAG</li>
+      <li>Constraints: assertions and equations</li>
+      <li>Solver: SAT + XOR linear reasoning</li>
+      <li>Front-ends: FOL, CNL, temporal, probabilistic</li>
+      <li>NL pipeline: lexicon, typed AST, lowering, compilation</li>
+    </ol>
+
+    <p>
+      See <a href="specs/UBH-SPEC.md">UBH-SPEC</a> or
+      <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a> for details.
+    </p>
+
+    <h2>Additional Pages</h2>
+    <ul>
+      <li><a href="nl-architecture.jhtml">CNL to UBH Pipeline</a></li>
+      <li><a href="design-choices.jhtml">Design Choices</a></li>
+    </ul>
+  </body>
+</html>

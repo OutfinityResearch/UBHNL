@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UBH Documentation</title>
+  </head>
+  <body>
+    <h1>UBH Documentation</h1>
+    <p>Universal Boolean Hypergraph core and front-end roadmap.</p>
+
+    <h2>Docs</h2>
+    <ul>
+      <li><a href="architecture.jhtml">Architecture Overview</a></li>
+      <li><a href="nl-architecture.jhtml">CNL to UBH Pipeline</a></li>
+      <li><a href="design-choices.jhtml">Design Choices</a></li>
+      <li><a href="usage.jhtml">Usage Notes</a></li>
+      <li>
+        Core Specification:
+        <a href="specs/UBH-SPEC.md">MD</a> |
+        <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a>
+      </li>
+      <li><a href="gamp/metrics.html">GAMP Metrics</a></li>
+    </ul>
+  </body>
+</html>
