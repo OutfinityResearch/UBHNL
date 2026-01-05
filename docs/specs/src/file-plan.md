@@ -28,6 +28,6 @@
 - src/devtests/cnl.mjs: CNL parsing and compilation tests
 
 ## Docs
-- docs/: narrative documentation in .jhtml
+- docs/: narrative documentation in .html
 - docs/specs/: detailed specs
 - docs/gamp/: URS/FS/NFS and metrics dashboard
