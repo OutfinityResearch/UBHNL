@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Wiki: Simplificări locale</title>
+    <title>Wiki: Local simplification</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Simplificări locale (construction-time rewrites)</h1>
-      <p>Rescrieri O(1) aplicate la crearea nodurilor UBH, înainte de hash-consing.</p>
+      <h1>Local simplifications (construction-time rewrites)</h1>
+      <p>O(1) rewrites applied when creating UBH nodes, before hash-consing.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,49 +23,46 @@
           <a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Simplificările locale sunt reguli de rescriere aplicate imediat la construcția unui nod.
-          Ele trebuie să fie:
-          <strong>ieftine</strong> (O(1)),
-          <strong>deterministe</strong>,
-          și <strong>satisfiability-preserving</strong> (nu schimbă dacă teoria e SAT/UNSAT).
+          Local simplifications are rewrite rules applied immediately when constructing a node. They must be
+          <strong>cheap</strong> (O(1)), <strong>deterministic</strong>, and <strong>satisfiability-preserving</strong>
+          (they must not change whether the theory is SAT/UNSAT).
         </p>
 
-        <h2>Set minim de reguli (kernel-level)</h2>
+        <h2>Minimal rule set (kernel-level)</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Regulă</th><th>Intuiție</th></tr></thead>
+            <thead><tr><th>Rule</th><th>Intuition</th></tr></thead>
             <tbody>
-              <tr><td><code>XOR(x, 0) = x</code></td><td>0 nu schimbă XOR</td></tr>
-              <tr><td><code>XOR(x, x) = 0</code></td><td>auto-anulare</td></tr>
-              <tr><td><code>AND(x, 0) = 0</code></td><td>0 anulează AND</td></tr>
-              <tr><td><code>AND(x, 1) = x</code></td><td>1 nu schimbă AND</td></tr>
-              <tr><td><code>AND(x, x) = x</code></td><td>idempotent booleean</td></tr>
+              <tr><td><code>XOR(x, 0) = x</code></td><td>0 is the identity for XOR</td></tr>
+              <tr><td><code>XOR(x, x) = 0</code></td><td>self-cancellation</td></tr>
+              <tr><td><code>AND(x, 0) = 0</code></td><td>0 annihilates AND</td></tr>
+              <tr><td><code>AND(x, 1) = x</code></td><td>1 is the identity for AND</td></tr>
+              <tr><td><code>AND(x, x) = x</code></td><td>Boolean idempotence</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>De ce sunt în kernel (și nu “optimizer”)</h2>
+        <h2>Why they are in the kernel (not an “optimizer”)</h2>
         <ul>
-          <li>Reduc imediat mărimea DAG-ului (și a CNF-ului) cu cost minim.</li>
-          <li>Îmbunătățesc hash-consing-ul: multe expresii devin literalmente identice după rescriere.</li>
-          <li>Sunt ușor de testat exhaustiv pe tabele de adevăr mici.</li>
+          <li>They immediately reduce the DAG size (and CNF size) at minimal cost.</li>
+          <li>They improve hash-consing: many expressions become literally identical after rewriting.</li>
+          <li>They are easy to test exhaustively on small truth tables.</li>
         </ul>
 
-        <h2>Ce NU intră aici</h2>
+        <h2>What does NOT belong here</h2>
         <p>
-          Rescrierile algebrice “de optimizare” care pot necesita analiză globală sau pot schimba forma în mod non-trivial
-          (ex.: factoring agresiv) sunt lăsate în module separate, ca tactici/optimizatori.
+          Algebraic “optimization” rewrites that may require global analysis or change shape in non-trivial ways
+          (e.g., aggressive factoring) are left to separate modules as tactics/optimizers.
         </p>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
-          <li><a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a> (secțiunea de simplificări)</li>
-          <li><a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a> (hash-consing + simplificare)</li>
+          <li><a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a> (simplification section)</li>
+          <li><a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a> (hash-consing + simplification)</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Decision: Certificate obligatorii</title>
+    <title>Decision: Mandatory Certificates</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Decizie: certificate obligatorii pentru acceptare</h1>
-      <p>UNSAT/OPTIMAL fără dovadă verificabilă nu sunt acceptate; se raportează UNKNOWN.</p>
+      <h1>Decision: mandatory certificates for acceptance</h1>
+      <p>UNSAT/OPTIMAL without checkable evidence are not accepted; the system reports UNKNOWN.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de decizie.</div>
+        <div class="draft">DRAFT: decision page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,26 +23,24 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Decizia</h2>
+        <h2>The decision</h2>
         <p>
-          UBHNL are “garda” de acceptare:
-          <strong>rezultatele sunt acceptate doar dacă sunt verificabile</strong>.
-          Altfel, status-ul este <code>UNKNOWN</code> (sau “DISPROVED” cu witness pentru contraexemple).
+          UBHNL has an explicit acceptance guard: <strong>results are accepted only if they are checkable</strong>. Otherwise the status is
+          <code>UNKNOWN</code> (or “DISPROVED” with a witness for counterexamples).
         </p>
 
-        <h2>De ce</h2>
+        <h2>Why</h2>
         <ul>
-          <li>Backends reale sunt complexe și pot avea bug-uri; verificarea independentă reduce riscul.</li>
-          <li>Asigură auditability: un rezultat poate fi re-check-uit fără solverul original.</li>
+          <li>Real backends are complex and can have bugs; independent verification reduces risk.</li>
+          <li>It enables auditability: a result can be re-checked without the original solver.</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Trebuie implementate checkere (DRAT/LRAT, invariants, dual certs etc.) în trusted core.</li>
-          <li>Orchestratorul trebuie să poată “confirma” rezultate prin rute alternative când backend-ul nu produce certificat.</li>
+          <li>The trusted core must include checkers (DRAT/LRAT, invariants, dual certs, etc.).</li>
+          <li>The orchestrator must be able to “confirm” results through alternative routes when a backend does not produce a certificate.</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Farkas' Lemma</title>
+    <link rel="stylesheet" href="../../site.css" />
+    <script src="../../site-nav.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Farkas' Lemma</h1>
+      <p>A standard certificate pattern for infeasibility of linear constraints (used in LIA/LRA/MIP verification).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">
+          DRAFT: This page is a beginner-friendly explanation for engineers. The normative certificate interface is in DS-011/DS-014.
+        </div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="mip.html">MIP</a>
+          <a href="smt.html">SMT</a>
+          <a href="certificates.html">Certificates</a>
+          <a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>What problem it answers</h2>
+        <p>
+          Suppose you have a system of linear inequalities (over reals) such as:
+        </p>
+        <pre><code>a11*x1 + a12*x2 + ... ≤ b1
+a21*x1 + a22*x2 + ... ≤ b2
+...
+</code></pre>
+        <p>
+          A solver may claim that this system has <strong>no solution</strong> (it is <code>UNSAT</code> / infeasible). UBHNL’s
+          auditability requirement asks: “can we verify this claim independently, using a small checker?”
+        </p>
+
+        <h2>Definition (informal)</h2>
+        <p>
+          <strong>Farkas' Lemma</strong> says (in one common form) that if a system of linear inequalities has no solution, there exists a
+          vector of non-negative multipliers that forms a <strong>certificate of contradiction</strong>.
+        </p>
+        <p>
+          Intuition: take a non-negative linear combination of the original inequalities. If you can combine them into something like
+          <code>0 ≤ -1</code>, you have exhibited an explicit contradiction.
+        </p>
+
+        <h2>How UBHNL uses it</h2>
+        <p>
+          In UBHNL, when a backend solves a linear arithmetic core (either as part of SMT(LIA/LRA) or as an ILP/MIP problem), it may return a
+          <strong>dual ray / multiplier vector</strong> as a certificate. The trusted checker verifies that the claimed multipliers:
+        </p>
+        <ul>
+          <li>are non-negative (when required by the certificate form), and</li>
+          <li>produce a contradiction when combined with the original constraints.</li>
+        </ul>
+        <p>
+          This allows UBHNL to accept <code>UNSAT</code> without re-solving the full problem.
+        </p>
+
+        <h2>Worked toy example</h2>
+        <p>
+          Consider constraints over a real variable <code>x</code>:
+        </p>
+        <pre><code>(1)  x ≤ 0
+(2) -x ≤ -1   (equivalently: x ≥ 1)</code></pre>
+        <p>
+          Clearly, there is no real number <code>x</code> that is both ≤ 0 and ≥ 1.
+        </p>
+        <p>
+          A Farkas-style certificate can use multipliers <code>y1 = 1</code> and <code>y2 = 1</code>:
+        </p>
+        <ul>
+          <li>Add (1) and (2): left side becomes <code>x + (-x) = 0</code>.</li>
+          <li>Right side becomes <code>0 + (-1) = -1</code>.</li>
+        </ul>
+        <p>
+          Result: <code>0 ≤ -1</code>, an explicit contradiction. A checker can validate this with simple arithmetic.
+        </p>
+
+        <h2>Engineering consequences</h2>
+        <ul>
+          <li>Certificates are compact: a vector of multipliers is usually much smaller than a full search trace.</li>
+          <li>Verification is deterministic and fast (matrix/vector arithmetic), which is ideal for the trusted core.</li>
+          <li>Exact details vary by fragment: LIA (integers) may need different proof objects than LRA (reals). UBHNL treats “Farkas-style” as one certificate family.</li>
+        </ul>
+
+        <div class="svg-wrap">
+          <svg viewBox="0 0 900 220" role="img" aria-label="Farkas certificate idea diagram">
+            <defs>
+              <style>
+                .b { fill: #ffffff; stroke: #d6d0c6; stroke-width: 2; }
+                .t { font: 14px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #1f1b16; }
+                .m { fill: #5a534b; font-size: 12px; }
+                .a { stroke: #2f5d50; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+                .k { fill: #2f5d50; font-weight: 700; }
+              </style>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L9,3 L0,6 z" fill="#2f5d50"></path>
+              </marker>
+            </defs>
+            <rect class="b" x="20" y="40" width="260" height="140" rx="12"></rect>
+            <text class="t" x="40" y="70">Primal constraints</text>
+            <text class="m" x="40" y="96">(1) a₁·x ≤ b₁</text>
+            <text class="m" x="40" y="116">(2) a₂·x ≤ b₂</text>
+            <text class="m" x="40" y="136">...</text>
+
+            <rect class="b" x="320" y="40" width="260" height="140" rx="12"></rect>
+            <text class="t" x="340" y="70">Certificate</text>
+            <text class="m" x="340" y="96">multipliers y ≥ 0</text>
+            <text class="m" x="340" y="118">combine constraints</text>
+
+            <rect class="b" x="620" y="40" width="260" height="140" rx="12"></rect>
+            <text class="t" x="640" y="70">Derived contradiction</text>
+            <text class="m" x="640" y="102"><tspan class="k">0 ≤ -1</tspan> (impossible)</text>
+            <text class="m" x="640" y="128">checker validates deterministically</text>
+
+            <path class="a" d="M280,110 L320,110"></path>
+            <path class="a" d="M580,110 L620,110"></path>
+          </svg>
+        </div>
+
+        <h2>References</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Farkas%27_lemma">Wikipedia: Farkas' lemma</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Linear_programming_duality">Wikipedia: Linear programming duality</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

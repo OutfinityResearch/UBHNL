@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Skolem Functions</title>
+    <link rel="stylesheet" href="../../site.css" />
+    <script src="../../site-nav.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Skolem Functions</h1>
+      <p>Strategy objects that witness existential choices under universal quantifiers (FOL/QBF).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">
+          DRAFT: This page explains “Skolem functions” as an engineering-friendly certificate idea. QBF integration details are in DS-011/DS-014.
+        </div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="quantifiers.html">Quantifiers</a>
+          <a href="qbf.html">QBF</a>
+          <a href="certificates.html">Certificates</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Problem context</h2>
+        <p>
+          Quantifiers introduce “choices”. In a formula like:
+        </p>
+        <pre><code>∀u ∈ {0,1} : ∃e ∈ {0,1} : Φ(u, e)</code></pre>
+        <p>
+          the existential variable <code>e</code> is allowed to depend on <code>u</code>. The formula is satisfiable if, for every possible
+          <code>u</code>, there exists a choice of <code>e</code> that makes <code>Φ</code> true.
+        </p>
+
+        <h2>Definition (engineering view)</h2>
+        <p>
+          A <strong>Skolem function</strong> is a function that makes those existential choices explicit:
+        </p>
+        <pre><code>e = f(u)</code></pre>
+        <p>
+          If you can provide such a function <code>f</code> and it satisfies the formula for all <code>u</code>, then <code>f</code> is a
+          <strong>checkable certificate of satisfiability</strong>.
+        </p>
+
+        <h2>Toy example</h2>
+        <p>
+          Consider:
+        </p>
+        <pre><code>∀u : ∃e : (e ↔ u)</code></pre>
+        <p>
+          This is satisfiable with the Skolem function <code>e = u</code>. A checker verifies it by enumerating all values of <code>u</code>
+          (here only 0 and 1) and checking that <code>(e ↔ u)</code> holds for <code>e=f(u)</code>.
+        </p>
+
+        <h2>How UBHNL uses Skolem functions</h2>
+        <p>
+          UBHNL’s QBF fragment expects that a backend that claims “SAT” can provide a <strong>strategy</strong>. For many QBF formats, this can
+          be represented as Skolem functions (often encoded as circuits). A trusted checker can validate the strategy by evaluating the QBF
+          formula against the strategy.
+        </p>
+
+        <div class="svg-wrap">
+          <svg viewBox="0 0 920 220" role="img" aria-label="Skolem function as a QBF SAT certificate">
+            <defs>
+              <style>
+                .b { fill: #ffffff; stroke: #d6d0c6; stroke-width: 2; }
+                .t { font: 14px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #1f1b16; }
+                .m { fill: #5a534b; font-size: 12px; }
+                .a { stroke: #2f5d50; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+              </style>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L9,3 L0,6 z" fill="#2f5d50"></path>
+              </marker>
+            </defs>
+
+            <rect class="b" x="20" y="55" width="280" height="120" rx="12"></rect>
+            <text class="t" x="40" y="85">QBF input</text>
+            <text class="m" x="40" y="110">∀u ∃e : Φ(u,e)</text>
+            <text class="m" x="40" y="132">matrix Φ is Boolean</text>
+
+            <rect class="b" x="330" y="55" width="280" height="120" rx="12"></rect>
+            <text class="t" x="350" y="85">Backend output</text>
+            <text class="m" x="350" y="110">strategy: e = f(u)</text>
+            <text class="m" x="350" y="132">(often as a circuit)</text>
+
+            <rect class="b" x="640" y="55" width="260" height="120" rx="12"></rect>
+            <text class="t" x="660" y="85">Checker</text>
+            <text class="m" x="660" y="110">verify Φ(u, f(u))</text>
+            <text class="m" x="660" y="132">for all u</text>
+
+            <path class="a" d="M300,115 L330,115"></path>
+            <path class="a" d="M610,115 L640,115"></path>
+          </svg>
+        </div>
+
+        <h2>References</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Skolem_normal_form">Wikipedia: Skolem normal form</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Skolemization">Wikipedia: Skolemization</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/True_quantified_Boolean_formula">Wikipedia: Quantified Boolean formula</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

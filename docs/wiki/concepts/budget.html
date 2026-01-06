@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Budget</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Budget (time/memory/iteration)</h1>
-      <p>Limitări explicite pentru solving/planning; sunt parte din reproducibilitate și din policy-ul UNKNOWN.</p>
+      <p>Explicit limits for solving/planning; part of reproducibility and the UNKNOWN policy.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="unknown.html">UNKNOWN</a>
@@ -21,25 +22,24 @@
           <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un <strong>budget</strong> limitează resursele disponibile pentru un query: timp, memorie, iterații (CEGAR), și eventual parametri
-          specifici metodei (ex. seeds/confidență pentru probabilistic).
+          A <strong>budget</strong> limits the resources available for a query: time, memory, iterations (CEGAR), and sometimes method-specific
+          parameters (e.g., seeds/confidence for probabilistic methods).
         </p>
 
-        <h2>De ce e parte din contract</h2>
+        <h2>Why it is part of the contract</h2>
         <ul>
-          <li>Explică de ce poți primi <code>UNKNOWN</code> chiar dacă problema are răspuns (nu s-a găsit în buget).</li>
-          <li>Permite reproducere: același plan + aceleași bugete/seeds → aceeași execuție (în limita determinismului backend-ului).</li>
+          <li>Explains why you can receive <code>UNKNOWN</code> even if the problem has an answer (it was not found within budget).</li>
+          <li>Enables replay: same plan + same budgets/seeds → same execution (subject to backend determinism).</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Orchestratorul trebuie să partajeze bugetul între task-uri (solve/check/refine).</li>
-          <li>Backends trebuie să fie capabile să returneze “partial” fără a pretinde SAT/UNSAT/OPTIMAL.</li>
+          <li>The orchestrator must split the budget across tasks (solve/check/refine).</li>
+          <li>Backends must be able to return “partial” results without claiming SAT/UNSAT/OPTIMAL.</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

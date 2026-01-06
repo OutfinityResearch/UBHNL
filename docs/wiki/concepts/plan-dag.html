@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Plan DAG</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Plan DAG (task graph)</h1>
-      <p>Reprezentarea planului de execuție: noduri = task-uri; arce = dependențe.</p>
+      <p>The execution plan representation: nodes = tasks; edges = dependencies.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="orchestrator.html">Orchestrator</a>
@@ -21,28 +22,27 @@
           <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un <strong>plan DAG</strong> este un graf aciclic de task-uri care descrie pipeline-ul complet pentru un query:
-          compilare/lowering, solving, checking, refinement, explain.
+          A <strong>plan DAG</strong> is an acyclic task graph that describes the full query pipeline: compilation/lowering, solving, checking,
+          refinement, and explanation.
         </p>
 
-        <h2>Task kinds (minim)</h2>
+        <h2>Task kinds (minimal)</h2>
         <ul>
-          <li><strong>Lower</strong>: compile semantic IR către un fragment țintă (ex. BV → UBH).</li>
-          <li><strong>Solve</strong>: rulează un backend pentru un fragment.</li>
-          <li><strong>Check</strong>: validează un witness/certificat în trusted core.</li>
-          <li><strong>Refine</strong>: pas CEGAR (instanțe/lemmas/invariants).</li>
-          <li><strong>Explain</strong>: produce explicația finală (origins).</li>
+          <li><strong>Lower</strong>: compile semantic IR into a target fragment (e.g., BV → UBH).</li>
+          <li><strong>Solve</strong>: run a backend for a fragment.</li>
+          <li><strong>Check</strong>: validate a witness/certificate in the trusted core.</li>
+          <li><strong>Refine</strong>: a CEGAR step (instances/lemmas/invariants).</li>
+          <li><strong>Explain</strong>: produce the final explanation (origins).</li>
         </ul>
 
-        <h2>De ce DAG (nu listă)</h2>
+        <h2>Why a DAG (not a list)</h2>
         <ul>
-          <li>Unele task-uri pot rula în paralel (ex. două backends candidate în fallback).</li>
-          <li>Poți reutiliza sub-task-uri (caching, incremental sessions).</li>
+          <li>Some tasks can run in parallel (e.g., two candidate backends in a fallback).</li>
+          <li>You can reuse sub-tasks (caching, incremental sessions).</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

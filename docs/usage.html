@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH Usage</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
@@ -13,24 +14,24 @@
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: exemplele de CLI/API sunt țintă. În repo, codul este încă scaffold.</div>
+        <div class="draft">DRAFT: CLI/API examples are targets. In this repo, the code is still a scaffold.</div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
-          <a href="vision.html">Viziune</a>
+          <a href="index.html">Docs Index</a>
+          <a href="vision.html">Vision</a>
           <a href="languages.html">Lexicon/CNL/DSL</a>
           <a href="session-api.html">Session API</a>
-          <a href="examples.html">Exemple</a>
+          <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
           <a href="theory/index.html">Theory</a>
         </div>
 
         <h2>Quick Start (conceptual)</h2>
         <ol>
-          <li>Creezi un lexicon (vocabular + tipuri) în JSON.</li>
-          <li>Scrii o teorie în `*.dsl` (sau `*.cnl`).</li>
-          <li>Pornești o sesiune, încarci fișierele, apoi rulezi `query`.</li>
-          <li>Primești rezultat + witness/certificate + explain (origins).</li>
+          <li>Create a lexicon (vocabulary + types) as JSON.</li>
+          <li>Write a theory in <code>*.dsl</code> (or <code>*.cnl</code>).</li>
+          <li>Start a session, load theory files, then run <code>query</code>.</li>
+          <li>Get a result + witness/certificate + explanation (via origins).</li>
         </ol>
 
         <h2>Target CLI (sketch)</h2>

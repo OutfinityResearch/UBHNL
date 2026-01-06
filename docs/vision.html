@@ -1,72 +1,73 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBHNL — Viziune</title>
+    <title>UBHNL — Vision</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>UBHNL — Viziune și direcție</h1>
-      <p>Un motor universal de reasoning: kernel minimal + backends + certificate + explain.</p>
+      <h1>UBHNL — Vision and direction</h1>
+      <p>A universal reasoning engine: minimal kernel + backends + certificates + explanations.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: descriere narativă. Ținta este explicită; implementarea este în lucru.</div>
+        <div class="draft">DRAFT: narrative description. The target architecture is explicit; implementation is still in progress.</div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
+          <a href="index.html">Docs Index</a>
           <a href="architecture.html">Architecture</a>
           <a href="languages.html">Lexicon/CNL/DSL</a>
           <a href="session-api.html">Session API</a>
           <a href="reasoning.html">Reasoning</a>
-          <a href="examples.html">Exemple</a>
+          <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
           <a href="theory/index.html">Theory</a>
         </div>
 
-        <h2>Ce vrem să obținem</h2>
-        <p>UBHNL este gândit ca un sistem care poate:</p>
+        <h2>What we want to build</h2>
+        <p>UBHNL is designed as a system that can:</p>
         <ul>
-          <li><code>learn</code>: să încarce teorii (fișiere CNL/DSL) și să adauge incremental cunoaștere în sesiune.</li>
-          <li><code>query</code>: să răspundă la satisfiabilitate, entailment (prove/refute), enumerare, counting, optimizare, sinteză.</li>
-          <li><code>explain</code>: să producă explicații în termenii vocabularului (origins din fișiere), nu în termeni de “wire id”.</li>
-          <li><code>audit</code>: să accepte doar rezultate verificabile (witness/certificate) sau să raporteze explicit <code>UNKNOWN</code>.</li>
+          <li><code>learn</code>: load theories (CNL/DSL files) and incrementally add knowledge in a session.</li>
+          <li><code>query</code>: answer satisfiability, entailment (prove/refute), enumeration, counting, optimization, and synthesis goals.</li>
+          <li><code>explain</code>: produce explanations in terms of the user vocabulary (file origins), not in terms of “wire ids”.</li>
+          <li><code>audit</code>: accept only checkable results (witness/certificate), otherwise report <code>UNKNOWN</code> explicitly.</li>
         </ul>
 
-        <h2>Principii de design</h2>
+        <h2>Design principles</h2>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Principiu</th><th>Consecință</th></tr>
+              <tr><th>Principle</th><th>Consequence</th></tr>
             </thead>
             <tbody>
               <tr>
-                <td>Trusted core mic</td>
-                <td>Kernel UBH + checkers; backends pot fi complexe și chiar “untrusted”, dar rezultatele sunt acceptate doar cu certificate.</td>
+                <td>Small trusted core</td>
+                <td>UBH kernel + checkers; backends can be complex and even “untrusted”, but results are accepted only with certificates.</td>
               </tr>
               <tr>
                 <td>Determinism</td>
-                <td>Parser/typing determinist; simbol necunoscut = eroare de încărcare; nu există “implicit new symbol”.</td>
+                <td>Deterministic parsing/typing; unknown symbol = load error; no “implicit new symbol”.</td>
               </tr>
               <tr>
                 <td>Fragment-first</td>
-                <td>“Ce problemă am?” (fragment) este separat de “cum o rezolv?” (backend/tactică).</td>
+                <td>“What problem do we have?” (fragment) is separated from “how do we solve it?” (backend/tactic).</td>
               </tr>
               <tr>
-                <td>UBH ca ancoră</td>
-                <td>UBH este lingua-franca bit-level pentru multe encodări și pentru checking, dar nu totul trebuie compilat în UBH.</td>
+                <td>UBH as an anchor</td>
+                <td>UBH is the bit-level lingua franca for many encodings and for checking, but not everything should be compiled to UBH.</td>
               </tr>
               <tr>
-                <td>Memorie: fișiere + sesiune</td>
-                <td>Fișierele (DSL/CNL) sunt long-term; sesiunea este short-term și cache-uiește; se poate reconstrui din fișiere.</td>
+                <td>Memory: files + session</td>
+                <td>Theory files (DSL/CNL) are long-term; the session is short-term and caches artifacts; it can be reconstructed from files.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Diagrama de sistem</h2>
+        <h2>System diagram</h2>
         <pre><code>          (long-term)                (short-term)
         theory files ───────┐        session delta (learn)
          (*.dsl/*.cnl)      │                 │
@@ -92,20 +93,20 @@
                               ▼
                     result + explain (origins)</code></pre>
 
-        <h2>De ce UBH (într-o frază)</h2>
+        <h2>Why UBH (in one sentence)</h2>
         <p>
-          UBH este o reprezentare minimală pentru constrângeri booleene ca circuit (XOR/AND/CONST), cu interpretare GF(2),
-          care permite compresie (hash-consing) și reasoning performant (SAT + ecuații XOR).
+          UBH is a minimal representation of Boolean constraints as a circuit (XOR/AND/CONST) with a GF(2) interpretation, enabling structural
+          compression (hash-consing) and efficient reasoning (SAT + native XOR equations).
         </p>
 
-        <h2>Ce înseamnă “universal” aici</h2>
+        <h2>What “universal” means here</h2>
         <ul>
-          <li><strong>universal ca substrate</strong>: multe teorii finite pot fi reduse la biți (BV, finite domains, TS bounded) și ajung în UBH/SAT;</li>
-          <li><strong>universal ca orchestrare</strong>: când nu e eficient să compilezi (MIP/SDP/NRA), rămâi nativ și verifici certificatele;</li>
-          <li><strong>universal ca audit</strong>: rezultatele “grele” sunt acceptate doar cu certificate verificabile.</li>
+          <li><strong>universal as a substrate</strong>: many finite theories can be reduced to bits (BV, finite domains, bounded TS) and end up in UBH/SAT;</li>
+          <li><strong>universal as orchestration</strong>: when compilation is not efficient (MIP/SDP/NRA), keep a native backend and verify its certificates;</li>
+          <li><strong>universal as auditability</strong>: “hard” results are accepted only with checkable certificates.</li>
         </ul>
 
-        <h2>Link-uri (spec-uri normative)</h2>
+        <h2>Links (normative specs)</h2>
         <ul>
           <li><a href="mdview.html?file=specs/src/system-spec.md">System Spec</a></li>
           <li><a href="mdview.html?file=specs/UBH-SPEC.md">UBH Kernel Spec</a></li>

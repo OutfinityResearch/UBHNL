@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH Architecture</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
@@ -13,29 +14,31 @@
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: aceasta pagină descrie arhitectura țintă, ca și cum ar fi funcțională. Unele module sunt încă neimplementate.</div>
+        <div class="draft">
+          DRAFT: this page describes the target architecture as if it were functional. Some modules are not implemented yet.
+        </div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
-          <a href="vision.html">Viziune</a>
+          <a href="index.html">Docs Index</a>
+          <a href="vision.html">Vision</a>
           <a href="languages.html">Lexicon/CNL/DSL</a>
           <a href="session-api.html">Session API</a>
           <a href="reasoning.html">Reasoning</a>
-          <a href="examples.html">Exemple</a>
+          <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
           <a href="theory/index.html">Theory</a>
         </div>
 
-        <h2>Straturi</h2>
+        <h2>Layers</h2>
         <ol>
           <li><strong>Trusted core</strong>: UBH IR + checkers (witness/certificate)</li>
-          <li><strong>Front-ends</strong>: CNL/DSL → typed semantic IR (determinist)</li>
-          <li><strong>Fragments</strong>: clasifică constrângerile și goal kinds</li>
-          <li><strong>Backends</strong>: SAT/SMT/QBF/MC/… cu artefacte verificabile</li>
-          <li><strong>Orchestrator</strong>: planificare, tactici (CEGAR), caching, explainability</li>
+          <li><strong>Front-ends</strong>: CNL/DSL → typed semantic IR (deterministic)</li>
+          <li><strong>Fragments</strong>: classify constraints and goal kinds</li>
+          <li><strong>Backends</strong>: SAT/SMT/QBF/MC/… with checkable artifacts</li>
+          <li><strong>Orchestrator</strong>: planning, tactics (CEGAR), caching, explainability</li>
         </ol>
 
-        <h2>Flux (high-level)</h2>
+        <h2>Flow (high-level)</h2>
         <pre><code>theory files (DSL/CNL) + session learn
            │
            ▼
@@ -53,7 +56,7 @@ backend result + certificate/witness
            ▼
 checker validates → explain (origins) → user output</code></pre>
 
-        <h2>Link-uri către specs</h2>
+        <h2>Links to specs</h2>
         <ul>
           <li>
             System Spec:

@@ -1,63 +1,62 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Decision: Kernel minimal</title>
+    <title>Decision: Minimal Kernel</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Decizie: kernel minimal + trusted core mic</h1>
-      <p>Separă solving (backends) de checking (trusted core) pentru auditabilitate și evoluție sigură.</p>
+      <h1>Decision: minimal kernel + small trusted core</h1>
+      <p>Separates solving (backends) from checking (trusted core) for auditability and safe evolution.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de decizie (rationale + consecințe). Spec-urile normative rămân în MD.</div>
+        <div class="draft">DRAFT: decision page (rationale + consequences). Normative specs remain in MD.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
-          <a href="../../vision.html">Viziune</a>
+          <a href="../../vision.html">Vision</a>
           <a href="../../mdview.html?file=specs/src/system-spec.md">System Spec</a>
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Decizia</h2>
+        <h2>The decision</h2>
         <p>
-          Kernel-ul (trusted core) rămâne <strong>minimal</strong>:
-          UBH IR + evaluare + checkere de certificate.
-          Orice metodă complexă de reasoning (SAT/SMT/QBF/IC3/…) este un <strong>backend</strong> modular.
+          The kernel (trusted core) remains <strong>minimal</strong>: UBH IR + evaluation + certificate checkers. Any complex reasoning method
+          (SAT/SMT/QBF/IC3/…) is implemented as a modular <strong>backend</strong>.
         </p>
 
-        <h2>De ce</h2>
+        <h2>Why</h2>
         <ul>
-          <li><strong>Auditabilitate</strong>: e mai ușor să ai încredere într-un checker mic decât într-un solver complex.</li>
-          <li><strong>Schimbabilitate</strong>: poți înlocui backends fără să schimbi semantica sistemului.</li>
-          <li><strong>Stabilitate de spec</strong>: contractele de input/output rămân aceleași, chiar dacă motorul se schimbă.</li>
+          <li><strong>Auditability</strong>: it is easier to trust a small checker than a complex solver.</li>
+          <li><strong>Replaceability</strong>: you can swap backends without changing the system’s semantics.</li>
+          <li><strong>Spec stability</strong>: input/output contracts remain the same even if the engine changes.</li>
         </ul>
 
-        <h2>Consecințe inginerești</h2>
+        <h2>Engineering consequences</h2>
         <ul>
-          <li>API-ul trebuie să expună certificate/witness și să accepte <code>UNKNOWN</code> când acestea lipsesc.</li>
-          <li>Trebuie “origin plumbing”: orice constrângere/artefact trebuie să păstreze legătura cu sursa.</li>
-          <li>Backends pot fi “heuristic/untrusted”, dar rezultatele lor nu sunt finale fără checking.</li>
+          <li>The API must expose certificates/witnesses and return <code>UNKNOWN</code> when they are missing.</li>
+          <li>You need “origin plumbing”: every constraint/artifact must retain a link to its source.</li>
+          <li>Backends may be heuristic/untrusted, but their results are not final without checking.</li>
         </ul>
 
-        <h2>Consecințe matematice/logice</h2>
+        <h2>Mathematical/logical consequences</h2>
         <ul>
-          <li>Solving produce afirmații; checking validează afirmațiile.</li>
-          <li>Reduceri (lowering) trebuie să fie sound/equisatisfiable ca să poți valida certificatele la țintă.</li>
+          <li>Solving produces claims; checking validates claims.</li>
+          <li>Reductions (lowering) must be sound/equisatisfiable so that certificates can be validated at the target level.</li>
         </ul>
 
-        <h2>Vezi și</h2>
+        <h2>See also</h2>
         <ul>
           <li><a href="../concepts/certificates.html">Certificate</a></li>
           <li><a href="../concepts/ubh.html">UBH</a></li>
           <li><a href="../concepts/orchestrator.html">Orchestrator</a></li>
-          <li><a href="certificates.html">Decizie: certificate obligatorii</a></li>
+          <li><a href="certificates.html">Decision: mandatory certificates</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

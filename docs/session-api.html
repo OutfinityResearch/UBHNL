@@ -1,63 +1,64 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBHNL — Session API</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Session API: load / learn / query / explain</h1>
-      <p>Sesiunea = memorie pe termen scurt + cache + orchestrare; fișierele = memorie pe termen lung.</p>
+      <p>Session = short-term memory + cache + orchestration; files = long-term memory.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: API-ul este descris ca target. Semantica este normativă; implementarea este în lucru.</div>
+        <div class="draft">DRAFT: the API is described as a target. The semantics are normative; implementation is still in progress.</div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
-          <a href="vision.html">Viziune</a>
+          <a href="index.html">Docs Index</a>
+          <a href="vision.html">Vision</a>
           <a href="languages.html">Lexicon/CNL/DSL</a>
           <a href="reasoning.html">Reasoning</a>
-          <a href="examples.html">Exemple</a>
+          <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
           <a href="theory/index.html">Theory</a>
           <a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a>
         </div>
 
-        <h2>Model mental</h2>
+        <h2>Mental model</h2>
         <ul>
-          <li><strong>Theory files</strong>: fișiere <code>*.dsl</code>/<code>*.cnl</code> (long-term), încărcate determinist; conțin axiome/fapte/reguli.</li>
-          <li><strong>Session</strong>: workspace efemer (short-term), care poate adăuga fapte tranzitorii și cache-uiește artefacte.</li>
-          <li><strong>Orchestrator</strong>: planifică și rulează backends (SAT/SMT/QBF/MC/...) și validează certificate.</li>
+          <li><strong>Theory files</strong>: <code>*.dsl</code>/<code>*.cnl</code> (long-term), loaded deterministically; contain axioms/facts/rules.</li>
+          <li><strong>Session</strong>: an ephemeral workspace (short-term) that can add transient facts and caches artifacts.</li>
+          <li><strong>Orchestrator</strong>: plans and runs backends (SAT/SMT/QBF/MC/...) and validates certificates.</li>
         </ul>
 
-        <h2>Status-uri și contract de acceptare</h2>
+        <h2>Statuses and acceptance contract</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Status</th><th>Înseamnă</th><th>Ce trebuie să existe</th></tr></thead>
+            <thead><tr><th>Status</th><th>Meaning</th><th>Required evidence</th></tr></thead>
             <tbody>
-              <tr><td><code>SAT</code></td><td>există model</td><td>witness model verificabil</td></tr>
-              <tr><td><code>UNSAT</code></td><td>nu există model</td><td>certificat verificabil (sau confirmare prin rută trusted)</td></tr>
-              <tr><td><code>PROVED</code></td><td><code>T ⊨ φ</code></td><td><code>UNSAT</code> pentru <code>T ∧ ¬φ</code> + certificat/core</td></tr>
-              <tr><td><code>DISPROVED</code></td><td>contraexemplu</td><td>model (sau trace) verificabil pentru <code>T ∧ ¬φ</code></td></tr>
-              <tr><td><code>UNKNOWN</code></td><td>nu se poate decide în buget / fără certificat</td><td>audit metadata (de ce)</td></tr>
+              <tr><td><code>SAT</code></td><td>a model exists</td><td>a checkable witness model</td></tr>
+              <tr><td><code>UNSAT</code></td><td>no model exists</td><td>a checkable certificate (or confirmation by a trusted route)</td></tr>
+              <tr><td><code>PROVED</code></td><td><code>T ⊨ φ</code></td><td><code>UNSAT</code> for <code>T ∧ ¬φ</code> plus certificate/core</td></tr>
+              <tr><td><code>DISPROVED</code></td><td>counterexample exists</td><td>a checkable model (or trace) for <code>T ∧ ¬φ</code></td></tr>
+              <tr><td><code>UNKNOWN</code></td><td>cannot decide within budget / without a certificate</td><td>audit metadata (why)</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>API: încărcare de fișiere (long-term)</h2>
+        <h2>API: loading theory files (long-term)</h2>
         <pre><code>// conceptual
 session.loadTheoryFile(path)
 session.unloadTheoryFile(docId)
 session.listLoadedTheories()</code></pre>
 
-        <p>Încărcarea trebuie să fie deterministă:</p>
+        <p>Loading must be deterministic:</p>
         <ul>
-          <li>parse + typecheck cu lexicon;</li>
-          <li>simbol necunoscut = eroare;</li>
-          <li>fiecare statement primește un <code>Origin</code> (path/line/col).</li>
+          <li>parse + typecheck with the lexicon;</li>
+          <li>unknown symbol = error;</li>
+          <li>every statement gets an <code>Origin</code> (path/line/col).</li>
         </ul>
 
         <h2>API: learn (short-term)</h2>
@@ -66,9 +67,9 @@ session.learn({ input: "...", kind: "DSL"|"CNL", origin? })</code></pre>
 
         <p><code>learn</code>:</p>
         <ul>
-          <li>adaugă statement-uri tranzitorii în sesiune (nu scrie pe disc);</li>
-          <li>invalidează/actualizează cache-urile relevante;</li>
-          <li>atașează origin ids pentru unsat cores/explain.</li>
+          <li>adds transient statements to the session (does not write to disk);</li>
+          <li>invalidates/updates relevant caches;</li>
+          <li>attaches origin ids for unsat cores/explanations.</li>
         </ul>
 
         <h2>API: query</h2>
@@ -79,10 +80,10 @@ session.query({
   options: { budget?, requireCertificate? }
 })</code></pre>
 
-        <h3>Holes (variabile ?)</h3>
-        <p>Holes sunt existențiale și returnabile ca witness:</p>
+        <h3>Holes (? variables)</h3>
+        <p>Holes are existential variables that are returned as witnesses:</p>
         <pre><code>exists ?c in Cell: proteinP(?c)</code></pre>
-        <p>Rezultatul trebuie să includă:</p>
+        <p>The result must include:</p>
         <pre><code>{
   status: "SAT",
   holeAssignments: { "?c": "c0" }
@@ -92,14 +93,14 @@ session.query({
         <pre><code>// conceptual
 session.explain(result, { style: "CNL" | "DSL" | "debug" })</code></pre>
 
-        <p>Explicația este construită din:</p>
+        <p>The explanation is built from:</p>
         <ul>
-          <li><strong>origins</strong> (care statement-uri din ce fișiere au fost relevante),</li>
-          <li><strong>unsat cores</strong> (când există),</li>
-          <li><strong>modele/trace-uri</strong> (la disproved/sat).</li>
+          <li><strong>origins</strong> (which statements from which files were relevant),</li>
+          <li><strong>unsat cores</strong> (when available),</li>
+          <li><strong>models/traces</strong> (for disproved/sat cases).</li>
         </ul>
 
-        <h2>Link-uri (spec-uri)</h2>
+        <h2>Links (specs)</h2>
         <ul>
           <li><a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009 Sessions</a></li>
           <li><a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010 Fragments</a></li>

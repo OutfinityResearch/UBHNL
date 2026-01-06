@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Decision: DSL un singur @</title>
+    <title>Decision: DSL Single @ Per Line</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Decizie: în DSL ai voie la un singur <code>@</code> pe linie</h1>
-      <p>@ declară ținta statement-ului; $ referă variabile; numele “bare” sunt vocab.</p>
+      <h1>Decision: DSL allows only a single <code>@</code> per line</h1>
+      <p><code>@</code> declares the statement target; <code>$</code> references variables; bare names are vocabulary symbols.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de decizie.</div>
+        <div class="draft">DRAFT: decision page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -21,26 +22,25 @@
           <a href="../../mdview.html?file=specs/DS/008-dsl.md">DS-008</a>
         </div>
 
-        <h2>Decizia</h2>
+        <h2>The decision</h2>
         <p>
-          În DSL, token-ul <code>@name</code> este permis o singură dată pe linie și trebuie să fie primul token.
-          El reprezintă “subiectul/ținta” statement-ului, nu o referință.
+          In DSL, the <code>@name</code> token is allowed at most once per line and it must be the first token.
+          It represents the statement “subject/target”, not a reference.
         </p>
 
-        <h2>De ce</h2>
+        <h2>Why</h2>
         <ul>
-          <li><strong>Claritate sintactică</strong>: separă “declar/definesc” de “referențiez”.</li>
-          <li><strong>Parsing simplu</strong>: evită ambiguități și reduce cazurile speciale.</li>
-          <li><strong>Model de graf</strong>: DSL-ul devine natural “subject-first” (proprietăți/edge-uri dintr-un nod).</li>
+          <li><strong>Syntactic clarity</strong>: separates “declare/define” from “reference”.</li>
+          <li><strong>Simple parsing</strong>: avoids ambiguity and reduces special cases.</li>
+          <li><strong>Graph model</strong>: makes the DSL naturally “subject-first” (properties/edges out of one node).</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Exemplu invalid (intenționat): <code>@p0 likes @p1</code> (a doua apariție trebuie să fie <code>$p1</code> sau un simbol din vocab).</li>
-          <li>Erorile devin locale și acționabile: mesajul poate sugera fixul corect.</li>
+          <li>Invalid example (intentional): <code>@p0 likes @p1</code> (the second occurrence must be <code>$p1</code> or a vocabulary constant).</li>
+          <li>Errors become local and actionable: the message can suggest the correct fix.</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

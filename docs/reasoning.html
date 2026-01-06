@@ -1,25 +1,26 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBHNL — Reasoning: Fragments, Backends, Certificates</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Reasoning: fragmente, backends, certificate</h1>
-      <p>Cum se orchestrează SAT/SMT/QBF/MC/… fără a umfla kernelul.</p>
+      <h1>Reasoning: fragments, backends, certificates</h1>
+      <p>How UBHNL orchestrates SAT/SMT/QBF/MC/… without inflating the kernel.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: descrie modul de lucru țintă. Backends sunt pluggable; rezultatele trebuie validate.</div>
+        <div class="draft">DRAFT: describes the target workflow. Backends are pluggable; results must be validated.</div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
-          <a href="vision.html">Viziune</a>
+          <a href="index.html">Docs Index</a>
+          <a href="vision.html">Vision</a>
           <a href="session-api.html">Session API</a>
-          <a href="examples.html">Exemple</a>
+          <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
           <a href="theory/index.html">Theory</a>
           <a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>
@@ -27,41 +28,42 @@
           <a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
         </div>
 
-        <h2>De ce nu “doar SAT”</h2>
+        <h2>Why not “just SAT”</h2>
         <p>
-          Multe probleme pot fi reduse la biți, dar nu toate reducțiile sunt eficiente sau corecte în mod practic.
-          De aceea sistemul are:
+          Many problems can be reduced to bits, but not all reductions are efficient or practically correct.
+          That is why the system has:
         </p>
         <ul>
-          <li><strong>Fragments</strong>: descriu clasa de constrângeri (Bool/BV/QBF/TS/MIP/…)</li>
-          <li><strong>Backends</strong>: metode specializate (SAT, SMT, IC3/PDR, Gröbner, MIP, KC, …)</li>
-          <li><strong>Certificates</strong>: dovezi/witness-uri verificabile</li>
-          <li><strong>Orchestrator</strong>: planifică tactici (CEGAR, fallback, KC, optimize-by-bounds)</li>
+          <li><strong>Fragments</strong>: describe the constraint class (Bool/BV/QBF/TS/MIP/…)</li>
+          <li><strong>Backends</strong>: specialized methods (SAT, SMT, IC3/PDR, Gröbner, MIP, KC, …)</li>
+          <li><strong>Certificates</strong>: checkable proofs/witnesses</li>
+          <li><strong>Orchestrator</strong>: plans tactics (CEGAR, fallbacks, KC, optimize-by-bounds)</li>
         </ul>
 
-        <h2>Goal kinds (ce cere userul)</h2>
+        <h2>Goal kinds (what the user asks)</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>GoalKind</th><th>Întrebare</th><th>Output</th></tr></thead>
+            <thead><tr><th>GoalKind</th><th>Question</th><th>Output</th></tr></thead>
             <tbody>
-              <tr><td><code>Satisfy</code></td><td>există model?</td><td>model/witness</td></tr>
+              <tr><td><code>Satisfy</code></td><td>does a model exist?</td><td>model/witness</td></tr>
               <tr><td><code>Prove</code></td><td><code>T ⊨ φ</code>?</td><td>UNSAT cert pentru <code>T ∧ ¬φ</code></td></tr>
-              <tr><td><code>Refute</code></td><td>contraexemplu?</td><td>model pentru <code>T ∧ ¬φ</code></td></tr>
-              <tr><td><code>CountModels</code></td><td>câte modele?</td><td>count (exact/approx) + audit</td></tr>
-              <tr><td><code>Optimize</code></td><td>min/max obiectiv</td><td>witness + proof of optimality</td></tr>
-              <tr><td><code>Synthesize</code></td><td>construiește artefact</td><td>artefact + proof obligations</td></tr>
+              <tr><td><code>Prove</code></td><td><code>T ⊨ φ</code>?</td><td>UNSAT cert for <code>T ∧ ¬φ</code></td></tr>
+              <tr><td><code>Refute</code></td><td>is there a counterexample?</td><td>model for <code>T ∧ ¬φ</code></td></tr>
+              <tr><td><code>CountModels</code></td><td>how many models?</td><td>count (exact/approx) + audit</td></tr>
+              <tr><td><code>Optimize</code></td><td>min/max objective</td><td>witness + proof of optimality</td></tr>
+              <tr><td><code>Synthesize</code></td><td>construct an artifact</td><td>artifact + proof obligations</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Fragment → Backend → Certificate (mini-matrice)</h2>
+        <h2>Fragment → Backend → Certificate (mini matrix)</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Fragment</th><th>Backend tipic</th><th>Ce verificăm</th></tr></thead>
+            <thead><tr><th>Fragment</th><th>Typical backend</th><th>What we check</th></tr></thead>
             <tbody>
               <tr><td><code>Frag_UBH</code></td><td>SAT+XOR</td><td>model (UBH eval) / DRAT-LRAT</td></tr>
-              <tr><td><code>Frag_SMT_BV</code></td><td>SMT(BV) sau bit-blast</td><td>model BV / SAT certificate</td></tr>
-              <tr><td><code>Frag_QBF</code></td><td>QCDCL/CEGAR</td><td>strategie / Q-resolution</td></tr>
+              <tr><td><code>Frag_SMT_BV</code></td><td>SMT(BV) or bit-blast</td><td>BV model / SAT certificate</td></tr>
+              <tr><td><code>Frag_QBF</code></td><td>QCDCL/CEGAR</td><td>strategy / Q-resolution</td></tr>
               <tr><td><code>Frag_TS</code></td><td>IC3/PDR, BMC</td><td>invariant / trace</td></tr>
               <tr><td><code>Frag_Opt</code></td><td>MaxSAT/PBO/OMT</td><td>witness + bound proof</td></tr>
               <tr><td><code>Frag_MIP</code></td><td>branch-and-cut</td><td>primal + dual certificates</td></tr>
@@ -69,9 +71,9 @@
           </table>
         </div>
 
-        <h2>Orchestrator: planificare și tactici</h2>
+        <h2>Orchestrator: planning and tactics</h2>
         <p>
-          Orchestratorul construiește un plan DAG din task-uri: <code>Lower</code>, <code>Solve</code>, <code>Check</code>, <code>Refine</code>, <code>Explain</code>.
+          The orchestrator builds a plan DAG out of tasks: <code>Lower</code>, <code>Solve</code>, <code>Check</code>, <code>Refine</code>, <code>Explain</code>.
         </p>
         <pre><code>Task DAG (sketch)
 
@@ -79,15 +81,15 @@ Lower(to UBH) ──► Solve(SAT) ──► Check(DRAT) ──► Explain
        │
        └──► (fallback) Solve(SMT) ──► Check(proof/model) ──► Explain</code></pre>
 
-        <h2>Regula de aur: acceptare doar cu verificare</h2>
+        <h2>The golden rule: accept only with verification</h2>
         <ul>
-          <li><code>SAT</code>: acceptat dacă witness-ul satisface constrângerile (checker determinist).</li>
-          <li><code>UNSAT</code>: acceptat doar cu certificat verificabil (DRAT/LRAT/Q-res/dual ray/invariant etc.) sau confirmat.</li>
-          <li><code>OPTIMAL</code>: acceptat doar cu witness + dovadă de optimalitate (bound certificate).</li>
-          <li>metode probabilistice/heuristic: trebuie etichetate (trust=heuristic) și însoțite de audit metadata; altfel rezultatul rămâne <code>UNKNOWN</code>.</li>
+          <li><code>SAT</code>: accepted only if the witness satisfies all constraints (deterministic checker).</li>
+          <li><code>UNSAT</code>: accepted only with a checkable certificate (DRAT/LRAT/Q-res/dual ray/invariant, etc.) or after confirmation.</li>
+          <li><code>OPTIMAL</code>: accepted only with a witness plus a proof of optimality (bound certificate).</li>
+          <li>Probabilistic/heuristic methods: must be labeled (trust=heuristic) and include audit metadata; otherwise the result remains <code>UNKNOWN</code>.</li>
         </ul>
 
-        <h2>Link-uri (spec-uri)</h2>
+        <h2>Links (specs)</h2>
         <ul>
           <li><a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010 Fragments &amp; GoalKinds</a></li>
           <li><a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011 Backends &amp; Certificates</a></li>

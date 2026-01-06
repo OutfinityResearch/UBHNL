@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Bit-Blasting</title>
+    <link rel="stylesheet" href="../../site.css" />
+    <script src="../../site-nav.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Bit-Blasting</h1>
+      <p>Lowering bitvector and finite-domain constraints into pure Boolean circuits/CNF (SAT/UBH).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">
+          DRAFT: This page explains the concept. Normative lowering rules live in DS-003 and DS-007.
+        </div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="smt.html">SMT</a>
+          <a href="ubh.html">UBH</a>
+          <a href="cnf.html">CNF</a>
+          <a href="tseitin.html">Tseitin</a>
+          <a href="../../mdview.html?file=specs/DS/003-frontends-compile.md">DS-003</a>
+        </div>
+
+        <h2>Definition</h2>
+        <p>
+          <strong>Bit-blasting</strong> is a compilation technique: you take constraints over <strong>bitvectors</strong> (or other finite
+          discrete types) and translate them into an equivalent Boolean problem by expanding each operation into a Boolean circuit.
+        </p>
+        <p>
+          After bit-blasting, a solver can work purely at the level of <code>{0,1}</code>: SAT, UBH (XOR/AND circuits), or CNF.
+        </p>
+
+        <h2>Why UBHNL uses it</h2>
+        <p>
+          UBHNL’s kernel is intentionally minimal: it only understands Boolean wires (<a href="bit.html">Bit</a>) and gates. Bit-blasting is the
+          bridge that lets higher-level, engineer-friendly types (like <code>BV32</code> integers) reuse the same kernel and the same certificate
+          checking infrastructure.
+        </p>
+
+        <h2>Concrete example: 8-bit increment</h2>
+        <p>
+          Suppose you have bitvectors <code>x:BV8</code> and <code>y:BV8</code> and the constraint:
+        </p>
+        <pre><code>y = x + 1   (mod 256)</code></pre>
+        <p>
+          Bit-blasting translates <code>+</code> into a network of XOR/AND gates: a ripple-carry adder. Each output bit is:
+        </p>
+        <pre><code>sum_i   = x_i XOR carry_i
+carry_{i+1} = (x_i AND carry_i)</code></pre>
+        <p>
+          For adding the constant 1, <code>carry_0 = 1</code>. This produces a Boolean circuit over 8 input bits and 8 output bits.
+        </p>
+
+        <div class="svg-wrap">
+          <svg viewBox="0 0 920 230" role="img" aria-label="Bit-blasting pipeline diagram">
+            <defs>
+              <style>
+                .b { fill: #ffffff; stroke: #d6d0c6; stroke-width: 2; }
+                .t { font: 14px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #1f1b16; }
+                .m { fill: #5a534b; font-size: 12px; }
+                .a { stroke: #2f5d50; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+              </style>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L9,3 L0,6 z" fill="#2f5d50"></path>
+              </marker>
+            </defs>
+
+            <rect class="b" x="20" y="55" width="260" height="120" rx="12"></rect>
+            <text class="t" x="40" y="85">Typed constraints</text>
+            <text class="m" x="40" y="110">BV ops: +, -, &lt;, ...</text>
+            <text class="m" x="40" y="132">Finite domains</text>
+
+            <rect class="b" x="330" y="55" width="260" height="120" rx="12"></rect>
+            <text class="t" x="350" y="85">Bit-blast</text>
+            <text class="m" x="350" y="110">expand into XOR/AND</text>
+            <text class="m" x="350" y="132">add domain constraints</text>
+
+            <rect class="b" x="640" y="55" width="260" height="120" rx="12"></rect>
+            <text class="t" x="660" y="85">Boolean problem</text>
+            <text class="m" x="660" y="110">UBH circuit or CNF</text>
+            <text class="m" x="660" y="132">solvable by SAT+XOR</text>
+
+            <path class="a" d="M280,115 L330,115"></path>
+            <path class="a" d="M590,115 L640,115"></path>
+          </svg>
+        </div>
+
+        <h2>Engineering consequences</h2>
+        <ul>
+          <li><strong>Correctness is explicit</strong>: every high-level operator must have a defined Boolean circuit semantics.</li>
+          <li><strong>Performance tradeoffs are visible</strong>: one-hot vs binary encodings, ripple-carry vs carry-lookahead, etc.</li>
+          <li><strong>Certificate reuse</strong>: if you lower to SAT/UBH, you can reuse SAT proof checking for <code>UNSAT</code>.</li>
+        </ul>
+
+        <h2>References</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Bitwise_operation">Wikipedia: Bitwise operation</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories">Wikipedia: Satisfiability modulo theories</a> (BV is a common SMT theory)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

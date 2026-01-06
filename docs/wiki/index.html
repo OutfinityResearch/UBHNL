@@ -1,46 +1,50 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBHNL Wiki — Index</title>
     <link rel="stylesheet" href="../site.css" />
+    <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Wiki: concepte și decizii</h1>
-      <p>Glossary complet (stil Wikipedia) pentru tot ce apare în specificații.</p>
+      <h1>Wiki: Concepts and Decisions</h1>
+      <p>A Wikipedia-style glossary for everything referenced by the UBHNL specifications.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: paginile sunt menite să fie definitive ca intenție și terminologie; implementarea este în lucru.</div>
+        <div class="draft">
+          DRAFT: the terminology and intent are meant to be stable; the implementation is still in progress.
+        </div>
 
         <div class="nav">
-          <a href="../index.html">Index</a>
-          <a href="../vision.html">Viziune</a>
+          <a href="../index.html">Docs Index</a>
+          <a href="../vision.html">Vision</a>
           <a href="../architecture.html">Architecture</a>
           <a href="../reasoning.html">Reasoning</a>
-          <a href="../examples.html">Exemple</a>
+          <a href="../examples.html">Examples</a>
           <a href="../theory/index.html">Theory</a>
         </div>
 
-        <h2>Ce este acest Wiki</h2>
+        <h2>What this Wiki is</h2>
         <p>
-          Wiki-ul este o listă completă de concepte folosite în <code>docs/specs/</code>, scrise într-un limbaj accesibil pentru ingineri.
-          Fiecare pagină clarifică: definiția, “de ce contează” în UBHNL, consecințele matematice/inginerești, și link-uri către spec-urile normative.
+          This Wiki is the authoritative glossary of concepts that appear in <code>docs/specs/</code>. Each page aims to answer, in an
+          engineer-friendly way: what the concept means, why it matters in UBHNL, what the practical consequences are, and where the normative
+          spec text lives.
         </p>
 
         <div class="toc">
-          <h2>Index rapid</h2>
+          <h2>Quick index</h2>
           <ul>
             <li><a href="#core-math">Core math</a></li>
-            <li><a href="#kernel">Kernel UBH</a></li>
+            <li><a href="#kernel">UBH kernel</a></li>
             <li><a href="#solving">Solving &amp; certificates</a></li>
-            <li><a href="#languages">Lexicon/CNL/DSL</a></li>
-            <li><a href="#session">Session &amp; explain</a></li>
+            <li><a href="#languages">Lexicon / CNL / DSL</a></li>
+            <li><a href="#session">Session &amp; explainability</a></li>
             <li><a href="#fragments">Fragments &amp; orchestrator</a></li>
             <li><a href="#backends">Backends (catalog)</a></li>
-            <li><a href="#decisions">Decizii</a></li>
+            <li><a href="#decisions">Design decisions</a></li>
           </ul>
         </div>
 
@@ -48,119 +52,135 @@
         <div class="grid">
           <div class="mini-card">
             <h3><a href="concepts/bit.html">Bit / Boolean</a></h3>
-            <div class="muted">{0,1}, adevăr/fals și modelul de bază al UBH.</div>
+            <div class="muted">{0,1}, truth/falsehood, and the base evaluation model.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/gf2.html">GF(2)</a></h3>
-            <div class="muted">Corp cu 2 elemente: XOR = +, AND = ·.</div>
+            <div class="muted">The field with 2 elements: XOR is +, AND is ·.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/anf.html">ANF (Algebraic Normal Form)</a></h3>
-            <div class="muted">Reprezentarea unică a funcțiilor booleene ca polinoame GF(2).</div>
+            <div class="muted">A canonical polynomial form of Boolean functions over GF(2).</div>
           </div>
         </div>
 
-        <h2 id="kernel">Kernel UBH</h2>
+        <h2 id="kernel">UBH kernel</h2>
         <div class="grid">
           <div class="mini-card">
             <h3><a href="concepts/ubh.html">UBH (Universal Boolean Hypergraph)</a></h3>
-            <div class="muted">IR minimal: XOR/AND/CONST/VAR + aserțiuni.</div>
+            <div class="muted">Minimal IR: XOR/AND/CONST/VAR plus assertions.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/wire-nodeid.html">Wire / NodeId</a></h3>
-            <div class="muted">Identitatea unui nod (wire) în DAG-ul hash-consed.</div>
+            <div class="muted">The identity of a wire/node in the hash-consed DAG.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/hash-consing.html">Hash-consing</a></h3>
-            <div class="muted">Compresie structurală prin deduplicarea subgrafurilor identice.</div>
+            <div class="muted">Structural sharing by deduplicating identical subgraphs.</div>
           </div>
           <div class="mini-card">
-            <h3><a href="concepts/simplification.html">Simplificări locale</a></h3>
-            <div class="muted">Rescrieri O(1) care păstrează satisfiabilitatea.</div>
+            <h3><a href="concepts/simplification.html">Local simplifications</a></h3>
+            <div class="muted">O(1) rewrites that preserve satisfiability.</div>
           </div>
         </div>
 
         <h2 id="solving">Solving &amp; certificates</h2>
         <div class="grid">
           <div class="mini-card">
-            <h3><a href="concepts/constraints.html">Constrângeri (assert)</a></h3>
-            <div class="muted">ASSERT1/0/EQ și cum devin probleme SAT.</div>
+            <h3><a href="concepts/constraints.html">Constraints (assert)</a></h3>
+            <div class="muted">ASSERT1/0/EQ and how they become solvable problems.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/cnf.html">CNF &amp; Tseitin</a></h3>
-            <div class="muted">Encodare liniară pentru porți AND.</div>
+            <div class="muted">Linear-size CNF encoding for AND gates.</div>
           </div>
           <div class="mini-card">
-            <h3><a href="concepts/tseitin.html">Tseitin</a></h3>
-            <div class="muted">De ce encodarea nu explodează formula (equisatisfiable).</div>
+            <h3><a href="concepts/tseitin.html">Tseitin transformation</a></h3>
+            <div class="muted">Why CNF encoding does not blow up (equisatisfiable).</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/sat-cdcl.html">SAT (CDCL)</a></h3>
-            <div class="muted">Motorul principal pentru partea CNF.</div>
+            <div class="muted">The main engine for CNF solving.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/xor-linear.html">XOR linear &amp; Gauss</a></h3>
-            <div class="muted">Ecuații GF(2) și propagare eficientă.</div>
+            <div class="muted">GF(2) linear equations and efficient propagation.</div>
           </div>
           <div class="mini-card">
-            <h3><a href="concepts/model-witness.html">Model / Witness</a></h3>
-            <div class="muted">Ce trebuie să existe ca să accepți un SAT.</div>
+            <h3><a href="concepts/model-witness.html">Model / witness</a></h3>
+            <div class="muted">What must exist to accept a <code>SAT</code> claim.</div>
           </div>
           <div class="mini-card">
-            <h3><a href="concepts/certificates.html">Certificate (DRAT/LRAT etc.)</a></h3>
-            <div class="muted">“Nu ai voie să crezi solverul” fără dovadă verificabilă.</div>
+            <h3><a href="concepts/certificates.html">Certificates (DRAT/LRAT, etc.)</a></h3>
+            <div class="muted">“Don’t trust solvers”: accept results only with checkable evidence.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/drat-lrat.html">DRAT / LRAT</a></h3>
-            <div class="muted">Certificate standard pentru UNSAT la SAT.</div>
+            <div class="muted">Standard UNSAT certificates for SAT.</div>
+          </div>
+          <div class="mini-card">
+            <h3><a href="concepts/bit-blasting.html">Bit-blasting</a></h3>
+            <div class="muted">Lowering BV/FD constraints into Boolean circuits (UBH/CNF).</div>
+          </div>
+          <div class="mini-card">
+            <h3><a href="concepts/alethe.html">Alethe (SMT proofs)</a></h3>
+            <div class="muted">A proof-object format to check SMT UNSAT claims.</div>
+          </div>
+          <div class="mini-card">
+            <h3><a href="concepts/farkas-lemma.html">Farkas' lemma</a></h3>
+            <div class="muted">A certificate pattern for infeasibility of linear constraints.</div>
+          </div>
+          <div class="mini-card">
+            <h3><a href="concepts/skolem-functions.html">Skolem functions</a></h3>
+            <div class="muted">Strategy witnesses for ∀∃ formulas (e.g., QBF).</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/unsat-core.html">UNSAT core</a></h3>
-            <div class="muted">Explicații: subset de origins în conflict.</div>
+            <div class="muted">Explanations: the subset of origins that participates in a conflict.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/unknown.html">Status: UNKNOWN</a></h3>
-            <div class="muted">Politica explicită pentru bugete și rezultate neverificabile.</div>
+            <div class="muted">An explicit policy for budgets and unverifiable results.</div>
           </div>
         </div>
 
-        <h2 id="languages">Lexicon/CNL/DSL</h2>
+        <h2 id="languages">Lexicon / CNL / DSL</h2>
         <div class="grid">
           <div class="mini-card">
             <h3><a href="concepts/lexicon.html">Lexicon</a></h3>
-            <div class="muted">Tipuri (domenii), constante, predicate, alias-uri.</div>
+            <div class="muted">Domains, constants, predicates, aliases, and typing rules.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/cnl.html">CNL (Controlled Natural Language)</a></h3>
-            <div class="muted">Input determinist, fără ambiguități.</div>
+            <div class="muted">Deterministic input: ambiguities are rejected, not guessed.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/dsl.html">DSL (Intermediate Language)</a></h3>
-            <div class="muted">Regula @/$/vocab; fișiere reproducibile.</div>
+            <div class="muted">The <code>@/$/vocab</code> rule and reproducible theory files.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/typed-ast.html">Typed semantic IR</a></h3>
-            <div class="muted">Contractul stabil dintre front-end și solving.</div>
+            <div class="muted">The stable contract between front-ends and the solving stack.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/type-lowering.html">Type lowering</a></h3>
-            <div class="muted">Bitvector/enum/set/rel: cum devin biți.</div>
+            <div class="muted">How BV/enum/set/relations become bits.</div>
           </div>
         </div>
 
-        <h2 id="session">Session &amp; explain</h2>
+        <h2 id="session">Session &amp; explainability</h2>
         <div class="grid">
           <div class="mini-card">
-            <h3><a href="concepts/session.html">Session vs Theory files</a></h3>
-            <div class="muted">Memorie short-term vs long-term; caching.</div>
+            <h3><a href="concepts/session.html">Session vs theory files</a></h3>
+            <div class="muted">Short-term memory vs long-term memory; caching and reproducibility.</div>
           </div>
           <div class="mini-card">
-            <h3><a href="concepts/origin.html">Origin / Proveniență</a></h3>
-            <div class="muted">Traceability: fișier/linie/col + “de ce e relevant”.</div>
+            <h3><a href="concepts/origin.html">Origin</a></h3>
+            <div class="muted">Traceability: file/line/column plus “why it matters”.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/holes.html">Holes (?x)</a></h3>
-            <div class="muted">Existențiale returnabile ca witness.</div>
+            <div class="muted">Returnable existential variables used as witnesses in queries.</div>
           </div>
         </div>
 
@@ -168,104 +188,107 @@
         <div class="grid">
           <div class="mini-card">
             <h3><a href="concepts/goalkind.html">GoalKind</a></h3>
-            <div class="muted">Ce vrea userul: Prove/Refute/Satisfy/Count/Optimize/…</div>
+            <div class="muted">What the user wants: prove/refute/satisfy/count/optimize/…</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/problem.html">Problem</a></h3>
-            <div class="muted">Query normalizat: T + φ? + kind + options.</div>
+            <div class="muted">Normalized query: theory <code>T</code> + optional <code>φ</code> + kind + options.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/fragment.html">Fragment</a></h3>
-            <div class="muted">Ce fel de constrângeri avem (Bool/BV/QBF/TS/MIP/…)</div>
+            <div class="muted">Which constraint class is involved (Bool/BV/QBF/TS/MIP/…)</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/backend.html">Backend</a></h3>
-            <div class="muted">Interfața comună: solve(problem,budget) → result.</div>
+            <div class="muted">A common interface: <code>solve(problem, budget) → result</code>.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/orchestrator.html">Orchestrator &amp; plan DAG</a></h3>
-            <div class="muted">Planificare, tactici, bugete, schimb de artefacte.</div>
+            <div class="muted">Planning, tactics, budgets, and artifact exchange.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/plan-dag.html">Plan DAG</a></h3>
-            <div class="muted">Task graph: Lower/Solve/Check/Refine/Explain.</div>
+            <div class="muted">Task graphs: Lower/Solve/Check/Refine/Explain.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/artifacts.html">Artifacts</a></h3>
-            <div class="muted">Lemma/core/invariant/strategy/KC objects.</div>
+            <div class="muted">Lemmas/cores/invariants/strategies/KC objects.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/budget.html">Budget</a></h3>
-            <div class="muted">Timp/memorie/iterații; influențează UNKNOWN.</div>
+            <div class="muted">Time/memory/iteration caps; drives <code>UNKNOWN</code>.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/cegar.html">CEGAR</a></h3>
-            <div class="muted">Abstraction/refinement, inclusiv schema engine.</div>
+            <div class="muted">Abstraction/refinement, including schema instantiation.</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/schema-engine.html">Schema engine</a></h3>
-            <div class="muted">Instanțiere lazy pentru reguli cuantificate.</div>
+            <div class="muted">Lazy instantiation for quantified rules.</div>
           </div>
           <div class="mini-card">
-            <h3><a href="concepts/quantifiers.html">Cuantificatori (finite)</a></h3>
-            <div class="muted">Semantica ∀/∃ și edge cases (domeniu gol).</div>
+            <h3><a href="concepts/quantifiers.html">Quantifiers (finite)</a></h3>
+            <div class="muted">∀/∃ semantics and edge cases (empty domains).</div>
           </div>
           <div class="mini-card">
             <h3><a href="concepts/trusted-core.html">Trusted core</a></h3>
-            <div class="muted">Checkere deterministe + evaluator UBH.</div>
+            <div class="muted">Deterministic checkers and the UBH evaluator.</div>
           </div>
         </div>
 
         <h2 id="backends">Backends (catalog)</h2>
-        <p class="muted">Paginile de mai jos explică metodele majore enumerate în DS-011, plus artefactele/certificatele tipice.</p>
+        <p class="muted">
+          The pages below explain the major methods enumerated in DS-011, plus the typical artifacts/certificates they produce.
+        </p>
         <div class="grid">
-          <div class="mini-card"><h3><a href="concepts/smt.html">SMT (DPLL(T))</a></h3><div class="muted">BV/LIA/EUF și dovezi/model.</div></div>
-          <div class="mini-card"><h3><a href="concepts/qbf.html">QBF</a></h3><div class="muted">Cuantificare booleană și certificate de strategie.</div></div>
-          <div class="mini-card"><h3><a href="concepts/model-checking.html">Model checking (TS)</a></h3><div class="muted">BMC, invariants, trace-uri.</div></div>
-          <div class="mini-card"><h3><a href="concepts/bmc.html">BMC</a></h3><div class="muted">Lower TS la SAT/SMT pentru trace-uri bounded.</div></div>
-          <div class="mini-card"><h3><a href="concepts/ic3-pdr.html">IC3/PDR</a></h3><div class="muted">Safety proofs via invariants.</div></div>
-          <div class="mini-card"><h3><a href="concepts/cp.html">CP (finite domains)</a></h3><div class="muted">Propagare + search; verificare prin witness.</div></div>
-          <div class="mini-card"><h3><a href="concepts/chc.html">CHC</a></h3><div class="muted">Constrained Horn Clauses pentru programe.</div></div>
-          <div class="mini-card"><h3><a href="concepts/abstract-interpretation.html">Abstract interpretation</a></h3><div class="muted">Invariants ca certificate (AI).</div></div>
-          <div class="mini-card"><h3><a href="concepts/atp.html">ATP (saturation)</a></h3><div class="muted">Resolution/superposition + proof traces.</div></div>
-          <div class="mini-card"><h3><a href="concepts/kc.html">Knowledge compilation</a></h3><div class="muted">BDD/d-DNNF/SDD pentru query rapid.</div></div>
-          <div class="mini-card"><h3><a href="concepts/counting.html">#SAT / WMC / HashCount</a></h3><div class="muted">Counting exact/approx + audit.</div></div>
-          <div class="mini-card"><h3><a href="concepts/optimization.html">MaxSAT/PBO/OMT</a></h3><div class="muted">Optimizare logică și certificate de bound.</div></div>
-          <div class="mini-card"><h3><a href="concepts/mip.html">MIP</a></h3><div class="muted">Branch-and-cut + dual certificates.</div></div>
-          <div class="mini-card"><h3><a href="concepts/sdp.html">SDP / SOS</a></h3><div class="muted">Certificate duale / SOS.</div></div>
-          <div class="mini-card"><h3><a href="concepts/cad.html">CAD / QE</a></h3><div class="muted">Quantifier elimination în reals.</div></div>
-          <div class="mini-card"><h3><a href="concepts/grobner.html">Gröbner (GF(2))</a></h3><div class="muted">Ideal membership, reducere polinomială.</div></div>
-          <div class="mini-card"><h3><a href="concepts/rewriting.html">Rewriting &amp; completion</a></h3><div class="muted">Knuth–Bendix și sisteme convergente.</div></div>
-          <div class="mini-card"><h3><a href="concepts/proof-assistants.html">Proof assistants</a></h3><div class="muted">HOL/Type Theory + kernel mic.</div></div>
-          <div class="mini-card"><h3><a href="concepts/games.html">Games</a></h3><div class="muted">Strategii ca certificate (parity/reachability).</div></div>
-          <div class="mini-card"><h3><a href="concepts/probabilistic.html">Probabilistic inference</a></h3><div class="muted">Exact via WMC/KC; approx cu audit.</div></div>
-          <div class="mini-card"><h3><a href="concepts/tensor-networks.html">Tensor / factor graphs</a></h3><div class="muted">Belief propagation și reducere la WMC.</div></div>
-          <div class="mini-card"><h3><a href="concepts/symbolic-execution.html">Symbolic execution</a></h3><div class="muted">Trace-uri + SMT/SAT ca backend.</div></div>
-          <div class="mini-card"><h3><a href="concepts/synthesis.html">Synthesis</a></h3><div class="muted">Artefact + proof obligations.</div></div>
-          <div class="mini-card"><h3><a href="concepts/ml-guidance.html">ML-guided search</a></h3><div class="muted">Heuristică, niciodată “trusted”.</div></div>
-          <div class="mini-card"><h3><a href="concepts/neuro-sat.html">Neuro-SAT</a></h3><div class="muted">Neural-symbolic ca heuristică, validată prin checkers.</div></div>
-          <div class="mini-card"><h3><a href="concepts/treewidth.html">Treewidth/DP</a></h3><div class="muted">Decompozări structurale ca tactic.</div></div>
-          <div class="mini-card"><h3><a href="concepts/separation-logic.html">Separation Logic</a></h3><div class="muted">Shape invariants (de obicei reduse la CHC/SMT).</div></div>
+          <div class="mini-card"><h3><a href="concepts/smt.html">SMT (DPLL(T))</a></h3><div class="muted">BV/LIA/EUF plus models and proofs.</div></div>
+          <div class="mini-card"><h3><a href="concepts/qbf.html">QBF</a></h3><div class="muted">Boolean quantification and strategy certificates.</div></div>
+          <div class="mini-card"><h3><a href="concepts/model-checking.html">Model checking (TS)</a></h3><div class="muted">BMC, invariants, and counterexample traces.</div></div>
+          <div class="mini-card"><h3><a href="concepts/bmc.html">BMC</a></h3><div class="muted">Lower a bounded system to SAT/SMT for traces.</div></div>
+          <div class="mini-card"><h3><a href="concepts/ic3-pdr.html">IC3/PDR</a></h3><div class="muted">Safety proofs via inductive invariants.</div></div>
+          <div class="mini-card"><h3><a href="concepts/cp.html">CP (finite domains)</a></h3><div class="muted">Propagation + search; validate via witness assignments.</div></div>
+          <div class="mini-card"><h3><a href="concepts/chc.html">CHC</a></h3><div class="muted">Constrained Horn Clauses for program verification.</div></div>
+          <div class="mini-card"><h3><a href="concepts/abstract-interpretation.html">Abstract interpretation</a></h3><div class="muted">Invariants as certificates (AI).</div></div>
+          <div class="mini-card"><h3><a href="concepts/atp.html">ATP (saturation)</a></h3><div class="muted">Resolution/superposition and proof traces.</div></div>
+          <div class="mini-card"><h3><a href="concepts/kc.html">Knowledge compilation</a></h3><div class="muted">BDD/d-DNNF/SDD for fast queries.</div></div>
+          <div class="mini-card"><h3><a href="concepts/counting.html">#SAT / WMC / HashCount</a></h3><div class="muted">Exact/approx counting plus audit metadata.</div></div>
+          <div class="mini-card"><h3><a href="concepts/optimization.html">MaxSAT / PBO / OMT</a></h3><div class="muted">Optimization with bound certificates.</div></div>
+          <div class="mini-card"><h3><a href="concepts/mip.html">MIP</a></h3><div class="muted">Branch-and-cut with primal/dual certificates.</div></div>
+          <div class="mini-card"><h3><a href="concepts/sdp.html">SDP / SOS</a></h3><div class="muted">Dual certificates / sum-of-squares.</div></div>
+          <div class="mini-card"><h3><a href="concepts/cad.html">CAD / QE</a></h3><div class="muted">Quantifier elimination over the reals.</div></div>
+          <div class="mini-card"><h3><a href="concepts/grobner.html">Gröbner (GF(2))</a></h3><div class="muted">Ideal membership via polynomial reduction.</div></div>
+          <div class="mini-card"><h3><a href="concepts/rewriting.html">Rewriting &amp; completion</a></h3><div class="muted">Knuth–Bendix and convergent rewrite systems.</div></div>
+          <div class="mini-card"><h3><a href="concepts/proof-assistants.html">Proof assistants</a></h3><div class="muted">HOL/Type Theory with a small kernel.</div></div>
+          <div class="mini-card"><h3><a href="concepts/games.html">Games</a></h3><div class="muted">Strategies as certificates (reachability/parity).</div></div>
+          <div class="mini-card"><h3><a href="concepts/probabilistic.html">Probabilistic inference</a></h3><div class="muted">Exact via WMC/KC; approx with auditable metadata.</div></div>
+          <div class="mini-card"><h3><a href="concepts/tensor-networks.html">Tensor / factor graphs</a></h3><div class="muted">Belief propagation and reductions to WMC.</div></div>
+          <div class="mini-card"><h3><a href="concepts/symbolic-execution.html">Symbolic execution</a></h3><div class="muted">Traces plus SMT/SAT as backends.</div></div>
+          <div class="mini-card"><h3><a href="concepts/synthesis.html">Synthesis</a></h3><div class="muted">Artifacts plus proof obligations.</div></div>
+          <div class="mini-card"><h3><a href="concepts/sygus.html">SyGuS</a></h3><div class="muted">Syntax-guided synthesis (grammar-restricted search).</div></div>
+          <div class="mini-card"><h3><a href="concepts/ml-guidance.html">ML-guided search</a></h3><div class="muted">Heuristics only; never trusted directly.</div></div>
+          <div class="mini-card"><h3><a href="concepts/neuro-sat.html">Neuro-SAT</a></h3><div class="muted">Neural-symbolic guidance, validated by checkers.</div></div>
+          <div class="mini-card"><h3><a href="concepts/treewidth.html">Treewidth/DP</a></h3><div class="muted">Structural decomposition tactics.</div></div>
+          <div class="mini-card"><h3><a href="concepts/separation-logic.html">Separation logic</a></h3><div class="muted">Shape invariants (often reduced to CHC/SMT).</div></div>
         </div>
 
-        <h2 id="decisions">Decizii importante</h2>
-        <p class="muted">Aceste pagini explică “de ce” (trade-offs) și consecințele direct în arhitectură/spec.</p>
+        <h2 id="decisions">Design decisions</h2>
+        <p class="muted">These pages explain “why” (trade-offs) and the consequences for the architecture/specs.</p>
         <div class="grid">
-          <div class="mini-card"><h3><a href="decisions/minimal-kernel.html">Kernel minimal + trusted core</a></h3><div class="muted">Separație strictă: solving vs checking.</div></div>
-          <div class="mini-card"><h3><a href="decisions/strict-vocab.html">Vocabular strict</a></h3><div class="muted">Typos ≠ simbol nou; reproducibilitate.</div></div>
-          <div class="mini-card"><h3><a href="decisions/dsl-at-rule.html">DSL: regula “un singur @”</a></h3><div class="muted">Claritate, evitarea ambiguității.</div></div>
-          <div class="mini-card"><h3><a href="decisions/sat-xor-hybrid.html">SAT + XOR nativ</a></h3><div class="muted">Evita blowup la XOR în CNF.</div></div>
-          <div class="mini-card"><h3><a href="decisions/certificates.html">Certificate obligatorii</a></h3><div class="muted">UNSAT/OPTIMAL fără dovadă ⇒ UNKNOWN.</div></div>
-          <div class="mini-card"><h3><a href="decisions/schemas-cegar.html">Schema engine (CEGAR)</a></h3><div class="muted">Compresie: reguli, nu grounding complet.</div></div>
-          <div class="mini-card"><h3><a href="decisions/fragments.html">Fragments + orchestrator</a></h3><div class="muted">Nu toate problemele sunt “doar SAT”.</div></div>
-          <div class="mini-card"><h3><a href="decisions/unknown-policy.html">Politica UNKNOWN</a></h3><div class="muted">Preferabil oricărei afirmații neverificabile.</div></div>
+          <div class="mini-card"><h3><a href="decisions/minimal-kernel.html">Minimal kernel + trusted core</a></h3><div class="muted">Strict separation: solving vs checking.</div></div>
+          <div class="mini-card"><h3><a href="decisions/strict-vocab.html">Strict vocabulary policy</a></h3><div class="muted">Typos do not become new symbols; reproducibility.</div></div>
+          <div class="mini-card"><h3><a href="decisions/dsl-at-rule.html">DSL: “single @ per line”</a></h3><div class="muted">Clarity and ambiguity avoidance.</div></div>
+          <div class="mini-card"><h3><a href="decisions/sat-xor-hybrid.html">SAT + native XOR</a></h3><div class="muted">Avoid XOR blow-up when encoding to CNF.</div></div>
+          <div class="mini-card"><h3><a href="decisions/certificates.html">Mandatory certificates</a></h3><div class="muted">UNSAT/OPTIMAL without evidence ⇒ UNKNOWN.</div></div>
+          <div class="mini-card"><h3><a href="decisions/schemas-cegar.html">Schema engine (CEGAR)</a></h3><div class="muted">Compression: keep rules, avoid full grounding.</div></div>
+          <div class="mini-card"><h3><a href="decisions/fragments.html">Fragments + orchestrator</a></h3><div class="muted">Not every problem is “just SAT”.</div></div>
+          <div class="mini-card"><h3><a href="decisions/unknown-policy.html">UNKNOWN policy</a></h3><div class="muted">Preferable to any unverifiable claim.</div></div>
         </div>
 
-        <h2>Spec-uri normative</h2>
+        <h2>Normative specs</h2>
         <ul>
-          <li><a href="../mdview.html?file=specs/src/system-spec.md">System Spec</a></li>
-          <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH Kernel Spec</a></li>
-          <li><a href="../gamp/metrics.html">GAMP index (URS/FS/NFS + link-uri)</a></li>
+          <li><a href="../mdview.html?file=specs/src/system-spec.md">System spec</a></li>
+          <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH kernel spec</a></li>
+          <li><a href="../gamp/metrics.html">GAMP index (URS/FS/NFS)</a></li>
         </ul>
       </div>
     </main>

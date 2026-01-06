@@ -1,58 +1,58 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Trusted core</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Trusted core</h1>
-      <p>Componenta minimă în care ai încredere: checkere deterministe + evaluator UBH.</p>
+      <p>The minimal component you trust: deterministic checkers + the UBH evaluator.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
-          <a href="../decisions/minimal-kernel.html">Decizie: kernel minimal</a>
+          <a href="../decisions/minimal-kernel.html">Decision: minimal kernel</a>
           <a href="certificates.html">Certificate</a>
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Trusted core</strong> este setul de componente a căror corectitudine este presupusă de sistem.
-          În UBHNL, el trebuie să fie cât mai mic și cât mai simplu.
+          The <strong>trusted core</strong> is the set of components whose correctness is assumed by the system.
+          In UBHNL, it must be as small and as simple as possible.
         </p>
 
-        <h2>Conținut minim</h2>
+        <h2>Minimal contents</h2>
         <ul>
-          <li><strong>UBH evaluator/checker</strong>: verifică că un model satisface constrângerile UBH.</li>
-          <li><strong>Checkere de certificate</strong>: DRAT/LRAT (SAT), invariants (TS), dual certs (MIP/SDP), etc.</li>
+          <li><strong>UBH evaluator/checker</strong>: verifies that a model satisfies UBH constraints.</li>
+          <li><strong>Certificate checkers</strong>: DRAT/LRAT (SAT), invariants (TS), dual certs (MIP/SDP), etc.</li>
         </ul>
 
-        <h2>Ce NU intră</h2>
+        <h2>What does NOT belong</h2>
         <ul>
-          <li>solvere complexe (SAT/SMT/IC3/MIP solvers) — acestea sunt backends “untrusted” prin default, validate prin certificate.</li>
-          <li>euristici/ML guidance.</li>
+          <li>complex solvers (SAT/SMT/IC3/MIP solvers) — these are untrusted by default and validated via certificates.</li>
+          <li>heuristics/ML guidance.</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Acceptarea rezultatelor devine mecanică: <code>check(result) == ok</code> sau <code>UNKNOWN</code>.</li>
-          <li>Poți schimba backends fără să schimbi “adevărul” sistemului.</li>
+          <li>Result acceptance becomes mechanical: <code>check(result) == ok</code> or <code>UNKNOWN</code>.</li>
+          <li>You can change backends without changing the system’s “truth”.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (trusted core)</li>
-          <li><a href="../../mdview.html?file=specs/src/system-spec.md">System Spec</a> (principii)</li>
+          <li><a href="../../mdview.html?file=specs/src/system-spec.md">System Spec</a> (principles)</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

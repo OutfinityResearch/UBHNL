@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH CNL to UBH Pipeline</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>CNL/DSL Pipeline</h1>
-      <p>Input determinist (CNL/DSL) → IR tipat → fragmente/backends → rezultate verificabile.</p>
+      <p>Deterministic input (CNL/DSL) → typed IR → fragments/backends → checkable results.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pipeline-ul este specificat ca target. Parser-ele și compilatoarele sunt încă în lucru.</div>
+        <div class="draft">DRAFT: the pipeline is specified as a target. Parsers and compilers are still in progress.</div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
+          <a href="index.html">Docs Index</a>
           <a href="languages.html">Lexicon/CNL/DSL</a>
           <a href="session-api.html">Session API</a>
           <a href="reasoning.html">Reasoning</a>
@@ -24,18 +25,18 @@
           <a href="theory/index.html">Theory</a>
         </div>
 
-        <h2>Etape</h2>
+        <h2>Stages</h2>
         <ol>
-          <li>Încărcare lexicon + construire symbol table</li>
-          <li>Tokenize + parse (CNL sau DSL)</li>
-          <li>Typing + rezolvare simboluri (strict vocab; erori la necunoscut)</li>
-          <li>Lowering la semantic IR (core logic sau IR specific fragmentului)</li>
-          <li>Clasificare fragment + planificare backend/tactică</li>
+          <li>Load lexicon + build the symbol table</li>
+          <li>Tokenize + parse (CNL or DSL)</li>
+          <li>Typecheck + symbol resolution (strict vocabulary; unknown symbols are errors)</li>
+          <li>Lower to semantic IR (core logic or a fragment-specific IR)</li>
+          <li>Fragment classification + backend/tactic planning</li>
           <li>Solving + certificate/witness</li>
-          <li>Check + Explain (origins → explicație în CNL/DSL)</li>
+          <li>Check + explain (origins → explanation in CNL/DSL)</li>
         </ol>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li>
             Lexicon + CNL:

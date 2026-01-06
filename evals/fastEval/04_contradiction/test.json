@@ -1,0 +1,13 @@
+[
+    {
+        "input": "true",
+        "description": "Detect global contradiction",
+        "kind": "Satisfy",
+        "expected": "UNSAT",
+        "core": [
+            "IsOn(switch1)",
+            "IsOff(switch1)",
+            "rule_exclusion"
+        ]
+    }
+]

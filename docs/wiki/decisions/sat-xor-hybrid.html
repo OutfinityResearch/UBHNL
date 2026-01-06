@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Decision: SAT + XOR nativ</title>
+    <title>Decision: SAT + Native XOR</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Decizie: solving hibrid SAT + XOR nativ</h1>
-      <p>Separă partea liniară (XOR) de partea non-liniară (AND/CNF) pentru eficiență și claritate.</p>
+      <h1>Decision: hybrid solving with SAT + native XOR</h1>
+      <p>Separates the linear part (XOR) from the non-linear part (AND/CNF) for efficiency and clarity.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de decizie.</div>
+        <div class="draft">DRAFT: decision page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,26 +23,25 @@
           <a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a>
         </div>
 
-        <h2>Decizia</h2>
+        <h2>The decision</h2>
         <p>
-          UBHNL tratează XOR-urile ca ecuații GF(2) și folosește un motor Gauss incremental, în cooperare cu un SAT CDCL backend
-          pentru partea CNF (AND via Tseitin).
+          UBHNL treats XOR constraints as GF(2) equations and uses an incremental Gaussian elimination engine, in cooperation with a SAT (CDCL)
+          backend for the CNF part (AND via Tseitin).
         </p>
 
-        <h2>De ce</h2>
+        <h2>Why</h2>
         <ul>
-          <li>Encodarea XOR în CNF poate fi costisitoare și poate omorî propagarea.</li>
-          <li>Gauss incremental este foarte eficient pentru sisteme liniare (pattern-uri frecvente în circuite reale).</li>
-          <li>Separarea liniar/non-liniar reflectă direct semantica GF(2): XOR=+, AND=·.</li>
+          <li>Encoding XOR into CNF can be expensive and can destroy propagation.</li>
+          <li>Incremental Gauss is very efficient for linear systems (common patterns in real circuits).</li>
+          <li>The linear/non-linear split mirrors GF(2) semantics: XOR=+, AND=·.</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Ai două canale de propagare și două surse de conflict; loop-ul trebuie integrat (DPLL(T)-style).</li>
-          <li>Origini trebuie propagate în ambele lumi (clauze și ecuații) pentru unsat core/explain.</li>
+          <li>You have two propagation channels and two conflict sources; the loop must be integrated (DPLL(T)-style).</li>
+          <li>Origins must be propagated in both worlds (clauses and equations) for unsat cores/explanations.</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

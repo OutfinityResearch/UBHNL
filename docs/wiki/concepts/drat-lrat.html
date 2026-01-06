@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: DRAT / LRAT</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>DRAT / LRAT (SAT UNSAT certificates)</h1>
-      <p>Formate de certificate pentru UNSAT la SAT; checker determinist în trusted core.</p>
+      <p>Certificate formats for SAT UNSAT; checked deterministically in the trusted core.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="certificates.html">Certificate</a>
@@ -21,20 +22,19 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Idee</h2>
+        <h2>Idea</h2>
         <p>
-          Pentru o formulă CNF, un solver poate produce un traseu (proof trace) care demonstrează UNSAT.
-          Un checker validează fiecare pas și confirmă contradicția finală.
+          For a CNF formula, a solver can produce a proof trace that demonstrates UNSAT. A checker validates each step and confirms the final
+          contradiction.
         </p>
 
-        <h2>De ce apar în UBHNL</h2>
+        <h2>Why they appear in UBHNL</h2>
         <ul>
-          <li>Sunt o ancoră practic standard pentru acceptarea UNSAT în booleeni.</li>
-          <li>Permit ca backends SAT să fie “untrusted”, dar verificabile.</li>
-          <li>UBHNL poate reduce multe afirmații la CNF UNSAT via lowering, apoi acceptă doar cu DRAT/LRAT.</li>
+          <li>They are a practical standard anchor for accepting UNSAT in Boolean reasoning.</li>
+          <li>They allow SAT backends to be untrusted yet verifiable.</li>
+          <li>UBHNL can lower many claims to CNF UNSAT, and accepts only with DRAT/LRAT evidence.</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

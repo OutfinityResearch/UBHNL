@@ -1,0 +1,22 @@
+[
+    {
+        "id": "01_boolean",
+        "directory": "01_boolean",
+        "description": "Basic Boolean logic with DSL"
+    },
+    {
+        "id": "02_family",
+        "directory": "02_family",
+        "description": "CNL predicates and implication chains"
+    },
+    {
+        "id": "03_biology",
+        "directory": "03_biology",
+        "description": "Synthesis/witness finding with holes"
+    },
+    {
+        "id": "04_contradiction",
+        "directory": "04_contradiction",
+        "description": "Contradiction detection and Unsat Core"
+    }
+]

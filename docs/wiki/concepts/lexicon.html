@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Lexicon</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Lexicon (vocabular + tipuri)</h1>
-      <p>Sursa de adevăr pentru simboluri: domenii finite, constante, predicate, alias-uri.</p>
+      <h1>Lexicon (vocabulary + types)</h1>
+      <p>The source of truth for symbols: finite domains, constants, predicates, and aliases.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,21 +24,21 @@
           <a href="../../mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Lexicon</strong> (în UBHNL) este un fișier de configurare (tipic JSON) care definește:
-          <strong>tipurile</strong> (domenii), <strong>constantele</strong> și <strong>predicatele</strong>.
-          El este baza pentru typing și pentru politica “vocabular strict”.
+          The <strong>lexicon</strong> (in UBHNL) is a configuration file (typically JSON) that defines
+          <strong>types</strong> (domains), <strong>constants</strong>, and <strong>predicates</strong>.
+          It is the basis for typing and for the “strict vocabulary” policy.
         </p>
 
-        <h2>De ce este “sursă de adevăr”</h2>
+        <h2>Why it is a “source of truth”</h2>
         <ul>
-          <li>Determinism: input identic + lexicon identic ⇒ semantic IR identic.</li>
-          <li>Fără lexicon nu există typing robust; fără typing, “CNL/DSL” devin ambigue și fragile.</li>
-          <li>Politică de siguranță: un simbol necunoscut este <strong>eroare</strong>, nu “creare implicită”.</li>
+          <li>Determinism: same input + same lexicon ⇒ same semantic IR.</li>
+          <li>Without a lexicon there is no robust typing; without typing, “CNL/DSL” become ambiguous and fragile.</li>
+          <li>Safety policy: an unknown symbol is an <strong>error</strong>, not “implicit creation”.</li>
         </ul>
 
-        <h2>Structură minimală (exemplu)</h2>
+        <h2>Minimal structure (example)</h2>
         <pre><code>{
   "domains": { "Cell": ["c0", "c1"] },
   "constants": { "c0": "Cell", "c1": "Cell" },
@@ -48,29 +49,29 @@
   "aliases": { "protein p": "proteinP" }
 }</code></pre>
 
-        <h2>Invariante (ce verifică loader-ul)</h2>
+        <h2>Invariants (what the loader validates)</h2>
         <ul>
-          <li>Tipurile menționate există (în <code>domains</code> sau <code>builtins</code> unde e cazul).</li>
-          <li>Constantele au tip valid și apar în domeniul lor (sau domeniul e tratat ca autoritativ).</li>
-          <li>Predicatele au <code>arity</code> și lista de tipuri <code>args</code> consistente.</li>
-          <li>Alias-urile nu se ciocnesc cu nume canonice și sunt rezolvate determinist.</li>
+          <li>Referenced types exist (in <code>domains</code> or <code>builtins</code>, where applicable).</li>
+          <li>Constants have valid types and belong to their domains (or the domain is treated as authoritative).</li>
+          <li>Predicates have consistent <code>arity</code> and argument type lists (<code>args</code>).</li>
+          <li>Aliases do not collide with canonical names and are resolved deterministically.</li>
         </ul>
 
         <h2>Reserved keywords</h2>
         <p>
-          CNL/DSL rezervă cuvinte cheie (ex.: <code>forall</code>, <code>exists</code>, <code>and</code>, <code>or</code>, <code>not</code>, <code>implies</code>).
-          Pentru predictibilitate, lexicon-ul trebuie să evite folosirea lor ca identificatori (sau să ceară quoting, dacă se suportă).
+          CNL/DSL reserve keywords (e.g., <code>forall</code>, <code>exists</code>, <code>and</code>, <code>or</code>, <code>not</code>, <code>implies</code>).
+          For predictability, the lexicon should avoid using them as identifiers (or require quoting, if supported).
         </p>
 
-        <h2>Consecințe inginerești</h2>
+        <h2>Engineering consequences</h2>
         <ul>
-          <li>Teoriile (fișiere CNL/DSL) devin “compilabile” și auditable: orice token are o semnificație tipată.</li>
-          <li>Explicațiile pot fi tipărite în vocabularul userului: “proteinP(c0)” nu “wire 123”.</li>
+          <li>Theories (CNL/DSL files) become “compilable” and auditable: every token has a typed meaning.</li>
+          <li>Explanations can be printed in the user vocabulary: “proteinP(c0)”, not “wire 123”.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
-          <li><a href="../../mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a> (schema + reguli)</li>
+          <li><a href="../../mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a> (schema + rules)</li>
           <li><a href="../../mdview.html?file=specs/tests/cnl-cases.md">CNL test cases</a></li>
           <li><a href="../../mdview.html?file=specs/tests/dsl-cases.md">DSL test cases</a></li>
         </ul>
@@ -78,4 +79,3 @@
     </main>
   </body>
 </html>
-

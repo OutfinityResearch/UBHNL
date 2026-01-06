@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: DSL</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>DSL (Intermediate Language)</h1>
-      <p>Limbaj de fișiere pentru teorii și query-uri: determinist, tipat, cu vocabular strict.</p>
+      <p>A file language for theories and queries: deterministic, typed, with a strict vocabulary.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,51 +24,51 @@
           <a href="../../mdview.html?file=specs/DS/008-dsl.md">DS-008</a>
         </div>
 
-        <h2>Rol</h2>
+        <h2>Role</h2>
         <ul>
-          <li><strong>IR textual stabil</strong> pentru teorii (long-term) și query-uri.</li>
-          <li><strong>Format “power-user”</strong> (mai direct decât CNL), dar încă strict și tipat.</li>
-          <li><strong>Punte</strong>: CNL poate fi tradus în DSL pentru audit/debug.</li>
+          <li><strong>Stable textual IR</strong> for theories (long-term) and queries.</li>
+          <li><strong>Power-user format</strong> (more direct than CNL), but still strict and typed.</li>
+          <li><strong>Bridge</strong>: CNL can be translated into DSL for audit/debug.</li>
         </ul>
 
-        <h2>Regula @ / $ / vocab (esențială)</h2>
+        <h2>The @ / $ / vocab rule (essential)</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Formă</th><th>Semnificație</th><th>Regulă</th></tr></thead>
+            <thead><tr><th>Form</th><th>Meaning</th><th>Rule</th></tr></thead>
             <tbody>
-              <tr><td><code>@name</code></td><td>ținta statement-ului (declarație / fact)</td><td>maxim un <code>@</code> pe linie; obligatoriu primul token</td></tr>
-              <tr><td><code>$name</code></td><td>referință la variabilă în scope</td><td>dacă nu e în scope → eroare</td></tr>
-              <tr><td><code>name</code></td><td>lookup în vocabular</td><td>dacă nu există → eroare</td></tr>
+              <tr><td><code>@name</code></td><td>the statement target (declaration / fact)</td><td>at most one <code>@</code> per line; must be the first token</td></tr>
+              <tr><td><code>$name</code></td><td>variable reference in scope</td><td>if not in scope → error</td></tr>
+              <tr><td><code>name</code></td><td>vocabulary lookup</td><td>if missing → error</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Forme principale</h2>
+        <h2>Main forms</h2>
         <ul>
-          <li><strong>Declarație exportată</strong>: <code>@ion:Person</code> (adaugă constantă în vocabular)</li>
+          <li><strong>Exported declaration</strong>: <code>@ion:Person</code> (adds a constant to the vocabulary)</li>
           <li><strong>Fact statement (subject-first)</strong>: <code>@ion has_flu flu</code> ≡ <code>has_flu(ion, flu)</code> (assert true)</li>
           <li><strong>Logic statement</strong>: <code>forall $c in Cell: geneA($c) implies proteinP($c)</code></li>
-          <li><strong>Holes</strong>: <code>exists ?c in Cell: proteinP(?c)</code> (witness returnabil)</li>
+          <li><strong>Holes</strong>: <code>exists ?c in Cell: proteinP(?c)</code> (returnable witness)</li>
         </ul>
 
-        <h2>Exemple de erori intenționate</h2>
-        <pre><code># invalid: două @ pe aceeași linie
+        <h2>Intentional error examples</h2>
+        <pre><code># invalid: two @ tokens on the same line
 @p0 likes @p1
-# fix: folosește $p1 (dacă e variabilă) sau p1 (dacă e constantă în vocabular)
+# fix: use $p1 (if it is a variable) or bare p1 (if it is a vocabulary constant)
 
-# invalid: simbol necunoscut în vocabular
+# invalid: unknown vocabulary symbol
 @ion has_flu flu
-# dacă "flu" nu e declarat → load error</code></pre>
+# if "flu" is not declared → load error</code></pre>
 
-        <h2>De ce “un singur @ pe linie”</h2>
+        <h2>Why “single @ per line”</h2>
         <p>
-          Pentru a preveni confuzii între “declar/subiect” și “referințe”, și pentru a păstra DSL-ul ca un graf “subject-first”.
-          Vezi <a href="../decisions/dsl-at-rule.html">decizia</a> pentru consecințe.
+          To prevent confusion between “declare/subject” and “references”, and to keep DSL naturally “subject-first”.
+          See <a href="../decisions/dsl-at-rule.html">the decision</a> for consequences.
         </p>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
-          <li><a href="../../mdview.html?file=specs/DS/008-dsl.md">DS-008</a> (gramatică + load errors)</li>
+          <li><a href="../../mdview.html?file=specs/DS/008-dsl.md">DS-008</a> (grammar + load errors)</li>
           <li><a href="../../mdview.html?file=specs/tests/dsl-cases.md">DSL cases</a> (normative)</li>
           <li><a href="../../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a> (holes + session API)</li>
         </ul>
@@ -75,4 +76,3 @@
     </main>
   </body>
 </html>
-

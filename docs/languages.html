@@ -1,35 +1,36 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBHNL — Lexicon, CNL, DSL</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Lexicon, CNL și DSL</h1>
-      <p>Input determinist, tipat, cu vocabular strict.</p>
+      <h1>Lexicon, CNL, and DSL</h1>
+      <p>Deterministic, typed input with a strict vocabulary.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: sintaxă și contracte țintă; parser-ele sunt în lucru.</div>
+        <div class="draft">DRAFT: target syntax and contracts; parsers are still in progress.</div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
-          <a href="vision.html">Viziune</a>
+          <a href="index.html">Docs Index</a>
+          <a href="vision.html">Vision</a>
           <a href="session-api.html">Session API</a>
-          <a href="examples.html">Exemple</a>
+          <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
           <a href="theory/index.html">Theory</a>
           <a href="mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a>
           <a href="mdview.html?file=specs/DS/008-dsl.md">DS-008</a>
         </div>
 
-        <h2>1) Lexicon (vocabularul)</h2>
+        <h2>1) Lexicon (the vocabulary)</h2>
         <p>
-          Lexicon-ul definește tipurile (domenii finite și/sau builtins) și simbolurile permise. Regula este simplă:
-          orice simbol folosit în CNL/DSL trebuie să fie declarat (altfel: eroare).
+          The lexicon defines types (finite domains and/or builtins) and the allowed symbols. The rule is simple:
+          every symbol used in CNL/DSL must be declared; otherwise it is a load error.
         </p>
 
         <h3>Format (sketch)</h3>
@@ -60,69 +61,69 @@
 
         <h2>2) CNL (Controlled Natural Language)</h2>
         <p>
-          CNL este “aproape” limbaj natural, dar controlat: cuantificatori expliciți, conectivi expliciți, scoping clar.
-          Ambiguitatea este respinsă.
+          CNL is “almost” natural language, but controlled: explicit quantifiers, explicit connectives, and clear scoping.
+          Ambiguity is rejected, not guessed.
         </p>
 
-        <h3>Exemple</h3>
+        <h3>Examples</h3>
         <pre><code>for all cell c: if geneA(c) and not inhibitor(c) then proteinP(c)
 exists person p: has_fever(p) and has_flu(p)</code></pre>
 
-        <h3>Reguli de determinism</h3>
+        <h3>Determinism rules</h3>
         <ul>
-          <li>Toți cuantificatorii trebuie să includă domeniu: <code>for all x in Cell: ...</code> / <code>for all cell x: ...</code>.</li>
-          <li>Simbol necunoscut (predicat/constant/domeniu) = eroare.</li>
-          <li>Typing strict: aritate și tipurile argumentelor trebuie să corespundă lexicon-ului.</li>
+          <li>All quantifiers must include a domain: <code>for all x in Cell: ...</code> / <code>for all cell x: ...</code>.</li>
+          <li>Unknown symbol (predicate/constant/domain) = error.</li>
+          <li>Strict typing: predicate arity and argument types must match the lexicon.</li>
         </ul>
 
         <h2>3) DSL (authoring + canonical IR)</h2>
         <p>
-          DSL este formatul “ingineresc”: compact, ușor de procesat, bun pentru fișiere de teorii și pentru reproducibilitate.
-          Este construit pe regula <code>@ / $ / vocab</code>.
+          DSL is the “engineering” format: compact, easy to process, good for theory files, and reproducible.
+          It is built on the <code>@ / $ / vocab</code> rule.
         </p>
 
-        <h3>Regula @ / $ / vocab</h3>
+        <h3>The @ / $ / vocab rule</h3>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Formă</th><th>Semnificație</th><th>Politică</th></tr></thead>
+            <thead><tr><th>Form</th><th>Meaning</th><th>Policy</th></tr></thead>
             <tbody>
               <tr>
                 <td><code>@name</code></td>
-                <td>ținta statement-ului (declarație / fact statement)</td>
-                <td>maxim un <code>@</code> pe linie; obligatoriu primul token</td>
+                <td>the statement target (declaration / fact statement)</td>
+                <td>at most one <code>@</code> per line; must be the first token</td>
               </tr>
               <tr>
                 <td><code>$name</code></td>
-                <td>referință la variabilă în scope (binder sau definită anterior)</td>
-                <td>dacă nu e în scope → eroare</td>
+                <td>a variable reference in scope (binder or previously defined)</td>
+                <td>if it is not in scope → error</td>
               </tr>
               <tr>
                 <td><code>name</code></td>
-                <td>lookup în vocabular (lexicon + symbols exportate)</td>
-                <td>dacă nu există → eroare</td>
+                <td>vocabulary lookup (lexicon + exported symbols)</td>
+                <td>if it does not exist → error</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h3>Statement-uri</h3>
+        <h3>Statements</h3>
         <ul>
-          <li><strong>Declarație exportată</strong>: <code>@ion:Person</code> (devine simbol de vocabular)</li>
-          <li><strong>Fact statement</strong>: <code>@ion has_fever</code> (assert <code>has_fever(ion)</code>)</li>
-          <li><strong>Expresii logice</strong>: <code>forall $c in Cell: geneA($c) implies proteinP($c)</code> (assert expresia)</li>
+          <li><strong>Exported declaration</strong>: <code>@ion:Person</code> (becomes a vocabulary constant)</li>
+          <li><strong>Fact statement</strong>: <code>@ion has_fever</code> (asserts <code>has_fever(ion)</code>)</li>
+          <li><strong>Logical expressions</strong>: <code>forall $c in Cell: geneA($c) implies proteinP($c)</code> (asserts the expression)</li>
           <li><strong>Query holes</strong>: <code>exists ?c in Cell: proteinP(?c)</code></li>
         </ul>
 
-        <h3>Erori tipice (intenționate)</h3>
-        <pre><code># invalid: două @ pe aceeași linie
+        <h3>Typical errors (intentional)</h3>
+        <pre><code># invalid: two @ tokens on the same line
 @p0 likes @p1
-# fix: p1 trebuie să fie $p1 (variabilă) sau p1 constant în vocabular
+# fix: p1 must be $p1 (variable) or a vocabulary constant (bare p1)
 
-# invalid: simbol necunoscut în vocabular
+# invalid: unknown vocabulary symbol
 @ion has_flu flu
-# dacă "flu" nu e declarat ca Disease în lexicon → eroare de încărcare</code></pre>
+# if "flu" is not declared as a Disease in the lexicon → load error</code></pre>
 
-        <h2>Link-uri (spec-uri)</h2>
+        <h2>Links (specs)</h2>
         <ul>
           <li><a href="mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005 CNL + Lexicon</a></li>
           <li><a href="mdview.html?file=specs/DS/008-dsl.md">DS-008 DSL</a></li>

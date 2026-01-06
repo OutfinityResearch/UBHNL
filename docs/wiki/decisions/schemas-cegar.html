@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Decision: Schema engine (CEGAR)</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Decizie: schema engine (instanțiere lazy) pentru cuantificatori</h1>
-      <p>Menține reguli ca scheme; instanțiază doar ce e necesar pentru query (compresie).</p>
+      <h1>Decision: schema engine (lazy instantiation) for quantifiers</h1>
+      <p>Keep rules as schemas; instantiate only what is needed for a query (compression).</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de decizie.</div>
+        <div class="draft">DRAFT: decision page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,25 +23,24 @@
           <a href="../../mdview.html?file=specs/DS/004-schema-engine.md">DS-004</a>
         </div>
 
-        <h2>Decizia</h2>
+        <h2>The decision</h2>
         <p>
-          Pentru domenii mari (dar finite), nu expandăm upfront <code>forall/exists</code> în mii/milioane de instanțe.
-          Păstrăm axiomele ca scheme și instanțiem în loop CEGAR.
+          For large (but finite) domains, we do not expand <code>forall/exists</code> upfront into thousands/millions of instances.
+          We keep axioms as schemas and instantiate them in a CEGAR loop.
         </p>
 
-        <h2>De ce</h2>
+        <h2>Why</h2>
         <ul>
-          <li>Fără asta, compresia structurală se pierde (grounding exploziv).</li>
-          <li>Modelele solverului pot ghida exact ce instanțe sunt relevante.</li>
+          <li>Without this, structural compression is lost (explosive grounding).</li>
+          <li>Solver models can guide exactly which instances are relevant.</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Query planner devine responsabil pentru bugete/iterații și poate termina cu <code>UNKNOWN</code>.</li>
-          <li>Explicațiile includ instanțele generate (și originea schemelor).</li>
+          <li>The query planner becomes responsible for budgets/iterations and may terminate with <code>UNKNOWN</code>.</li>
+          <li>Explanations include the generated instances (and the origin of the schemas).</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

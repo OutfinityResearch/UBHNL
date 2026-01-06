@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Decision: UNKNOWN policy</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Decizie: UNKNOWN este preferabil unei afirmații neverificabile</h1>
-      <p>Politică de integritate: dacă nu poți verifica, nu pretinzi că e demonstrat.</p>
+      <h1>Decision: UNKNOWN is preferable to an unverifiable claim</h1>
+      <p>Integrity policy: if you cannot verify it, you do not claim it is proved.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de decizie.</div>
+        <div class="draft">DRAFT: decision page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,25 +23,24 @@
           <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
         </div>
 
-        <h2>Decizia</h2>
+        <h2>The decision</h2>
         <p>
-          Dacă un backend nu produce witness/certificat acceptabil în buget, UBHNL întoarce <code>UNKNOWN</code>.
-          Nu există “fallback silent” către o afirmație tare.
+          If a backend does not produce an acceptable witness/certificate within the budget, UBHNL returns <code>UNKNOWN</code>.
+          There is no “silent fallback” to a strong claim.
         </p>
 
-        <h2>De ce</h2>
+        <h2>Why</h2>
         <ul>
-          <li>Protejează împotriva bug-urilor și a metodologiilor probabilistice ne-auditate.</li>
-          <li>Forțează sistemul să fie explicit despre limite (bugete, certificate lipsă).</li>
+          <li>Protects against bugs and unaudited probabilistic methodologies.</li>
+          <li>Forces the system to be explicit about limits (budgets, missing certificates).</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>API-ul trebuie să includă metadata pentru UNKNOWN (de ce, ce s-a încercat).</li>
-          <li>Planner-ul poate încerca mai multe rute, dar nu poate “accepta” fără verificare.</li>
+          <li>The API must include metadata for UNKNOWN (why, what was attempted).</li>
+          <li>The planner may try multiple routes, but it cannot “accept” without verification.</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

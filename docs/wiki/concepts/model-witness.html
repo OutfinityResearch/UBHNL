@@ -1,67 +1,67 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Model / Witness</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Model / Witness</h1>
-      <p>Ce înseamnă “SAT” într-un sistem care acceptă doar rezultate verificabile.</p>
+      <p>What “SAT” means in a system that accepts only checkable results.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
-          <a href="constraints.html">Constrângeri</a>
+          <a href="constraints.html">Constraints</a>
           <a href="certificates.html">Certificate</a>
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un <strong>model</strong> (a.k.a. <strong>witness</strong>) este o atribuire care face o teorie satisfiabilă.
-          În UBH, un model dă valori pentru variabilele de intrare (și, în practică, pentru wire-urile relevante), astfel încât toate constrângerile să fie adevărate.
+          A <strong>model</strong> (a.k.a. a <strong>witness</strong>) is an assignment that makes a theory satisfiable.
+          In UBH, a model assigns values to input variables (and, in practice, to all relevant wires) such that all constraints evaluate to true.
         </p>
 
-        <h2>De ce “witness” este obligatoriu</h2>
+        <h2>Why a witness is mandatory</h2>
         <ul>
-          <li><code>SAT</code> trebuie să fie <strong>checkable</strong>: verifici determinist că toate constrângerile sunt satisfăcute sub model.</li>
-          <li>Fără witness, “SAT” ar fi o afirmație neverificabilă → inacceptabil pentru audit.</li>
+          <li><code>SAT</code> must be <strong>checkable</strong>: deterministically verify that all constraints are satisfied under the model.</li>
+          <li>Without a witness, “SAT” would be an unverifiable claim → unacceptable for audit.</li>
         </ul>
 
-        <h2>Witness în diferite fragmente</h2>
+        <h2>Witnesses across fragments</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Fragment</th><th>Witness tipic</th><th>Cum verifici</th></tr></thead>
+            <thead><tr><th>Fragment</th><th>Typical witness</th><th>How to check</th></tr></thead>
             <tbody>
-              <tr><td><code>Frag_UBH</code></td><td>Map&lt;wireId,0|1&gt;</td><td>evaluezi UBH DAG + assert</td></tr>
-              <tr><td><code>Frag_SAT_CNF</code></td><td>asignare CNF</td><td>evaluezi clauze</td></tr>
-              <tr><td><code>Frag_TS</code></td><td>trace <code>s0..sk</code></td><td>verifici init + tranziții + violare proprietate</td></tr>
-              <tr><td><code>Frag_MIP</code></td><td>soluție primară</td><td>verifici constrângeri numerice</td></tr>
-              <tr><td><code>Frag_QBF</code></td><td>strategie/Skolem</td><td>verifici jocul cuantificat</td></tr>
+              <tr><td><code>Frag_UBH</code></td><td>Map&lt;wireId,0|1&gt;</td><td>evaluate the UBH DAG + assertions</td></tr>
+              <tr><td><code>Frag_SAT_CNF</code></td><td>CNF assignment</td><td>evaluate clauses</td></tr>
+              <tr><td><code>Frag_TS</code></td><td>trace <code>s0..sk</code></td><td>check init + transitions + property violation</td></tr>
+              <tr><td><code>Frag_MIP</code></td><td>primal solution</td><td>check numeric constraints</td></tr>
+              <tr><td><code>Frag_QBF</code></td><td>strategy/Skolem</td><td>check the quantified game</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Witness și holes (?x)</h2>
+        <h2>Witnesses and holes (?x)</h2>
         <p>
-          Pentru query-uri cu <a href="holes.html">holes</a>, witness-ul include și o asignare pentru <code>?x</code>
-          (de ex. o constantă din domeniu). Este tot un “model”, dar cu componentă “returnabilă”.
+          For queries with <a href="holes.html">holes</a>, the witness includes an assignment for <code>?x</code>
+          (e.g., a domain constant). It is still a “model”, but with a “returnable” component.
         </p>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
-          <li><a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a> (model checking pentru SAT)</li>
-          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (policy: SAT trebuie witness)</li>
+          <li><a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a> (SAT witness checking)</li>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (policy: SAT must provide a witness)</li>
           <li><a href="../../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a> (holeAssignments)</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

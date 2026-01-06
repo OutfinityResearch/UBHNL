@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: CNF (Conjunctive Normal Form)</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>CNF (Conjunctive Normal Form)</h1>
-      <p>Reprezentarea standard pentru SAT: conjuncție de clauze (disjuncții de literali).</p>
+      <p>The standard SAT representation: a conjunction of clauses (disjunctions of literals).</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,37 +23,36 @@
           <a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          O formulă în <strong>CNF</strong> este o conjuncție (AND) de clauze, unde fiecare clauză este o disjuncție (OR) de literali:
+          A <strong>CNF</strong> formula is a conjunction (AND) of clauses, where each clause is a disjunction (OR) of literals:
         </p>
         <pre><code>(l11 ∨ l12 ∨ ...) ∧ (l21 ∨ l22 ∨ ...) ∧ ...</code></pre>
         <p>
-          Un <strong>literal</strong> este o variabilă booleană sau negarea ei.
+          A <strong>literal</strong> is a Boolean variable or its negation.
         </p>
 
-        <h2>De ce apare în UBHNL</h2>
+        <h2>Why it appears in UBHNL</h2>
         <ul>
-          <li>Partea “AND” a UBH se encodează în CNF folosind <a href="tseitin.html">Tseitin</a> (linear în numărul de porți AND).</li>
-          <li>Un backend SAT (CDCL) operează natural pe CNF; UBHNL folosește SAT ca motor generic pentru non-linearitate.</li>
+          <li>The “AND” part of UBH is encoded into CNF using <a href="tseitin.html">Tseitin</a> (linear in the number of AND gates).</li>
+          <li>A SAT backend (CDCL) operates naturally on CNF; UBHNL uses SAT as a generic engine for non-linearity.</li>
         </ul>
 
         <h2>Important: equisatisfiable vs equivalent</h2>
         <ul>
-          <li><strong>Equivalent</strong>: exact aceeași mulțime de modele peste variabilele originale.</li>
-          <li><strong>Equisatisfiable</strong>: are SAT/UNSAT identic, dar poate introduce variabile auxiliare (modele diferite ca set, dar satisfiabilitatea se păstrează).</li>
+          <li><strong>Equivalent</strong>: exactly the same set of models over the original variables.</li>
+          <li><strong>Equisatisfiable</strong>: same SAT/UNSAT answer, but it may introduce auxiliary variables (different model sets, preserved satisfiability).</li>
         </ul>
         <p>
-          Encodarea Tseitin este în general <strong>equisatisfiable</strong> (și asta e suficient pentru solve/prove).
+          Tseitin encodings are typically <strong>equisatisfiable</strong>, which is sufficient for solve/prove.
         </p>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
-          <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (CNF encoding pentru AND)</li>
+          <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (CNF encoding for AND)</li>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (SAT backend + certificate)</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

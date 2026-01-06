@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH Design Choices</title>
     <link rel="stylesheet" href="site.css" />
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Design Choices</h1>
-      <p>De ce arată arhitectura așa: kernel minimal + backends/tactici + certificate.</p>
+      <p>Why the architecture looks like this: minimal kernel + backends/tactics + certificates.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: sumar de decizii; referințele normative sunt în specs (MD).</div>
+        <div class="draft">DRAFT: a summary of key decisions; normative references live in the specs (MD).</div>
 
         <div class="nav">
-          <a href="index.html">Index</a>
-          <a href="vision.html">Viziune</a>
+          <a href="index.html">Docs Index</a>
+          <a href="vision.html">Vision</a>
           <a href="architecture.html">Architecture</a>
           <a href="reasoning.html">Reasoning</a>
           <a href="wiki/index.html">Wiki</a>
@@ -26,32 +27,29 @@
 
         <h2>Kernel IR (UBH)</h2>
         <p>
-          XOR/AND/CONST peste GF(2) oferă o bază booleană minimală, cu interpretare directă ca polinoame și cu
-          hash-consing eficient (compresie structurală).
+          XOR/AND/CONST over GF(2) provide a minimal Boolean basis, with a direct polynomial interpretation and efficient hash-consing
+          (structural compression).
         </p>
 
-        <h2>Strategie de solving</h2>
+        <h2>Solving strategy</h2>
         <p>
-          SAT + XOR nativ (ecuații liniare GF(2)) evită “blowup” la encodarea XOR în CNF și se potrivește cu structura
-          circuitelor tipice UBH.
+          SAT + native XOR (linear GF(2) equations) avoids “blow-up” when encoding XOR into CNF and matches the structure of typical UBH circuits.
         </p>
 
         <h2>Schema engine / CEGAR</h2>
         <p>
-          Cuantificatorii și regulile generative sunt tratate prin instanțiere lazy (CEGAR) pentru a păstra teoriile compacte
-          și pentru a evita grounding complet.
+          Quantifiers and generative rules are handled via lazy instantiation (CEGAR) to keep theories compact and avoid full grounding.
         </p>
 
-        <h2>Front-end determinist (CNL/DSL)</h2>
+        <h2>Deterministic front-end (CNL/DSL)</h2>
         <p>
-          CNL/DSL sunt controlate: typing obligatoriu și vocabular strict (simbol necunoscut = eroare). Ambiguitatea este respinsă,
-          nu ghicită.
+          CNL/DSL are controlled: typing is mandatory and the vocabulary is strict (unknown symbol = error). Ambiguity is rejected, not guessed.
         </p>
 
-        <h2>Fragmente + certificate</h2>
+        <h2>Fragments + certificates</h2>
         <p>
-          Sistemul separă “ce problemă avem” (Fragment) de “cum o rezolvăm” (Backend/Tactică). Orice rezultat acceptat trebuie să fie
-          verificabil (witness/certificate), iar partea “trusted” rămâne mică.
+          The system separates “what problem do we have?” (Fragment) from “how do we solve it?” (Backend/Tactic). Any accepted result must be
+          checkable (witness/certificate), and the “trusted” part remains small.
         </p>
       </div>
     </main>

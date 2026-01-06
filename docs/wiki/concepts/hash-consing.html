@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Hash-consing</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Hash-consing</h1>
-      <p>Tehnica prin care nodurile identice sunt deduplicate, obținând compresie structurală.</p>
+      <p>The technique that deduplicates identical nodes, yielding structural compression.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -21,42 +22,41 @@
           <a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Hash-consing</strong> este o tehnică de reprezentare a structurii ca DAG în care fiecare nod este creat “o singură dată”:
-          dacă încerci să creezi din nou același nod (aceeași operație + aceiași copii, în formă canonică), primești același <a href="wire-nodeid.html">NodeId</a>.
+          <strong>Hash-consing</strong> is a technique to represent structure as a DAG where each node is created “only once”: if you attempt to
+          create the same node again (same operation + same children, in canonical form), you receive the same <a href="wire-nodeid.html">NodeId</a>.
         </p>
 
-        <h2>De ce contează în UBHNL</h2>
+        <h2>Why it matters in UBHNL</h2>
         <ul>
-          <li><strong>Compresie</strong>: sub-structuri repetitive apar o dată și sunt partajate (DAG, nu arbore).</li>
-          <li><strong>Determinism</strong>: compilări repetate ale aceleiași expresii dau aceleași id-uri, ceea ce ajută caching-ul și explicațiile.</li>
-          <li><strong>Solving eficient</strong>: CNF/Tseitin și XOR-equations se generează o singură dată per nod, nu per apariție.</li>
+          <li><strong>Compression</strong>: repeated sub-structures appear once and are shared (DAG, not a tree).</li>
+          <li><strong>Determinism</strong>: repeated compilation of the same expression yields the same ids, enabling caching and stable explanations.</li>
+          <li><strong>Efficient solving</strong>: CNF/Tseitin and XOR equations are generated once per node, not per occurrence.</li>
         </ul>
 
-        <h2>Ce înseamnă “același nod”</h2>
+        <h2>What “the same node” means</h2>
         <p>
-          “Identic” înseamnă după:
+          “Identical” means after:
         </p>
         <ul>
-          <li><strong>simplificări locale</strong> (vezi <a href="simplification.html">simplificări</a>),</li>
-          <li><strong>canonizare</strong> (ex.: pentru XOR/AND, ordonarea inputurilor).</li>
+          <li><strong>local simplifications</strong> (see <a href="simplification.html">simplification</a>),</li>
+          <li><strong>canonicalization</strong> (e.g., for XOR/AND, ordering the inputs).</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li><strong>Reutilizare maximă</strong> în teorii mari (reguli care generează același pattern).</li>
-          <li><strong>Cost model clar</strong>: numărul de noduri distincte ≈ mărimea IR-ului și a encodării CNF.</li>
+          <li><strong>Maximum reuse</strong> in large theories (rules that generate the same patterns).</li>
+          <li><strong>Clear cost model</strong>: the number of distinct nodes ≈ the size of the IR and the CNF encoding.</li>
         </ul>
 
-        <h2>Vezi și</h2>
+        <h2>See also</h2>
         <ul>
-          <li><a href="simplification.html">Simplificări locale</a></li>
-          <li><a href="cnf.html">CNF/Tseitin</a> (de ce e liniar în numărul de AND-uri distincte)</li>
-          <li><a href="../decisions/minimal-kernel.html">Decizie: kernel minimal</a></li>
+          <li><a href="simplification.html">Local simplification</a></li>
+          <li><a href="cnf.html">CNF/Tseitin</a> (why it is linear in the number of distinct AND gates)</li>
+          <li><a href="../decisions/minimal-kernel.html">Decision: minimal kernel</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

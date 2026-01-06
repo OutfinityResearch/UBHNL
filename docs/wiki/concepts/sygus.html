@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: SyGuS (Syntax-Guided Synthesis)</title>
+    <link rel="stylesheet" href="../../site.css" />
+    <script src="../../site-nav.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>SyGuS (Syntax-Guided Synthesis)</h1>
+      <p>A synthesis problem format where the solution must satisfy both semantics and a grammar.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">
+          DRAFT: This page explains the concept and how it maps to UBHNL’s <code>GoalKind=Synthesize</code>. The backend interface is in DS-011.
+        </div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="synthesis.html">Synthesis</a>
+          <a href="certificates.html">Certificates</a>
+          <a href="fragment.html">Fragment</a>
+          <a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Definition</h2>
+        <p>
+          <strong>Syntax-Guided Synthesis (SyGuS)</strong> is a family of synthesis problems where you must construct an artifact (usually an
+          expression or program) that:
+        </p>
+        <ol>
+          <li>meets a semantic specification (constraints must hold), and</li>
+          <li>is built only from a given syntactic space (a grammar / template).</li>
+        </ol>
+        <p>
+          The grammar is not just a convenience: it is part of the problem statement. It restricts the search space and can encode domain
+          knowledge (“only use these building blocks”).
+        </p>
+
+        <h2>How UBHNL treats synthesis</h2>
+        <p>
+          UBHNL models synthesis as a first-class goal kind (<code>Synthesize</code>) and expects a backend/tactic to return:
+        </p>
+        <ul>
+          <li>a synthesized artifact (e.g., a circuit, expression, or invariant), and</li>
+          <li>a checkable correctness justification (usually by reducing to SAT/SMT/UBH obligations).</li>
+        </ul>
+        <p>
+          In other words: the system may use advanced heuristics to find a candidate, but acceptance requires that the candidate is verifiable.
+        </p>
+
+        <h2>Toy example</h2>
+        <p>
+          Suppose you want to synthesize a Boolean expression <code>f(x,y)</code> that matches a truth table, but you restrict syntax to:
+          <code>and</code>, <code>or</code>, <code>not</code>, and variables.
+        </p>
+        <p>
+          A SyGuS solver searches expressions in that grammar and returns a candidate like <code>and(x,y)</code>.
+          UBHNL then checks it by compiling the equivalence <code>∀x,y: f(x,y) ↔ spec(x,y)</code> to a checkable backend.
+        </p>
+
+        <div class="svg-wrap">
+          <svg viewBox="0 0 920 220" role="img" aria-label="SyGuS solution and verification flow">
+            <defs>
+              <style>
+                .b { fill: #ffffff; stroke: #d6d0c6; stroke-width: 2; }
+                .t { font: 14px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #1f1b16; }
+                .m { fill: #5a534b; font-size: 12px; }
+                .a { stroke: #2f5d50; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+              </style>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L9,3 L0,6 z" fill="#2f5d50"></path>
+              </marker>
+            </defs>
+
+            <rect class="b" x="20" y="55" width="280" height="120" rx="12"></rect>
+            <text class="t" x="40" y="85">Synthesis problem</text>
+            <text class="m" x="40" y="110">spec constraints</text>
+            <text class="m" x="40" y="132">+ grammar / templates</text>
+
+            <rect class="b" x="330" y="55" width="280" height="120" rx="12"></rect>
+            <text class="t" x="350" y="85">SyGuS backend</text>
+            <text class="m" x="350" y="110">searches candidate artifacts</text>
+            <text class="m" x="350" y="132">returns a program/expression</text>
+
+            <rect class="b" x="640" y="55" width="260" height="120" rx="12"></rect>
+            <text class="t" x="660" y="85">UBHNL checker</text>
+            <text class="m" x="660" y="110">compiles obligations</text>
+            <text class="m" x="660" y="132">accepts only if verified</text>
+
+            <path class="a" d="M300,115 L330,115"></path>
+            <path class="a" d="M610,115 L640,115"></path>
+          </svg>
+        </div>
+
+        <h2>References</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Program_synthesis">Wikipedia: Program synthesis</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

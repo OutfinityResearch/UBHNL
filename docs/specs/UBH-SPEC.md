@@ -44,7 +44,7 @@ Evaluation `⟦id⟧_σ` is defined recursively:
 - `⟦CONST0⟧_σ = 0`
 - `⟦CONST1⟧_σ = 1`
 - `⟦VAR(name)⟧_σ = σ(name)`
-- `⟦XOR(a,b)⟧_σ = ⟦a⟧_σ ⊕ ⟦b⟧_σ`
+- `⟦XOR(a,b)⟧_σ = ⟦a⟧_σ ⊕ ⟦b⟧_σ` (XOR, i.e. addition modulo 2)
 - `⟦AND(a,b)⟧_σ = ⟦a⟧_σ ∧ ⟦b⟧_σ`
 
 GF(2) view (optional but useful):

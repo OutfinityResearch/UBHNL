@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 220" role="img" aria-label="UBHNL pipeline: languages to fragments to backends to checkers to result">
+  <defs>
+    <style>
+      .box { fill: #ffffff; stroke: #d6d0c6; stroke-width: 2; rx: 12; }
+      .title { font: 600 20px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #1f1b16; }
+      .sub { font: 14px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #5a534b; }
+      .arrow { stroke: #2f5d50; stroke-width: 3; fill: none; marker-end: url(#arrowHead); }
+      .label { font: 600 14px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #2f5d50; }
+    </style>
+    <marker id="arrowHead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#2f5d50" />
+    </marker>
+  </defs>
+
+  <rect class="box" x="20" y="40" width="210" height="140" rx="14" />
+  <text class="title" x="40" y="88">Languages</text>
+  <text class="sub" x="40" y="116">Lexicon • CNL • DSL</text>
+  <text class="sub" x="40" y="140">deterministic parse/type</text>
+
+  <rect class="box" x="270" y="40" width="210" height="140" rx="14" />
+  <text class="title" x="290" y="88">Semantic IR</text>
+  <text class="sub" x="290" y="116">typed AST + origins</text>
+  <text class="sub" x="290" y="140">normalized statements</text>
+
+  <rect class="box" x="520" y="40" width="210" height="140" rx="14" />
+  <text class="title" x="540" y="88">Fragments</text>
+  <text class="sub" x="540" y="116">classify constraints</text>
+  <text class="sub" x="540" y="140">goal kind → plan</text>
+
+  <rect class="box" x="770" y="20" width="190" height="85" rx="14" />
+  <text class="title" x="790" y="60">Backends</text>
+  <text class="sub" x="790" y="86">SAT/SMT/QBF/MC/…</text>
+
+  <rect class="box" x="770" y="120" width="190" height="85" rx="14" />
+  <text class="title" x="790" y="160">Checkers</text>
+  <text class="sub" x="790" y="186">witness/certificates</text>
+
+  <path class="arrow" d="M230 110 L270 110" />
+  <path class="arrow" d="M480 110 L520 110" />
+  <path class="arrow" d="M730 80 L770 62" />
+  <path class="arrow" d="M730 140 L770 158" />
+
+  <text class="label" x="340" y="30">compile</text>
+  <text class="label" x="585" y="30">plan</text>
+</svg>
+

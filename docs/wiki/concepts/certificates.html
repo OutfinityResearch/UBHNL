@@ -1,78 +1,78 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Certificate (proof-carrying)</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Certificate (proof-carrying results)</h1>
-      <p>Politica UBHNL: rezultatele sunt acceptate doar dacă pot fi verificate independent.</p>
+      <p>UBHNL policy: results are accepted only if they can be independently verified.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
-          <a href="../decisions/certificates.html">Decizie: certificate</a>
+          <a href="../decisions/certificates.html">Decision: certificates</a>
           <a href="unknown.html">UNKNOWN</a>
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un <strong>certificat</strong> este un artefact de date care permite unui <strong>checker</strong> determinist să valideze afirmația unui backend:
-          <code>UNSAT</code>, <code>OPTIMAL</code>, “invariant corect”, “strategie corectă”, etc.
+          A <strong>certificate</strong> is a data artifact that allows a deterministic <strong>checker</strong> to validate a backend claim:
+          <code>UNSAT</code>, <code>OPTIMAL</code>, “invariant is correct”, “strategy is correct”, etc.
         </p>
 
-        <h2>Politica de acceptare</h2>
+        <h2>Acceptance policy</h2>
         <ul>
-          <li><code>SAT</code>: acceptat doar cu <a href="model-witness.html">witness model</a> verificabil.</li>
-          <li><code>UNSAT</code>: acceptat doar cu certificat verificabil (sau confirmare printr-o rută checkable).</li>
-          <li><code>OPTIMAL</code>: acceptat doar cu witness + dovadă de bound (dual/bounds/UNSAT-of-tightened).</li>
-          <li>Altfel: <code>UNKNOWN</code> (nu “ghicim”).</li>
+          <li><code>SAT</code>: accepted only with a checkable <a href="model-witness.html">witness model</a>.</li>
+          <li><code>UNSAT</code>: accepted only with a checkable certificate (or confirmation via a checkable route).</li>
+          <li><code>OPTIMAL</code>: accepted only with a witness plus a bound proof (dual/bounds/UNSAT-of-tightened).</li>
+          <li>Otherwise: <code>UNKNOWN</code> (no “guessing”).</li>
         </ul>
 
-        <h2>Certificate SAT: DRAT/LRAT (pe scurt)</h2>
+        <h2>SAT certificates: DRAT/LRAT (short)</h2>
         <p>
-          Pentru CNF SAT, certificatele uzuale pentru <code>UNSAT</code> sunt trasee de rezoluție în formate precum DRAT/LRAT.
-          Checker-ul verifică determinist că fiecare pas este valid și că se obține contradicție.
+          For CNF SAT, common <code>UNSAT</code> certificates are resolution traces in formats such as DRAT/LRAT.
+          The checker deterministically validates that each step is valid and that a contradiction is derived.
         </p>
         <p class="muted">
-          În UBHNL, asta este “ancora” pentru acceptarea UNSAT la nivel bit/UBH: dacă reducerea la CNF este corectă, DRAT/LRAT închide bucla.
+          In UBHNL, this is the “anchor” for accepting UNSAT at the bit/UBH level: if the reduction to CNF is correct, DRAT/LRAT closes the loop.
         </p>
 
-        <h2>Certificate în alte fragmente (exemple)</h2>
+        <h2>Certificates in other fragments (examples)</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Fragment</th><th>Afirmație</th><th>Certificat tipic</th></tr></thead>
+            <thead><tr><th>Fragment</th><th>Claim</th><th>Typical certificate</th></tr></thead>
             <tbody>
-              <tr><td><code>Frag_TS</code></td><td>safety</td><td>invariant inductiv (check: 3 obligații)</td></tr>
-              <tr><td><code>Frag_QBF</code></td><td>SAT</td><td>strategie/Skolem</td></tr>
+              <tr><td><code>Frag_TS</code></td><td>safety</td><td>inductive invariant (check: 3 obligations)</td></tr>
+              <tr><td><code>Frag_QBF</code></td><td>SAT</td><td>strategy/Skolem</td></tr>
               <tr><td><code>Frag_MIP</code></td><td>infeasible/optimal</td><td>dual ray / dual bound</td></tr>
-              <tr><td><code>Frag_KC</code></td><td>equivalence</td><td>echivalență verificată prin SAT/UBH</td></tr>
+              <tr><td><code>Frag_KC</code></td><td>equivalence</td><td>equivalence checked via SAT/UBH</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Consecințe inginerești</h2>
+        <h2>Engineering consequences</h2>
         <ul>
-          <li>Trebuie un “trusted core” mic: UBH evaluator + checkere de certificate (vezi DS-011).</li>
-          <li>Backends pot fi “untrusted/heuristic”, dar rezultatele lor nu sunt finale fără verificare.</li>
-          <li>Explicațiile pot reutiliza certificatele: “de ce UNSAT” = core + traseu.</li>
+          <li>You need a small “trusted core”: UBH evaluator + certificate checkers (see DS-011).</li>
+          <li>Backends may be untrusted/heuristic, but their results are not final without verification.</li>
+          <li>Explanations can reuse certificates: “why UNSAT” = core + trace.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (policy + catalog)</li>
-          <li><a href="../../mdview.html?file=specs/src/system-spec.md">System Spec</a> (rule: accept doar cu certificate)</li>
+          <li><a href="../../mdview.html?file=specs/src/system-spec.md">System Spec</a> (rule: accept only with certificates)</li>
           <li><a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a> (acceptance rule)</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Bit / Boolean</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Bit / Boolean</h1>
-      <p>Unitatea fundamentală: valori în {0,1} și semantica de adevăr.</p>
+      <p>The fundamental unit: values in {0,1} and truth semantics.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki (glossary). Spec-ul normativ rămâne în MD.</div>
+        <div class="draft">DRAFT: Wiki page (glossary). The normative spec remains in MD.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,46 +23,45 @@
           <a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un <strong>bit</strong> este un element din mulțimea <code>{0,1}</code>. În UBHNL, un bit este și un <strong>boolean</strong>:
-          <code>0</code> = fals, <code>1</code> = adevărat.
+          A <strong>bit</strong> is an element of <code>{0,1}</code>. In UBHNL, a bit is also a <strong>Boolean</strong>:
+          <code>0</code> means false, and <code>1</code> means true.
         </p>
 
-        <h2>De ce contează în UBHNL</h2>
+        <h2>Why it matters in UBHNL</h2>
         <ul>
-          <li><strong>Kernel-ul UBH are un singur tip nativ</strong>: <code>Bit</code>. Orice alt tip (BV, enum, set, relație) este o encodare pe biți.</li>
-          <li><strong>Solving-ul și checking-ul</strong> se reduc la evaluarea de circuite booleene sub o atribuire de biți (model).</li>
-          <li><strong>Universalitate practică (finită)</strong>: orice structură discretă finită se poate codifica în biți.</li>
+          <li><strong>The UBH kernel has a single native type</strong>: <code>Bit</code>. Every other type (BV, enum, set, relation) is encoded as bits.</li>
+          <li><strong>Solving and checking</strong> reduce to evaluating Boolean circuits under a bit assignment (a model).</li>
+          <li><strong>Practical (finite) universality</strong>: any finite discrete structure can be encoded in bits.</li>
         </ul>
 
-        <h2>Notare minimă</h2>
+        <h2>Minimal notation</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Notare</th><th>Înseamnă</th></tr></thead>
+            <thead><tr><th>Notation</th><th>Meaning</th></tr></thead>
             <tbody>
-              <tr><td><code>0</code></td><td>fals</td></tr>
-              <tr><td><code>1</code></td><td>adevărat</td></tr>
-              <tr><td><code>⊕</code></td><td>XOR (adunare mod 2) — vezi <a href="gf2.html">GF(2)</a></td></tr>
-              <tr><td><code>∧</code></td><td>AND (înmulțire) — vezi <a href="gf2.html">GF(2)</a></td></tr>
+              <tr><td><code>0</code></td><td>false</td></tr>
+              <tr><td><code>1</code></td><td>true</td></tr>
+              <tr><td><code>⊕</code></td><td>XOR (addition modulo 2) — see <a href="gf2.html">GF(2)</a></td></tr>
+              <tr><td><code>∧</code></td><td>AND (multiplication) — see <a href="gf2.html">GF(2)</a></td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Consecințe inginerești</h2>
+        <h2>Engineering consequences</h2>
         <ul>
-          <li>Orice API “de nivel înalt” trebuie să specifice clar encodarea pe biți (ex.: <a href="type-lowering.html">type lowering</a>).</li>
-          <li>Checkerele sunt simple și robuste: pentru <code>SAT</code> verifici “modelul satisface constrângerile” prin evaluare deterministă.</li>
+          <li>Any “high-level” API must specify its bit encoding explicitly (see <a href="type-lowering.html">type lowering</a>).</li>
+          <li>Checkers are simple and robust: for <code>SAT</code>, you validate “the model satisfies the constraints” by deterministic evaluation.</li>
         </ul>
 
-        <h2>Vezi și</h2>
+        <h2>See also</h2>
         <ul>
-          <li><a href="gf2.html">GF(2)</a> (interpretarea algebrică a bit-ului)</li>
-          <li><a href="ubh.html">UBH</a> (IR-ul pe biți)</li>
-          <li><a href="type-lowering.html">Type lowering</a> (cum devin tipurile biți)</li>
+          <li><a href="gf2.html">GF(2)</a> (the algebraic interpretation of bits)</li>
+          <li><a href="ubh.html">UBH</a> (the bit-level IR)</li>
+          <li><a href="type-lowering.html">Type lowering</a> (how types become bits)</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

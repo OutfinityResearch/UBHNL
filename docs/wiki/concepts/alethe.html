@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Alethe (SMT Proof Format)</title>
+    <link rel="stylesheet" href="../../site.css" />
+    <script src="../../site-nav.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Alethe (SMT Proof Format)</h1>
+      <p>An SMT proof-object format used to make <code>UNSAT</code> results independently checkable.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">
+          DRAFT: This page describes the intended role of Alethe in UBHNL. The exact accepted subset is specified in DS-014.
+        </div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="smt.html">SMT</a>
+          <a href="certificates.html">Certificates</a>
+          <a href="trusted-core.html">Trusted core</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Definition</h2>
+        <p>
+          <strong>Alethe</strong> is a machine-readable format for <strong>SMT proof objects</strong>. In practice, it is used as an
+          <em>evidence payload</em> for an <code>UNSAT</code> claim: a separate checker can replay the proof and confirm that the input is
+          indeed unsatisfiable, without re-solving the problem.
+        </p>
+
+        <h2>Why UBHNL mentions Alethe</h2>
+        <p>
+          UBHNL’s system-level rule is “do not trust solvers, verify results”. For purely Boolean problems we can validate <code>UNSAT</code>
+          via <a href="drat-lrat.html">DRAT/LRAT</a>. For SMT problems, a comparable approach is required: an SMT backend should return a
+          <strong>checkable proof object</strong>. Alethe is one practical candidate format for that role.
+        </p>
+
+        <h2>How it fits in the architecture</h2>
+        <p>
+          In UBHNL, Alethe is treated as an <strong>artifact</strong> attached to a backend result. The orchestrator accepts an SMT backend’s
+          <code>UNSAT</code> only if a trusted checker validates the proof object (or if the problem is reduced to SAT/UBH with a Boolean proof).
+        </p>
+        <div class="svg-wrap">
+          <svg viewBox="0 0 820 190" role="img" aria-label="SMT UNSAT with proof object flow">
+            <defs>
+              <style>
+                .b { fill: #ffffff; stroke: #d6d0c6; stroke-width: 2; }
+                .t { font: 14px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #1f1b16; }
+                .m { fill: #5a534b; font-size: 12px; }
+                .a { stroke: #2f5d50; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+              </style>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L9,3 L0,6 z" fill="#2f5d50"></path>
+              </marker>
+            </defs>
+            <rect class="b" x="20" y="40" width="240" height="90" rx="12"></rect>
+            <text class="t" x="40" y="70">SMT backend</text>
+            <text class="m" x="40" y="94">returns: UNSAT + proof object</text>
+
+            <rect class="b" x="300" y="40" width="240" height="90" rx="12"></rect>
+            <text class="t" x="320" y="70">Trusted checker</text>
+            <text class="m" x="320" y="94">replays Alethe steps</text>
+
+            <rect class="b" x="580" y="40" width="220" height="90" rx="12"></rect>
+            <text class="t" x="600" y="70">Accepted result</text>
+            <text class="m" x="600" y="94">UNSAT is verified</text>
+
+            <path class="a" d="M260,85 L300,85"></path>
+            <path class="a" d="M540,85 L580,85"></path>
+          </svg>
+        </div>
+
+        <h2>UBHNL policy (summary)</h2>
+        <ul>
+          <li>SMT backends may return <code>UNSAT</code> with a proof object (e.g., Alethe), but it must be checked.</li>
+          <li>If proof checking is not available, the orchestrator must either confirm via a checkable reduction (e.g., bit-blast→SAT) or return <code>UNKNOWN</code>.</li>
+          <li>The exact supported proof subset and checker invocation are specified in <a href="../../mdview.html?file=specs/DS/014-certificate-formats-verification.md">DS-014</a>.</li>
+        </ul>
+
+        <h2>References</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories">Wikipedia: Satisfiability modulo theories</a></li>
+          <li><a href="https://smt-lib.org/">SMT-LIB</a> (standard input language; many proof formats exist beyond SMT-LIB)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

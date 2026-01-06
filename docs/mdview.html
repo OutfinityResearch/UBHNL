@@ -99,6 +99,38 @@
         padding: 0;
       }
 
+      h1, h2, h3, h4, h5, h6 {
+        position: relative;
+        scroll-margin-top: 72px;
+      }
+
+      .anchor-link {
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 600;
+        margin-left: 8px;
+        opacity: 0;
+      }
+
+      h1:hover .anchor-link,
+      h2:hover .anchor-link,
+      h3:hover .anchor-link,
+      h4:hover .anchor-link,
+      h5:hover .anchor-link,
+      h6:hover .anchor-link {
+        opacity: 1;
+      }
+
+      .task-item {
+        list-style: none;
+        margin-left: -18px;
+      }
+
+      .task-item input[type="checkbox"] {
+        margin-right: 10px;
+        transform: translateY(1px);
+      }
+
       blockquote {
         border-left: 4px solid var(--accent);
         padding-left: 12px;
@@ -159,6 +191,7 @@
         pre { padding: 12px 12px; }
       }
     </style>
+      <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
@@ -186,7 +219,70 @@
           .replace(/'/g, "&#39;");
       }
 
-      function inlineFormat(text) {
+      function dirname(path) {
+        const idx = path.lastIndexOf("/");
+        return idx >= 0 ? path.slice(0, idx + 1) : "";
+      }
+
+      function normalizePath(path) {
+        const absolute = path.startsWith("/");
+        const parts = path.replace(/^\/+/, "").split("/");
+        const out = [];
+        for (const part of parts) {
+          if (!part || part === ".") continue;
+          if (part === "..") {
+            if (out.length) out.pop();
+            continue;
+          }
+          out.push(part);
+        }
+        return (absolute ? "/" : "") + out.join("/");
+      }
+
+      function splitTarget(target) {
+        const m = target.match(/^([^?#]+)([?#].*)?$/);
+        if (!m) return { path: target, suffix: "" };
+        return { path: m[1], suffix: m[2] ?? "" };
+      }
+
+      function resolveTarget(baseFile, target) {
+        if (!target) return target;
+        if (target.startsWith("#")) return target;
+        if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(target)) return target; // scheme (http:, mailto:, ...)
+
+        const { path, suffix } = splitTarget(target);
+        let clean = path;
+        if (clean.startsWith("docs/")) clean = clean.slice(5);
+        if (clean.startsWith("/")) clean = clean.replace(/^\/+/, "");
+
+        const resolved = normalizePath(dirname(baseFile) + clean);
+        return resolved + suffix;
+      }
+
+      function rewriteLinkForViewer(resolvedTarget) {
+        if (!resolvedTarget) return resolvedTarget;
+        if (resolvedTarget.startsWith("#")) return resolvedTarget;
+        if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(resolvedTarget)) return resolvedTarget;
+
+        const { path, suffix } = splitTarget(resolvedTarget);
+        if (path.toLowerCase().endsWith(".md")) {
+          return "mdview.html?file=" + encodeURIComponent(path) + (suffix ?? "");
+        }
+        return resolvedTarget;
+      }
+
+      function slugifyHeading(text) {
+        const base = text
+          .trim()
+          .toLowerCase()
+          .replace(/[`*_~]/g, "")
+          .replace(/<[^>]+>/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+        return base || "section";
+      }
+
+      function inlineFormat(text, ctx) {
         let escaped = escapeHtml(text);
 
         const codeSpans = [];
@@ -196,8 +292,21 @@
           return "\u0000CODE" + idx + "\u0000";
         });
 
-        escaped = escaped.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, "<img alt=\"$1\" src=\"$2\" />");
-        escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href=\"$2\">$1</a>");
+        escaped = escaped.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
+          const resolved = ctx?.baseFile ? resolveTarget(ctx.baseFile, src) : src;
+          if (/^javascript:/i.test(resolved) || /^data:/i.test(resolved)) {
+            return alt;
+          }
+          return "<img alt=\"" + alt + "\" src=\"" + resolved + "\" />";
+        });
+        escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+          const resolved = ctx?.baseFile ? resolveTarget(ctx.baseFile, href) : href;
+          const viewerHref = rewriteLinkForViewer(resolved);
+          if (/^javascript:/i.test(viewerHref) || /^data:/i.test(viewerHref)) {
+            return label;
+          }
+          return "<a href=\"" + viewerHref + "\">" + label + "</a>";
+        });
         escaped = escaped.replace(/~~([^~]+)~~/g, "<del>$1</del>");
         escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
         escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
@@ -206,21 +315,23 @@
         return escaped;
       }
 
-      function renderMarkdown(markdown) {
+      function renderMarkdown(markdown, ctx = {}) {
         const lines = markdown.replace(/\r\n/g, "\n").split("\n");
         const html = [];
 
         let inCode = false;
+        let codeFence = "";
         let codeLines = [];
         let codeLang = "";
 
         let paragraphLines = [];
         const listStack = []; // { type: "ul"|"ol", indent: number }
+        const headingIds = ctx.headingIds ?? new Map();
 
         function flushParagraph() {
           if (paragraphLines.length === 0) return;
           const text = paragraphLines.join(" ").trim();
-          if (text) html.push("<p>" + inlineFormat(text) + "</p>");
+          if (text) html.push("<p>" + inlineFormat(text, ctx) + "</p>");
           paragraphLines = [];
         }
 
@@ -275,7 +386,7 @@
           html.push("<thead><tr>");
           for (let i = 0; i < headerCells.length; i++) {
             const align = aligns[i] ? " style=\"text-align:" + aligns[i] + "\"" : "";
-            html.push("<th" + align + ">" + inlineFormat(headerCells[i]) + "</th>");
+            html.push("<th" + align + ">" + inlineFormat(headerCells[i], ctx) + "</th>");
           }
           html.push("</tr></thead>");
           if (bodyRows.length) {
@@ -285,7 +396,7 @@
               for (let i = 0; i < headerCells.length; i++) {
                 const align = aligns[i] ? " style=\"text-align:" + aligns[i] + "\"" : "";
                 const cell = row[i] ?? "";
-                html.push("<td" + align + ">" + inlineFormat(cell) + "</td>");
+                html.push("<td" + align + ">" + inlineFormat(cell, ctx) + "</td>");
               }
               html.push("</tr>");
             }
@@ -297,14 +408,22 @@
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i];
 
-          if (line.startsWith("```")) {
+          const opensFence = line.startsWith("```") || line.startsWith("~~~");
+          if (opensFence) {
+            const fence = line.startsWith("```") ? "```" : "~~~";
             if (inCode) {
-              flushCodeBlock();
-              inCode = false;
+              if (line.startsWith(codeFence)) {
+                flushCodeBlock();
+                inCode = false;
+                codeFence = "";
+              } else {
+                codeLines.push(line);
+              }
             } else {
               flushParagraph();
               closeLists();
               inCode = true;
+              codeFence = fence;
               codeLang = line.slice(3).trim();
             }
             continue;
@@ -332,7 +451,7 @@
               i++;
             }
             i--;
-            html.push("<blockquote>" + renderMarkdown(quoteLines.join("\n")) + "</blockquote>");
+            html.push("<blockquote>" + renderMarkdown(quoteLines.join("\n"), ctx) + "</blockquote>");
             continue;
           }
 
@@ -342,7 +461,26 @@
             flushParagraph();
             closeLists();
             const level = heading[1].length;
-            html.push("<h" + level + ">" + inlineFormat(heading[2]) + "</h" + level + ">");
+            const rawTitle = heading[2].trim();
+            const baseId = slugifyHeading(rawTitle);
+            const prev = headingIds.get(baseId) ?? 0;
+            const next = prev + 1;
+            headingIds.set(baseId, next);
+            const id = next === 1 ? baseId : baseId + "-" + next;
+            const titleHtml = inlineFormat(rawTitle, ctx);
+            html.push(
+              "<h" +
+                level +
+                " id=\"" +
+                escapeHtml(id) +
+                "\">" +
+                titleHtml +
+                "<a class=\"anchor-link\" href=\"#" +
+                escapeHtml(id) +
+                "\" aria-label=\"Link to this section\">#</a></h" +
+                level +
+                ">"
+            );
             continue;
           }
 
@@ -394,7 +532,20 @@
               listStack.push({ type, indent });
             }
 
-            html.push("<li>" + inlineFormat(listMatch[3]) + "</li>");
+            const itemText = listMatch[3];
+            const task = itemText.match(/^\[( |x|X)\]\s+(.*)$/);
+            if (task) {
+              const checked = task[1].toLowerCase() === "x";
+              html.push(
+                "<li class=\"task-item\"><input type=\"checkbox\" disabled" +
+                  (checked ? " checked" : "") +
+                  " />" +
+                  inlineFormat(task[2], ctx) +
+                  "</li>"
+              );
+            } else {
+              html.push("<li>" + inlineFormat(itemText, ctx) + "</li>");
+            }
             continue;
           }
 
@@ -409,7 +560,9 @@
       }
 
       const params = new URLSearchParams(window.location.search);
-      const file = params.get("file") || "specs/UBH-SPEC.md";
+      let file = params.get("file") || "specs/UBH-SPEC.md";
+      if (file.startsWith("docs/")) file = file.slice(5);
+      file = file.replace(/^\/+/, "");
       const fileNameEl = document.getElementById("file-name");
       const sourceLinkEl = document.getElementById("source-link");
       const contentEl = document.getElementById("content");
@@ -425,7 +578,7 @@
           return res.text();
         })
         .then((text) => {
-          contentEl.innerHTML = renderMarkdown(text);
+          contentEl.innerHTML = renderMarkdown(text, { baseFile: file, headingIds: new Map() });
         })
         .catch((err) => {
           contentEl.innerHTML = "<p class=\"error\">" + escapeHtml(err.message) + "</p>";

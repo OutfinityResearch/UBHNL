@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wiki: Artifacts (lemmas, invariants, strategies)</title>
     <link rel="stylesheet" href="../../site.css" />
+      <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Artifacts (obiecte schimbate/verificate)</h1>
-      <p>Ce produce orchestratorul/backends: lemmas, cores, invariants, strategies, KC objects, etc.</p>
+      <h1>Artifacts (exchanged/verified objects)</h1>
+      <p>What the orchestrator/backends produce: lemmas, cores, invariants, strategies, KC objects, etc.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="orchestrator.html">Orchestrator</a>
@@ -22,34 +23,33 @@
           <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
         </div>
 
-        <h2>De ce există “artifacts”</h2>
+        <h2>Why “artifacts” exist</h2>
         <ul>
-          <li>Backends nu returnează doar status; returnează obiecte care permit rafinare, caching și explain.</li>
-          <li>Orchestratorul le rutează între task-uri și le validează (unde e cazul).</li>
+          <li>Backends do not return only a status; they return objects that enable refinement, caching, and explanations.</li>
+          <li>The orchestrator routes them between tasks and validates them (when applicable).</li>
         </ul>
 
-        <h2>Catalog minim (DS-012)</h2>
+        <h2>Minimal catalog (DS-012)</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Artifact</th><th>Înseamnă</th><th>Verificare</th></tr></thead>
+            <thead><tr><th>Artifact</th><th>Meaning</th><th>Verification</th></tr></thead>
             <tbody>
-              <tr><td><strong>Lemma</strong></td><td>constrângere derivată adăugată teoriei</td><td>soundness prin checker (ex. SAT/SMT subobligații) + origin</td></tr>
-              <tr><td><strong>UnsatCore</strong></td><td>subset de origins în conflict</td><td>nu e certificat; e explain aid</td></tr>
-              <tr><td><strong>Invariant</strong></td><td>proprietate inductivă (TS/CHC)</td><td>obligații Init/Trans/Safe</td></tr>
-              <tr><td><strong>Strategy</strong></td><td>strategie câștigătoare (QBF/Games)</td><td>simulare/obligații</td></tr>
-              <tr><td><strong>KC object</strong></td><td>BDD/d-DNNF/SDD compilat</td><td>echivalență check via SAT/UBH</td></tr>
-              <tr><td><strong>Interpolant</strong></td><td>formula care separă A/B (opțional)</td><td>obligații de interpolare</td></tr>
+              <tr><td><strong>Lemma</strong></td><td>derived constraint added to the theory</td><td>soundness via checkers (e.g., SAT/SMT sub-obligations) + origin</td></tr>
+              <tr><td><strong>UnsatCore</strong></td><td>subset of origins in conflict</td><td>not a certificate; an explainability aid</td></tr>
+              <tr><td><strong>Invariant</strong></td><td>inductive property (TS/CHC)</td><td>Init/Trans/Safe obligations</td></tr>
+              <tr><td><strong>Strategy</strong></td><td>winning strategy (QBF/Games)</td><td>simulation/obligations</td></tr>
+              <tr><td><strong>KC object</strong></td><td>compiled BDD/d-DNNF/SDD</td><td>equivalence check via SAT/UBH</td></tr>
+              <tr><td><strong>Interpolant</strong></td><td>a formula that separates A/B (optional)</td><td>interpolation obligations</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Toate artefactele trebuie să fie serializabile și legate de origins (pentru explain și reproducere).</li>
-          <li>Unele artefacte sunt certificate (invariant/strategy), altele sunt doar suport (unsat core).</li>
+          <li>All artifacts must be serializable and linked to origins (for explanation and replay).</li>
+          <li>Some artifacts are certificates (invariant/strategy), others are only support (unsat core).</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

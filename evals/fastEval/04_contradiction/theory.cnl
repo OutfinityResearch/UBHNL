@@ -1,0 +1,4 @@
+For all Switch s: IsOn(s) implies not IsOff(s)
+switch1 is a Switch
+switch1 is IsOn
+switch1 is IsOff
