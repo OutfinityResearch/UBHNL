@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Theory 07 — Fragments, backends, orchestrator</h1>
-      <p>Modulul universal: cum alegi metoda potrivită și cum păstrezi rezultatul verificabil.</p>
+      <p>The universal module: how you choose a method and keep results checkable.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: capitol de tutorial.</div>
+        <div class="draft">DRAFT: tutorial chapter.</div>
 
         <div class="nav">
           <a href="06-sessions.html">Prev</a>
@@ -23,33 +23,33 @@
           <a href="08-examples.html">Next</a>
         </div>
 
-        <h2>1) Fragment + GoalKind = problemă normalizată</h2>
+        <h2>1) Fragment + GoalKind = a normalized problem</h2>
         <p>
-          Orchestratorul primește un <a href="../wiki/concepts/fragment.html">Fragment</a> (ce constrângeri) și un
-          <a href="../wiki/concepts/goalkind.html">GoalKind</a> (ce vrei), apoi decide tactic/backends.
+          The orchestrator receives a <a href="../wiki/concepts/fragment.html">Fragment</a> (which constraint class is involved) and a
+          <a href="../wiki/concepts/goalkind.html">GoalKind</a> (what you want), then chooses tactics/backends.
         </p>
 
-        <h2>2) Backends sunt pluggable</h2>
+        <h2>2) Backends are pluggable</h2>
         <p>
-          SAT/SMT/QBF/IC3/PDR/MIP/… sunt “motoare” interschimbabile. Sistemul nu le crede pe cuvânt:
-          acceptarea e filtrată prin <a href="../wiki/concepts/certificates.html">certificate</a>.
+          SAT/SMT/QBF/IC3/PDR/MIP/… are interchangeable “engines”. UBHNL does not take them on faith:
+          acceptance is filtered via <a href="../wiki/concepts/certificates.html">checkable certificates</a>.
         </p>
 
-        <h2>3) Plan DAG și tactici</h2>
+        <h2>3) Plan DAG and tactics</h2>
         <ul>
-          <li><strong>Lower-to-UBH</strong>: pentru BV/finite constraints.</li>
-          <li><strong>CEGAR</strong>: pentru scheme/abstracții (<a href="../wiki/concepts/cegar.html">CEGAR</a>).</li>
-          <li><strong>IC3/PDR</strong>: pentru TS safety (<a href="../wiki/concepts/ic3-pdr.html">IC3/PDR</a>).</li>
-          <li><strong>KC</strong>: compile once, query many (<a href="../wiki/concepts/kc.html">KC</a>).</li>
+          <li><strong>Lower-to-UBH</strong>: for bitvectors and finite constraints.</li>
+          <li><strong>CEGAR</strong>: for schemas/abstractions (<a href="../wiki/concepts/cegar.html">CEGAR</a>).</li>
+          <li><strong>IC3/PDR</strong>: for TS safety (<a href="../wiki/concepts/ic3-pdr.html">IC3/PDR</a>).</li>
+          <li><strong>KC</strong>: compile once, query many (<a href="../wiki/concepts/kc.html">knowledge compilation</a>).</li>
         </ul>
 
-        <h2>4) UNKNOWN este parte din contract</h2>
+        <h2>4) UNKNOWN is part of the contract</h2>
         <p>
-          Dacă nu obții witness/certificat în buget, întorci <a href="../wiki/concepts/unknown.html">UNKNOWN</a>.
-          Este preferabil unei afirmații neverificabile (<a href="../wiki/decisions/unknown-policy.html">decizie</a>).
+          If you do not obtain a witness/certificate within budget, return <a href="../wiki/concepts/unknown.html">UNKNOWN</a>.
+          This is preferable to any unverifiable claim (<a href="../wiki/decisions/unknown-policy.html">decision</a>).
         </p>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a></li>
           <li><a href="../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a></li>
@@ -59,4 +59,3 @@
     </main>
   </body>
 </html>
-

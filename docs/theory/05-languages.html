@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Theory 05 — Lexicon, CNL, DSL</h1>
-      <p>De ce input-ul trebuie să fie determinist și tipat, și cum se obține asta.</p>
+      <p>Why input must be deterministic and typed, and how we achieve that.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: capitol de tutorial.</div>
+        <div class="draft">DRAFT: tutorial chapter.</div>
 
         <div class="nav">
           <a href="04-solving.html">Prev</a>
@@ -23,39 +23,43 @@
           <a href="06-sessions.html">Next</a>
         </div>
 
-        <h2>1) Lexicon = semnătura sistemului</h2>
+        <h2>1) The lexicon is the system signature</h2>
         <p>
-          <a href="../wiki/concepts/lexicon.html">Lexicon</a> definește tipuri/domenii, constante și predicate.
-          Fără el, CNL/DSL nu pot fi tipate robust.
+          The <a href="../wiki/concepts/lexicon.html">lexicon</a> defines types/domains, constants, and predicates.
+          Without it, CNL/DSL cannot be typed robustly, and “unknown word” handling becomes ambiguous.
         </p>
 
-        <h2>2) CNL: NL fără ambiguități</h2>
+        <h2>2) CNL: natural language without ambiguity</h2>
         <ul>
-          <li><a href="../wiki/concepts/cnl.html">CNL</a> are gramatică mică și deterministă.</li>
-          <li>Cuantificatorii și conectivii sunt expliciți; pronumele/coreferența sunt respinse.</li>
+          <li><a href="../wiki/concepts/cnl.html">CNL</a> has a small, deterministic grammar.</li>
+          <li>Quantifiers and connectives are explicit; pronouns/coreference are rejected (or handled only by explicit user disambiguation).</li>
         </ul>
 
-        <h2>3) DSL: IR textual “subject-first” + core logic</h2>
+        <h2>3) DSL: a “subject-first” textual IR plus core logic</h2>
         <ul>
-          <li><a href="../wiki/concepts/dsl.html">DSL</a> este formatul preferat pentru theory files.</li>
-          <li>Regula <code>@/$/vocab</code> (și “un singur @”) face parsing-ul simplu și reduce erorile.</li>
+          <li><a href="../wiki/concepts/dsl.html">DSL</a> is the preferred format for theory files (long-term memory).</li>
+          <li>The <code>@/$/vocab</code> rule (and “single <code>@</code> per line”) makes parsing simple and reduces user mistakes.</li>
         </ul>
 
-        <h2>4) Typing și erori utile</h2>
+        <h2>4) Typing and useful errors</h2>
         <p>
-          Politica de vocab strict (<a href="../wiki/decisions/strict-vocab.html">decizie</a>) înseamnă:
-          simbol necunoscut = eroare de încărcare (cu linie/col), nu “simbol nou”.
+          Strict-vocabulary policy (<a href="../wiki/decisions/strict-vocab.html">decision</a>) means:
+          unknown symbol ⇒ load error (with line/column), not “create a new symbol”.
         </p>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a></li>
           <li><a href="../mdview.html?file=specs/DS/008-dsl.md">DS-008</a></li>
           <li><a href="../mdview.html?file=specs/tests/cnl-cases.md">CNL cases</a></li>
           <li><a href="../mdview.html?file=specs/tests/dsl-cases.md">DSL cases</a></li>
         </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Controlled_natural_language" target="_blank" rel="noreferrer">Controlled natural language (Wikipedia)</a></li>
+        </ul>
       </div>
     </main>
   </body>
 </html>
-

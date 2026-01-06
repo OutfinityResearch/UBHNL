@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>ATP by saturation (resolution / superposition)</h1>
-      <p>Automated theorem proving pentru FOL (+ egalitate): dovezi ca trace-uri verificabile.</p>
+      <p>Automated theorem proving for FOL (+ equality): proofs as checkable traces.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="certificates.html">Certificate</a>
@@ -22,24 +22,23 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Saturation-based ATP</strong> încearcă să derive contradicție sau să construiască dovadă prin aplicarea repetată de reguli
-          (resolution, superposition pentru egalitate), până la saturare sau găsirea unei clauze goale.
+          <strong>Saturation-based ATP</strong> tries to derive a contradiction or construct a proof by repeatedly applying inference rules
+          (resolution, and superposition for equality) until saturation or until the empty clause is derived.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Modelat ca backend pentru <code>Frag_FOL_Eq</code>.</li>
-          <li>Poate produce lemma/proof traces care sunt verificate de un checker mic (trusted core).</li>
+          <li>Modeled as a backend for <code>Frag_FOL_Eq</code>.</li>
+          <li>Can produce lemmas/proof traces that are verified by a small checker (trusted core).</li>
         </ul>
 
         <h2>Certificate</h2>
         <p>
-          Certificatul tipic este un <strong>proof trace</strong> (pași de rezoluție/superposition) pe care îl verifici determinist.
+          The typical certificate is a <strong>proof trace</strong> (resolution/superposition steps) that can be checked deterministically.
         </p>
       </div>
     </main>
   </body>
 </html>
-

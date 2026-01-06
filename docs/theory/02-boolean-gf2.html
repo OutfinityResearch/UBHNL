@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Theory 02 — Bit, GF(2), ANF</h1>
-      <p>De ce XOR/AND sunt suficiente și cum apar polinoamele peste GF(2).</p>
+      <p>Why XOR/AND are sufficient, and how GF(2) polynomials show up in practice.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: capitol de tutorial.</div>
+        <div class="draft">DRAFT: tutorial chapter.</div>
 
         <div class="nav">
           <a href="01-orientation.html">Prev</a>
@@ -23,49 +23,54 @@
           <a href="03-ubh-ir.html">Next</a>
         </div>
 
-        <h2>1) Totul începe cu bit-ul</h2>
+        <h2>1) Everything starts with a bit</h2>
         <p>
-          În UBHNL, totul se reduce la <a href="../wiki/concepts/bit.html">bit</a>: <code>{0,1}</code>.
-          Un “adevăr” este doar o valoare în <code>{0,1}</code>.
+          In UBHNL, everything ultimately lowers to a <a href="../wiki/concepts/bit.html">bit</a>: <code>{0,1}</code>.
+          “Truth” is just a value in <code>{0,1}</code> under a chosen interpretation (a model).
         </p>
 
-        <h2>2) GF(2): interpretarea algebrică</h2>
+        <h2>2) GF(2): the algebraic interpretation</h2>
         <p>
-          În <a href="../wiki/concepts/gf2.html">GF(2)</a>:
-          XOR este adunarea mod 2, iar AND este înmulțirea.
+          Over <a href="../wiki/concepts/gf2.html">GF(2)</a> (the field with two elements):
+          XOR is addition modulo 2, and AND is multiplication.
         </p>
         <pre><code>a ⊕ b  ↔  a + b (mod 2)
 a ∧ b  ↔  a · b</code></pre>
 
-        <h2>3) De ce baza {XOR, AND, 1} e suficientă</h2>
+        <h2>3) Why {XOR, AND, 1} is a complete basis</h2>
         <p>
-          Negarea e “gratis”: <code>¬x = 1 ⊕ x</code>. Iar OR se poate construi:
+          Negation is “free”: <code>¬x = 1 ⊕ x</code>. OR can also be derived:
         </p>
         <pre><code>x ∨ y = x ⊕ y ⊕ (x ∧ y)</code></pre>
         <p>
-          Consecință inginerească: kernel-ul poate rămâne mic (<a href="../wiki/concepts/ubh.html">UBH</a>), iar “operatori bogați”
-          sunt doar macro-uri compilate.
+          Engineering consequence: the kernel can remain tiny (<a href="../wiki/concepts/ubh.html">UBH</a>), while “rich operators”
+          (OR, implication, arithmetic, comparisons) can live in libraries as macros compiled down to XOR/AND/CONST.
         </p>
 
-        <h2>4) ANF: orice funcție booleană ca polinom</h2>
+        <h2>4) ANF: every Boolean function as a polynomial</h2>
         <p>
-          <a href="../wiki/concepts/anf.html">ANF</a> spune: orice funcție booleană are o reprezentare unică ca polinom GF(2).
-          Asta explică de ce UBH este natural “polynomial-friendly”.
+          <a href="../wiki/concepts/anf.html">ANF</a> says: every Boolean function has a unique representation as a GF(2) polynomial
+          (a multilinear polynomial under the Boolean identities). This is why UBH is naturally “polynomial-friendly”.
         </p>
 
-        <h2>5) De ce XOR merită tratament nativ</h2>
+        <h2>5) Why XOR deserves native treatment</h2>
         <ul>
-          <li>XOR-urile formează un fragment liniar, rezolvabil eficient cu <a href="../wiki/concepts/xor-linear.html">Gauss</a>.</li>
-          <li>Encodarea XOR în CNF poate fi scumpă; de aici <a href="../wiki/decisions/sat-xor-hybrid.html">decizia SAT+XOR</a>.</li>
+          <li>XOR constraints form a linear fragment that can be solved efficiently with <a href="../wiki/concepts/xor-linear.html">Gaussian elimination</a>.</li>
+          <li>Encoding XOR into pure CNF can be expensive; hence the <a href="../wiki/decisions/sat-xor-hybrid.html">SAT+native-XOR decision</a>.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
           <li><a href="../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a></li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/GF(2)" target="_blank" rel="noreferrer">GF(2) (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Algebraic_normal_form" target="_blank" rel="noreferrer">Algebraic normal form (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

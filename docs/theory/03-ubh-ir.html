@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,12 +9,12 @@
   </head>
   <body>
     <header>
-      <h1>Theory 03 — UBH: IR, hash-consing, semantica</h1>
-      <p>Cum arată nucleul minimal și de ce compresia structurală e o proprietate “by construction”.</p>
+      <h1>Theory 03 — UBH: IR, hash-consing, semantics</h1>
+      <p>What the minimal kernel looks like, and why structural compression is “by construction”.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: capitol de tutorial.</div>
+        <div class="draft">DRAFT: tutorial chapter.</div>
 
         <div class="nav">
           <a href="02-boolean-gf2.html">Prev</a>
@@ -23,39 +23,44 @@
           <a href="04-solving.html">Next</a>
         </div>
 
-        <h2>1) UBH ca DAG de gates</h2>
+        <h2>1) UBH as a DAG of gates</h2>
         <p>
-          <a href="../wiki/concepts/ubh.html">UBH</a> reprezintă expresii ca un DAG de noduri
-          (<a href="../wiki/concepts/wire-nodeid.html">wire/nodeId</a>) cu porți XOR/AND și constante.
+          <a href="../wiki/concepts/ubh.html">UBH</a> represents expressions as a DAG of nodes
+          (<a href="../wiki/concepts/wire-nodeid.html">wire/nodeId</a>) with XOR/AND gates and constants.
         </p>
 
-        <h2>2) Hash-consing = compresie structurală</h2>
+        <h2>2) Hash-consing = structural compression</h2>
         <ul>
-          <li>Orice nod este creat o singură dată; apoi este refolosit (<a href="../wiki/concepts/hash-consing.html">hash-consing</a>).</li>
-          <li>Comutativitatea XOR/AND e canonizată (ordonare inputuri) înainte de hashing.</li>
-          <li><a href="../wiki/concepts/simplification.html">Simplificările locale</a> se aplică înainte de hashing, ca să crească deduplicarea.</li>
+          <li>Each node is created once and then reused (<a href="../wiki/concepts/hash-consing.html">hash-consing</a>).</li>
+          <li>XOR/AND commutativity is canonicalized (input ordering) before hashing.</li>
+          <li><a href="../wiki/concepts/simplification.html">Local simplifications</a> run before hashing to increase deduplication.</li>
         </ul>
 
-        <h2>3) Semantica: evaluare pe un model</h2>
+        <h2>3) Semantics: evaluation under a model</h2>
         <p>
-          Pentru un <a href="../wiki/concepts/model-witness.html">model</a> (atribuirile variabilelor), fiecare wire se evaluează recursiv.
-          Kernel-ul poate verifica <code>SAT</code> prin evaluare deterministă.
+          Given a <a href="../wiki/concepts/model-witness.html">model</a> (assignments for variables), each wire is evaluated recursively.
+          The trusted core can validate a <code>SAT</code> claim by deterministic evaluation.
         </p>
 
-        <h2>4) Constrângerile sunt separate de structură</h2>
+        <h2>4) Constraints are separate from structure</h2>
         <p>
-          UBH IR descrie “cum se calculează” un wire.
-          <a href="../wiki/concepts/constraints.html">Constrângerile</a> spun “ce trebuie să fie adevărat”.
-          Asta păstrează kernel-ul simplu și permite compoziție.
+          UBH IR describes “how a wire is computed”.
+          <a href="../wiki/concepts/constraints.html">Constraints</a> describe “what must be true”.
+          This separation keeps the kernel small and makes composition predictable.
         </p>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
           <li><a href="../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a></li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph" target="_blank" rel="noreferrer">Directed acyclic graph (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Structural_sharing" target="_blank" rel="noreferrer">Structural sharing (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

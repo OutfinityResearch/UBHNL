@@ -1,0 +1,9 @@
+Let switch1 be a Switch.
+
+# Contradictory Facts
+switch1 is On.
+switch1 is Off.
+
+# Basic Exclusion Rule
+For all Switch s:
+    It is not the case that (s is On and s is Off).

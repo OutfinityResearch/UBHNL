@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>CP (Constraint Programming, finite domains)</h1>
-      <p>Rezolvare pe domenii finite cu propagare + search (alldifferent, table constraints, etc.).</p>
+      <p>Solving over finite domains with propagation + search (alldifferent, table constraints, etc.).</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,37 +23,41 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Constraint Programming</strong> pe domenii finite reprezintă variabile cu valori într-un set finit și constrângeri globale
-          (ex.: <code>alldifferent</code>) care se propagă incremental pentru a reduce domeniile, plus backtracking search.
+          <strong>Finite-domain Constraint Programming</strong> represents variables with values in a finite set and global constraints
+          (e.g., <code>alldifferent</code>) that propagate incrementally to shrink domains, plus backtracking search.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Modelat ca <code>Frag_CP_FD</code>: domenii finite + constrângeri CP.</li>
-          <li>Poate rula nativ (backend CP) sau poate fi “lowered” la SAT/BV/UBH pentru unificare/checking.</li>
+          <li>Modeled as <code>Frag_CP_FD</code>: finite domains + CP constraints.</li>
+          <li>Can run natively (CP backend) or be lowered to SAT/BV/UBH for unification/checking.</li>
         </ul>
 
         <h2>Certificate</h2>
         <ul>
-          <li><code>SAT</code>: asignare de variabile; verifici direct fiecare constrângere.</li>
-          <li><code>UNSAT</code>: necesită proof log (dacă există) sau traducere la SAT/SMT cu certificat.</li>
+          <li><code>SAT</code>: a variable assignment; check each constraint directly.</li>
+          <li><code>UNSAT</code>: requires a proof log (if available) or translation to SAT/SMT with a certificate.</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>CP este adesea excelent pentru scheduling/FD constraints; SAT poate fi mai bun pentru booleeni masivi — de aici rolul orchestratorului.</li>
-          <li>Explicațiile bune cer “reificare” a constrângerilor în origins (nu doar “failed propagation”).</li>
+          <li>CP is often excellent for scheduling/FD constraints; SAT can be better for large Boolean structure — hence the role of the orchestrator.</li>
+          <li>Good explanations require mapping constraints back to origins (not just “failed propagation”).</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (<code>Frag_CP_FD</code>)</li>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (policy CP)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Constraint_programming" target="_blank" rel="noreferrer">Constraint programming (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Theory 04 — Solving: SAT + XOR, certificate, UNKNOWN</h1>
-      <p>Cum funcționează solve/prove și de ce certificatele sunt parte din contract.</p>
+      <p>How solve/prove works, and why certificates are part of the public contract.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: capitol de tutorial.</div>
+        <div class="draft">DRAFT: tutorial chapter.</div>
 
         <div class="nav">
           <a href="03-ubh-ir.html">Prev</a>
@@ -25,42 +25,49 @@
 
         <h2>1) solve()</h2>
         <p>
-          <code>solve()</code> răspunde la întrebarea “există un model care satisface constrângerile?”.
-          Rezultatul este <code>SAT/UNSAT/UNKNOWN</code>.
+          <code>solve()</code> answers: “does there exist a model that satisfies the constraints?”.
+          The only statuses are <code>SAT</code>, <code>UNSAT</code>, and <code>UNKNOWN</code>.
         </p>
         <ul>
-          <li><strong>SAT</strong>: include un witness verificabil (<a href="../wiki/concepts/model-witness.html">model</a>).</li>
-          <li><strong>UNSAT</strong>: include un <a href="../wiki/concepts/certificates.html">certificat</a> verificabil.</li>
-          <li><strong>UNKNOWN</strong>: buget depășit / certificat lipsă / metodă probabilistică neacceptată.</li>
+          <li><strong>SAT</strong>: includes a checkable witness (<a href="../wiki/concepts/model-witness.html">model</a>).</li>
+          <li><strong>UNSAT</strong>: includes a checkable <a href="../wiki/concepts/certificates.html">certificate</a>.</li>
+          <li><strong>UNKNOWN</strong>: budget exceeded, missing certificate, or an approximation method that cannot satisfy an “exact” goal.</li>
         </ul>
 
         <h2>2) prove(phi)</h2>
         <p>
-          <code>prove(phi)</code> se reduce la <code>solve(T ∧ ¬phi)</code>.
-          Dacă rezultatul e <code>UNSAT</code> (cu certificat), atunci <code>phi</code> este PROVED.
+          <code>prove(phi)</code> reduces to <code>solve(T ∧ ¬phi)</code>.
+          If the result is <code>UNSAT</code> (with a certificate), then <code>phi</code> is PROVED.
         </p>
 
-        <h2>3) De ce SAT + XOR hibrid</h2>
+        <h2>3) Why a SAT + XOR hybrid</h2>
         <p>
-          AND-urile se encodează în <a href="../wiki/concepts/cnf.html">CNF</a> prin <a href="../wiki/concepts/tseitin.html">Tseitin</a>,
-          iar XOR-urile sunt ecuații liniare <a href="../wiki/concepts/xor-linear.html">GF(2)</a>.
-          De aici <a href="../wiki/decisions/sat-xor-hybrid.html">decizia SAT+XOR nativ</a>.
+          AND gates are encoded into <a href="../wiki/concepts/cnf.html">CNF</a> using a linear-size <a href="../wiki/concepts/tseitin.html">Tseitin</a>-style transformation,
+          while XOR constraints form linear equations over <a href="../wiki/concepts/xor-linear.html">GF(2)</a>.
+          This motivates the <a href="../wiki/decisions/sat-xor-hybrid.html">SAT + native XOR decision</a>.
         </p>
 
-        <h2>4) Explain: unsat core și origins</h2>
+        <h2>4) Explain: unsat cores and origins</h2>
         <ul>
-          <li>Un <a href="../wiki/concepts/unsat-core.html">unsat core</a> (origins) ajută la explicații și debugging.</li>
-          <li><code>UNSAT</code> este acceptat doar cu certificat; core-ul nu înlocuiește certificatul.</li>
+          <li>An <a href="../wiki/concepts/unsat-core.html">unsat core</a> (in terms of <a href="../wiki/concepts/origin.html">origins</a>) helps explain and debug failures.</li>
+          <li><code>UNSAT</code> is accepted only with a certificate; a core does not replace the certificate.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
           <li><a href="../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a></li>
           <li><a href="../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a></li>
         </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem" target="_blank" rel="noreferrer">Boolean satisfiability problem (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Conjunctive_normal_form" target="_blank" rel="noreferrer">Conjunctive normal form (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Tseytin_transformation" target="_blank" rel="noreferrer">Tseytin transformation (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Gaussian_elimination" target="_blank" rel="noreferrer">Gaussian elimination (Wikipedia)</a></li>
+        </ul>
       </div>
     </main>
   </body>
 </html>
-

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>BMC (Bounded Model Checking)</h1>
-      <p>Verifici proprietăți până la o adâncime k: reduci TS la SAT/SMT și cauți trace.</p>
+      <p>Verify properties up to depth <code>k</code>: reduce TS to SAT/SMT and search for a trace.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="model-checking.html">Model checking</a>
@@ -22,22 +22,21 @@
           <a href="type-lowering.html">Type lowering</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>BMC</strong> encodează o execuție de lungime <code>k</code> ca o formulă:
+          <strong>BMC</strong> encodes an execution of length <code>k</code> as a formula:
         </p>
         <pre><code>Init(s0) ∧ Trans(s0,s1) ∧ ... ∧ Trans(s{k-1},sk) ∧ ¬Safe(sk)</code></pre>
         <p>
-          Dacă formula e SAT, ai un trace; dacă e UNSAT, nu există contraexemplu de lungime ≤ k.
+          If the formula is SAT, you get a trace; if it is UNSAT, there is no counterexample of length ≤ k.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Este fallback-ul standard când IC3/PDR nu produce invariant în buget.</li>
-          <li>Lowering: TS/BV → UBH/SAT (bit-level), cu certificate DRAT/LRAT pentru UNSAT la bound fix.</li>
+          <li>It is the standard fallback when IC3/PDR does not produce an invariant within budget.</li>
+          <li>Lowering: TS/BV → UBH/SAT (bit-level), with DRAT/LRAT certificates for UNSAT at a fixed bound.</li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

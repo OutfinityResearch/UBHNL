@@ -1,0 +1,13 @@
+Let Person be a Domain.
+Let p1 be a Person.
+Let p2 be a Person.
+Let p3 be a Person.
+
+# Facts
+p1 is Parent of p2.
+p2 is Parent of p3.
+
+# Rules
+For all Person x, Person y, Person z:
+    If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
+    If x is Parent of y then x is Ancestor of y.
