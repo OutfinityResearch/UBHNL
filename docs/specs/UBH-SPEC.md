@@ -3,7 +3,7 @@
 ## 1. Scope
 UBH (Universal Boolean Hypergraph) defines a minimal kernel for:
 - representing Boolean expressions as a hash-consed DAG of gates over `{0,1}`, and
-- reasoning about Boolean constraints via `SAT/UNSAT` (with native XOR handling).
+- reasoning about Boolean constraints via `SAT/UNSAT/UNKNOWN` (with native XOR handling).
 
 Everything above the kernel (CNL/DSL parsing, finite-domain FOL, temporal encodings, probabilistic layers) is specified as a *front-end* that compiles into UBH constraints. See:
 - `docs/specs/src/system-spec.md` for the full system layering (CNL → DSL → UBH),

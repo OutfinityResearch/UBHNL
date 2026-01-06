@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: Fragments + orchestrator</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: fragments + orchestrator (nu “totul e SAT”)</h1>
+      <p>Separă “ce problemă e” de “cum o rezolv”, cu contracte de certificate per metodă.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../concepts/fragment.html">Fragment</a>
+          <a href="../concepts/orchestrator.html">Orchestrator</a>
+          <a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          UBHNL nu presupune că toate problemele trebuie reduse imediat la UBH/SAT.
+          În schimb, sistemul clasifică problema (fragment) și alege backends/tactici.
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li>Unele domenii au backends specializate (MIP/SDP/CAD) cu certificate mai bune decât o reducere brută la booleeni.</li>
+          <li>Unele proprietăți (TS safety) sunt rezolvate mai natural prin invariants (IC3/PDR).</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Trebuie definite encodări/lowerings și criterii de acceptare pentru fiecare fragment.</li>
+          <li>Planner-ul devine componentă de primă clasă, cu policy/bugete/log-uri.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

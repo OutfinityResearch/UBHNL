@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Wire / NodeId</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Wire / NodeId</h1>
+      <p>Identitatea unui nod din UBH: un “wire” evaluabil în {0,1}.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="ubh.html">UBH</a>
+          <a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>
+          <a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Un <strong>wire</strong> este o valoare booleană (bit) produsă de o constantă, o variabilă de intrare sau o poartă (XOR/AND).
+          Un <strong>NodeId</strong> este un identificator întreg care referă wire-ul respectiv.
+        </p>
+
+        <h2>Contracte</h2>
+        <ul>
+          <li><strong>Stabilitate în instanță</strong>: într-un kernel UBH, crearea aceluiași nod (aceeași operație și aceiași copii canonizați) întoarce același <code>id</code>.</li>
+          <li><strong>Id-urile nu sunt persistente</strong> între rulări: persistenta este o responsabilitate de nivel session/theory store.</li>
+          <li><strong>Comutativitate canonizată</strong>: pentru XOR/AND, <code>(a,b)</code> se ordonează ca să eviți duplicate.</li>
+        </ul>
+
+        <h2>De ce contează</h2>
+        <ul>
+          <li>NodeId este “moneda” comună: solverul, checkerul, și origin mapping-ul se raportează la aceste id-uri.</li>
+          <li>Explicațiile trebuie să reconstruiască termeni de user (predicate instances) din id-uri, de aceea există mapări în sesiune.</li>
+        </ul>
+
+        <h2>Vezi și</h2>
+        <ul>
+          <li><a href="hash-consing.html">Hash-consing</a> (de ce id-urile se deduplică)</li>
+          <li><a href="origin.html">Origin</a> (cum atașezi proveniența constrângerilor)</li>
+          <li><a href="model-witness.html">Model</a> (atribuirile asupra wire-urilor)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theory 04: Solving</title>
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Theory 04 — Solving: SAT + XOR, certificate, UNKNOWN</h1>
+      <p>Cum funcționează solve/prove și de ce certificatele sunt parte din contract.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: capitol de tutorial.</div>
+
+        <div class="nav">
+          <a href="03-ubh-ir.html">Prev</a>
+          <a href="index.html">Theory</a>
+          <a href="../wiki/index.html">Wiki</a>
+          <a href="05-languages.html">Next</a>
+        </div>
+
+        <h2>1) solve()</h2>
+        <p>
+          <code>solve()</code> răspunde la întrebarea “există un model care satisface constrângerile?”.
+          Rezultatul este <code>SAT/UNSAT/UNKNOWN</code>.
+        </p>
+        <ul>
+          <li><strong>SAT</strong>: include un witness verificabil (<a href="../wiki/concepts/model-witness.html">model</a>).</li>
+          <li><strong>UNSAT</strong>: include un <a href="../wiki/concepts/certificates.html">certificat</a> verificabil.</li>
+          <li><strong>UNKNOWN</strong>: buget depășit / certificat lipsă / metodă probabilistică neacceptată.</li>
+        </ul>
+
+        <h2>2) prove(phi)</h2>
+        <p>
+          <code>prove(phi)</code> se reduce la <code>solve(T ∧ ¬phi)</code>.
+          Dacă rezultatul e <code>UNSAT</code> (cu certificat), atunci <code>phi</code> este PROVED.
+        </p>
+
+        <h2>3) De ce SAT + XOR hibrid</h2>
+        <p>
+          AND-urile se encodează în <a href="../wiki/concepts/cnf.html">CNF</a> prin <a href="../wiki/concepts/tseitin.html">Tseitin</a>,
+          iar XOR-urile sunt ecuații liniare <a href="../wiki/concepts/xor-linear.html">GF(2)</a>.
+          De aici <a href="../wiki/decisions/sat-xor-hybrid.html">decizia SAT+XOR nativ</a>.
+        </p>
+
+        <h2>4) Explain: unsat core și origins</h2>
+        <ul>
+          <li>Un <a href="../wiki/concepts/unsat-core.html">unsat core</a> (origins) ajută la explicații și debugging.</li>
+          <li><code>UNSAT</code> este acceptat doar cu certificat; core-ul nu înlocuiește certificatul.</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
+          <li><a href="../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a></li>
+          <li><a href="../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

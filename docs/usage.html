@@ -4,71 +4,85 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH Usage</title>
+    <link rel="stylesheet" href="site.css" />
   </head>
   <body>
-    <h1>Usage Notes</h1>
-    <p>This repository is a scaffold for the UBH kernel and its compilers.</p>
+    <header>
+      <h1>Usage Notes</h1>
+      <p>How the system is meant to be used (target UX). Specs are authoritative.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: exemplele de CLI/API sunt țintă. În repo, codul este încă scaffold.</div>
 
-    <h2>Run</h2>
-    <pre><code>node src/index.mjs</code></pre>
+        <div class="nav">
+          <a href="index.html">Index</a>
+          <a href="vision.html">Viziune</a>
+          <a href="languages.html">Lexicon/CNL/DSL</a>
+          <a href="session-api.html">Session API</a>
+          <a href="examples.html">Exemple</a>
+          <a href="wiki/index.html">Wiki</a>
+          <a href="theory/index.html">Theory</a>
+        </div>
 
-    <h2>Specs</h2>
-    <ul>
-      <li>
-        UBH Core Spec:
-        <a href="specs/UBH-SPEC.md">MD</a> |
-        <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a>
-      </li>
-      <li>
-        System Spec (Universal Reasoning):
-        <a href="specs/src/system-spec.md">MD</a> |
-        <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a>
-      </li>
-      <li>
-        Implementation Plan:
-        <a href="specs/src/implementation-plan.md">MD</a> |
-        <a href="mdview.html?file=specs/src/implementation-plan.md">HTML view</a>
-      </li>
-      <li>
-        Design Spec DS-001:
-        <a href="specs/DS/001-ir-hashcons.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/001-ir-hashcons.md">HTML view</a>
-      </li>
-      <li>
-        Design Spec DS-005 (CNL):
-        <a href="specs/DS/005-cnl-lexicon.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/005-cnl-lexicon.md">HTML view</a>
-      </li>
-      <li>
-        Design Spec DS-010 (Fragments):
-        <a href="specs/DS/010-fragments-goals.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/010-fragments-goals.md">HTML view</a>
-      </li>
-      <li>
-        Design Spec DS-011 (Backends/Certificates):
-        <a href="specs/DS/011-backends-certificates.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/011-backends-certificates.md">HTML view</a>
-      </li>
-      <li>
-        Design Spec DS-012 (Orchestrator):
-        <a href="specs/DS/012-orchestrator-planner.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">HTML view</a>
-      </li>
-      <li>
-        Test Plan:
-        <a href="specs/tests/test-plan.md">MD</a> |
-        <a href="mdview.html?file=specs/tests/test-plan.md">HTML view</a>
-      </li>
-      <li>
-        CNL Cases:
-        <a href="specs/tests/cnl-cases.md">MD</a> |
-        <a href="mdview.html?file=specs/tests/cnl-cases.md">HTML view</a>
-      </li>
-      <li>
-        DSL Cases:
-        <a href="specs/tests/dsl-cases.md">MD</a> |
-        <a href="mdview.html?file=specs/tests/dsl-cases.md">HTML view</a>
-      </li>
-    </ul>
+        <h2>Quick Start (conceptual)</h2>
+        <ol>
+          <li>Creezi un lexicon (vocabular + tipuri) în JSON.</li>
+          <li>Scrii o teorie în `*.dsl` (sau `*.cnl`).</li>
+          <li>Pornești o sesiune, încarci fișierele, apoi rulezi `query`.</li>
+          <li>Primești rezultat + witness/certificate + explain (origins).</li>
+        </ol>
+
+        <h2>Target CLI (sketch)</h2>
+        <pre><code># create a session and load lexicon
+ubh session new --lexicon lexicon.json
+
+# load theories (long-term memory)
+ubh learn --file bio.dsl
+ubh learn --file rules.cnl
+
+# query: prove/refute/satisfy/count/optimize
+ubh query --prove "proteinP(c0)"
+ubh query --satisfy "exists ?c in Cell: proteinP(?c)"
+ubh query --explain last</code></pre>
+
+        <h2>Target JS API (sketch)</h2>
+        <pre><code>import { createSession } from "ubh";
+
+const session = await createSession({ lexiconPath: "lexicon.json" });
+await session.loadTheoryFile("bio.dsl");
+
+const result = await session.query({
+  kind: "Prove",
+  input: "proteinP(c0)"
+});
+
+console.log(result.status);
+console.log(await session.explain(result, { style: "CNL" }));</code></pre>
+
+        <h2>Specs</h2>
+        <ul>
+          <li>
+            System Spec:
+            <a href="specs/src/system-spec.md">MD</a> |
+            <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a>
+          </li>
+          <li>
+            DSL:
+            <a href="mdview.html?file=specs/DS/008-dsl.md">DS-008</a>
+          </li>
+          <li>
+            Sessions:
+            <a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a>
+          </li>
+          <li>
+            Fragments/Backends/Planner:
+            <a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>,
+            <a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>,
+            <a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+          </li>
+        </ul>
+      </div>
+    </main>
   </body>
 </html>

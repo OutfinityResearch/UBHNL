@@ -17,7 +17,7 @@ Theory files are plain text files on disk, typically:
 - `*.cnl` (DS-005)
 
 Properties:
-- versioned by the user (git, filesystem),
+- managed by the user (git, filesystem),
 - reproducible: loading the same set of files yields the same semantic IR,
 - strict vocabulary: unknown bare identifiers are load errors (DS-008/DS-005).
 
@@ -211,4 +211,3 @@ Query with hole:
 Expected:
 - `SAT`
 - `holeAssignments: { ?c: c0 }` (one possible witness)
-

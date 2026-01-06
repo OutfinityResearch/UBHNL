@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: DSL un singur @</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: în DSL ai voie la un singur <code>@</code> pe linie</h1>
+      <p>@ declară ținta statement-ului; $ referă variabile; numele “bare” sunt vocab.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../concepts/dsl.html">DSL</a>
+          <a href="../../mdview.html?file=specs/DS/008-dsl.md">DS-008</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          În DSL, token-ul <code>@name</code> este permis o singură dată pe linie și trebuie să fie primul token.
+          El reprezintă “subiectul/ținta” statement-ului, nu o referință.
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li><strong>Claritate sintactică</strong>: separă “declar/definesc” de “referențiez”.</li>
+          <li><strong>Parsing simplu</strong>: evită ambiguități și reduce cazurile speciale.</li>
+          <li><strong>Model de graf</strong>: DSL-ul devine natural “subject-first” (proprietăți/edge-uri dintr-un nod).</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Exemplu invalid (intenționat): <code>@p0 likes @p1</code> (a doua apariție trebuie să fie <code>$p1</code> sau un simbol din vocab).</li>
+          <li>Erorile devin locale și acționabile: mesajul poate sugera fixul corect.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

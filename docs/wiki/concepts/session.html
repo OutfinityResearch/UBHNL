@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Session</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Session (short-term workspace)</h1>
+      <p>Sesiunea este memoria de lucru: încarcă teorii (fișiere) + learn tranzitoriu + cache.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../../session-api.html">Docs: Session API</a>
+          <a href="origin.html">Origin</a>
+          <a href="holes.html">Holes</a>
+          <a href="../../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a>
+        </div>
+
+        <h2>Model mental</h2>
+        <ul>
+          <li><strong>Theory files</strong> (long-term): fișiere <code>*.dsl</code>/<code>*.cnl</code> pe disc, încărcate determinist.</li>
+          <li><strong>Session</strong> (short-term): un workspace efemer care poate fi recreat din fișiere.</li>
+          <li><strong>Cache</strong>: rezultate intermediare (parsed IR, lowered fragments, state incremental al backend-urilor).</li>
+        </ul>
+
+        <h2>De ce există sesiune (nu “doar rulează solve pe fișier”)</h2>
+        <ul>
+          <li><strong>Incrementalitate</strong>: learn/query repetate fără recompilare completă.</li>
+          <li><strong>Orchestrare</strong>: sesiunea cheamă orchestratorul (plan DAG) și validează certificate.</li>
+          <li><strong>Explain</strong>: sesiunea păstrează legătura dintre constrângeri și origini (fișier/linie).</li>
+        </ul>
+
+        <h2>Operații tipice</h2>
+        <pre><code>loadTheoryFile(path)
+unloadTheoryFile(docId)
+learn(input, origin?)
+query(input, GoalKind, options?)
+explain(result, style?)</code></pre>
+
+        <h2>Consecințe inginerești</h2>
+        <ul>
+          <li>Sesiunea este locul unde se stabilesc policy-uri: bugete, trust, “UNKNOWN vs accept”.</li>
+          <li>Sesiunea trebuie să fie reproducibilă: încărcarea acelorași fișiere (aceeași digest) → aceeași semnificație.</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a> (contract complet)</li>
+          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (planificare + caching)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

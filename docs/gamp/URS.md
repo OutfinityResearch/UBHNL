@@ -5,7 +5,8 @@ Provide a minimal kernel that models and solves Boolean constraints using XOR/AN
 
 ## User Goals
 - Represent Boolean theories as circuits over GF(2).
-- Prove or refute queries via SAT/UNSAT with optional models.
+- Prove or refute queries via `SAT/UNSAT/UNKNOWN` with optional models/certificates.
+- Prefer auditability: accept results only with checkable witnesses/certificates; otherwise report `UNKNOWN`.
 - Compile higher-level logics into the same kernel.
 - Work incrementally in a session: `learn(...)` facts/rules, then `query(...)` for entailment, witness search (holes), and counterexamples.
 - Get explainable outputs (unsat cores / counterexample summaries) in the user vocabulary.

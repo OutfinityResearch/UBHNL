@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Problem (normalized query)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Problem (query normalizat)</h1>
+      <p>Forma internă standard: teorie + (opțional) formula query + goal kind + opțiuni/buget.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="fragment.html">Fragment</a>
+          <a href="goalkind.html">GoalKind</a>
+          <a href="budget.html">Budget</a>
+          <a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          În UBHNL, input-ul userului (CNL/DSL/AST) este normalizat la un <strong>Problem</strong>:
+        </p>
+        <pre><code>P = ⟨T, φ?, kind, options⟩</code></pre>
+        <ul>
+          <li><code>T</code>: teoria curentă (fișiere + session delta)</li>
+          <li><code>φ?</code>: formula query (opțional, ex. Prove/Refute)</li>
+          <li><code>kind</code>: <a href="goalkind.html">GoalKind</a></li>
+          <li><code>options</code>: bugete, trust requirements, etc.</li>
+        </ul>
+
+        <h2>De ce normalizare</h2>
+        <ul>
+          <li>Backends au o interfață comună: primesc Problem + Budget.</li>
+          <li>Planner-ul poate compara tactici pe aceeași reprezentare.</li>
+          <li>Reproducibilitate: Problem + metadata → replay.</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (Problem)</li>
+          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (planner input)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

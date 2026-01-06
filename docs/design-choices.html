@@ -4,40 +4,56 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH Design Choices</title>
+    <link rel="stylesheet" href="site.css" />
   </head>
   <body>
-    <h1>Design Choices</h1>
-    <p>Short rationale for the main architectural decisions.</p>
+    <header>
+      <h1>Design Choices</h1>
+      <p>De ce arată arhitectura așa: kernel minimal + backends/tactici + certificate.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: sumar de decizii; referințele normative sunt în specs (MD).</div>
 
-    <h2>Kernel IR</h2>
-    <p>
-      XOR/AND/CONST gates over GF(2) give a minimal, universal Boolean basis with
-      a direct polynomial interpretation and efficient structural hashing.
-    </p>
+        <div class="nav">
+          <a href="index.html">Index</a>
+          <a href="vision.html">Viziune</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="reasoning.html">Reasoning</a>
+          <a href="wiki/index.html">Wiki</a>
+          <a href="theory/index.html">Theory</a>
+        </div>
 
-    <h2>Solver Strategy</h2>
-    <p>
-      A SAT backbone with native XOR reasoning avoids CNF blowups and matches the
-      circuit structure typical of UBH workloads.
-    </p>
+        <h2>Kernel IR (UBH)</h2>
+        <p>
+          XOR/AND/CONST peste GF(2) oferă o bază booleană minimală, cu interpretare directă ca polinoame și cu
+          hash-consing eficient (compresie structurală).
+        </p>
 
-    <h2>Schema Engine</h2>
-    <p>
-      Quantifiers are handled with lazy instantiation to avoid full grounding and
-      keep large theories compact.
-    </p>
+        <h2>Strategie de solving</h2>
+        <p>
+          SAT + XOR nativ (ecuații liniare GF(2)) evită “blowup” la encodarea XOR în CNF și se potrivește cu structura
+          circuitelor tipice UBH.
+        </p>
 
-    <h2>CNL Front-end</h2>
-    <p>
-      Controlled natural language trades expressivity for deterministic parsing
-      and predictable compilation to the kernel.
-    </p>
+        <h2>Schema engine / CEGAR</h2>
+        <p>
+          Cuantificatorii și regulile generative sunt tratate prin instanțiere lazy (CEGAR) pentru a păstra teoriile compacte
+          și pentru a evita grounding complet.
+        </p>
 
-    <h2>Fragments and Certificates</h2>
-    <p>
-      A fragment system separates “what constraints we have” from “how we solve them”, enabling
-      specialized backends (SAT/SMT/QBF/model checking/etc.) while keeping a small trusted core
-      that checks witnesses and proof certificates.
-    </p>
+        <h2>Front-end determinist (CNL/DSL)</h2>
+        <p>
+          CNL/DSL sunt controlate: typing obligatoriu și vocabular strict (simbol necunoscut = eroare). Ambiguitatea este respinsă,
+          nu ghicită.
+        </p>
+
+        <h2>Fragmente + certificate</h2>
+        <p>
+          Sistemul separă “ce problemă avem” (Fragment) de “cum o rezolvăm” (Backend/Tactică). Orice rezultat acceptat trebuie să fie
+          verificabil (witness/certificate), iar partea “trusted” rămâne mică.
+        </p>
+      </div>
+    </main>
   </body>
 </html>

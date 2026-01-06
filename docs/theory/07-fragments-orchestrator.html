@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theory 07: Fragments &amp; orchestrator</title>
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Theory 07 — Fragments, backends, orchestrator</h1>
+      <p>Modulul universal: cum alegi metoda potrivită și cum păstrezi rezultatul verificabil.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: capitol de tutorial.</div>
+
+        <div class="nav">
+          <a href="06-sessions.html">Prev</a>
+          <a href="index.html">Theory</a>
+          <a href="../wiki/index.html">Wiki</a>
+          <a href="08-examples.html">Next</a>
+        </div>
+
+        <h2>1) Fragment + GoalKind = problemă normalizată</h2>
+        <p>
+          Orchestratorul primește un <a href="../wiki/concepts/fragment.html">Fragment</a> (ce constrângeri) și un
+          <a href="../wiki/concepts/goalkind.html">GoalKind</a> (ce vrei), apoi decide tactic/backends.
+        </p>
+
+        <h2>2) Backends sunt pluggable</h2>
+        <p>
+          SAT/SMT/QBF/IC3/PDR/MIP/… sunt “motoare” interschimbabile. Sistemul nu le crede pe cuvânt:
+          acceptarea e filtrată prin <a href="../wiki/concepts/certificates.html">certificate</a>.
+        </p>
+
+        <h2>3) Plan DAG și tactici</h2>
+        <ul>
+          <li><strong>Lower-to-UBH</strong>: pentru BV/finite constraints.</li>
+          <li><strong>CEGAR</strong>: pentru scheme/abstracții (<a href="../wiki/concepts/cegar.html">CEGAR</a>).</li>
+          <li><strong>IC3/PDR</strong>: pentru TS safety (<a href="../wiki/concepts/ic3-pdr.html">IC3/PDR</a>).</li>
+          <li><strong>KC</strong>: compile once, query many (<a href="../wiki/concepts/kc.html">KC</a>).</li>
+        </ul>
+
+        <h2>4) UNKNOWN este parte din contract</h2>
+        <p>
+          Dacă nu obții witness/certificat în buget, întorci <a href="../wiki/concepts/unknown.html">UNKNOWN</a>.
+          Este preferabil unei afirmații neverificabile (<a href="../wiki/decisions/unknown-policy.html">decizie</a>).
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a></li>
+          <li><a href="../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a></li>
+          <li><a href="../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

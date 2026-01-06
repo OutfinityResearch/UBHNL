@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: UNKNOWN policy</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: UNKNOWN este preferabil unei afirmații neverificabile</h1>
+      <p>Politică de integritate: dacă nu poți verifica, nu pretinzi că e demonstrat.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../concepts/unknown.html">UNKNOWN</a>
+          <a href="../concepts/certificates.html">Certificate</a>
+          <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          Dacă un backend nu produce witness/certificat acceptabil în buget, UBHNL întoarce <code>UNKNOWN</code>.
+          Nu există “fallback silent” către o afirmație tare.
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li>Protejează împotriva bug-urilor și a metodologiilor probabilistice ne-auditate.</li>
+          <li>Forțează sistemul să fie explicit despre limite (bugete, certificate lipsă).</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>API-ul trebuie să includă metadata pentru UNKNOWN (de ce, ce s-a încercat).</li>
+          <li>Planner-ul poate încerca mai multe rute, dar nu poate “accepta” fără verificare.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

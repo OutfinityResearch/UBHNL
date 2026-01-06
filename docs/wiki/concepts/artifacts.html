@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Artifacts (lemmas, invariants, strategies)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Artifacts (obiecte schimbate/verificate)</h1>
+      <p>Ce produce orchestratorul/backends: lemmas, cores, invariants, strategies, KC objects, etc.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="orchestrator.html">Orchestrator</a>
+          <a href="certificates.html">Certificate</a>
+          <a href="origin.html">Origin</a>
+          <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+        </div>
+
+        <h2>De ce există “artifacts”</h2>
+        <ul>
+          <li>Backends nu returnează doar status; returnează obiecte care permit rafinare, caching și explain.</li>
+          <li>Orchestratorul le rutează între task-uri și le validează (unde e cazul).</li>
+        </ul>
+
+        <h2>Catalog minim (DS-012)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Artifact</th><th>Înseamnă</th><th>Verificare</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Lemma</strong></td><td>constrângere derivată adăugată teoriei</td><td>soundness prin checker (ex. SAT/SMT subobligații) + origin</td></tr>
+              <tr><td><strong>UnsatCore</strong></td><td>subset de origins în conflict</td><td>nu e certificat; e explain aid</td></tr>
+              <tr><td><strong>Invariant</strong></td><td>proprietate inductivă (TS/CHC)</td><td>obligații Init/Trans/Safe</td></tr>
+              <tr><td><strong>Strategy</strong></td><td>strategie câștigătoare (QBF/Games)</td><td>simulare/obligații</td></tr>
+              <tr><td><strong>KC object</strong></td><td>BDD/d-DNNF/SDD compilat</td><td>echivalență check via SAT/UBH</td></tr>
+              <tr><td><strong>Interpolant</strong></td><td>formula care separă A/B (opțional)</td><td>obligații de interpolare</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Toate artefactele trebuie să fie serializabile și legate de origins (pentru explain și reproducere).</li>
+          <li>Unele artefacte sunt certificate (invariant/strategy), altele sunt doar suport (unsat core).</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

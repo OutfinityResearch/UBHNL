@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: UBH</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>UBH (Universal Boolean Hypergraph)</h1>
+      <p>Kernel-ul minimal: un DAG hash-consed de porți XOR/AND/CONST/VAR + aserțiuni.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagina descrie contractul “ca și cum sistemul ar fi complet”. Contractele normative sunt în UBH-SPEC.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../../theory/03-ubh-ir.html">Theory</a>
+          <a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>
+          <a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a>
+        </div>
+
+        <h2>Ce este UBH</h2>
+        <p>
+          <strong>UBH</strong> este “substratul” bit-level al UBHNL: o reprezentare de expresii booleene ca un graf aciclic direcționat
+          (DAG) de porți binare, cu deduplicare (hash-consing).
+        </p>
+
+        <h2>Primitivă: baza de porți</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Constructor</th><th>Semnificație</th><th>Observații</th></tr></thead>
+            <tbody>
+              <tr><td><code>CONST0</code></td><td>0</td><td>singleton</td></tr>
+              <tr><td><code>CONST1</code></td><td>1</td><td>singleton</td></tr>
+              <tr><td><code>VAR(name)</code></td><td>input wire</td><td>cheiat prin string</td></tr>
+              <tr><td><code>XOR(a,b)</code></td><td><code>a ⊕ b</code></td><td>comutativ, canonizat</td></tr>
+              <tr><td><code>AND(a,b)</code></td><td><code>a ∧ b</code></td><td>comutativ, canonizat</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          <strong>NOT</strong> este derivat: <code>NOT(x) := XOR(CONST1, x)</code>. Alte operații (ex. OR) sunt macro-uri compilate în baza de mai sus.
+        </p>
+
+        <h2>Ce “rezolvă” UBH</h2>
+        <p>
+          UBH nu este “o logică”; este un IR minimal pentru multe logici. Kernel-ul primește constrângeri booleene
+          (<a href="constraints.html">assert</a>) și răspunde la <code>solve()</code>/<code>prove()</code> cu <code>SAT/UNSAT/UNKNOWN</code>.
+        </p>
+
+        <h2>Semantica (într-o propoziție)</h2>
+        <p>
+          Un <a href="model-witness.html">model</a> atribuie valori pentru toate variabilele, iar fiecare nod UBH se evaluează recursiv
+          folosind XOR/AND; o teorie este satisfiabilă dacă există un model care face toate aserțiunile adevărate.
+        </p>
+
+        <h2>De ce această bază</h2>
+        <ul>
+          <li><strong>Minimală</strong> (puține primitive) și <strong>universală</strong> pentru funcții booleene.</li>
+          <li><strong>Algebrică</strong> (vezi <a href="gf2.html">GF(2)</a>): XOR/AND au interpretare naturală ca + și ·.</li>
+          <li><strong>Eficientă</strong>: XOR-urile se tratează nativ ca ecuații liniare, iar AND-urile se encodează în CNF.</li>
+        </ul>
+
+        <h2>Vezi și</h2>
+        <ul>
+          <li><a href="wire-nodeid.html">Wire / NodeId</a></li>
+          <li><a href="hash-consing.html">Hash-consing</a></li>
+          <li><a href="sat-cdcl.html">SAT</a> + <a href="xor-linear.html">XOR linear</a></li>
+          <li><a href="../decisions/minimal-kernel.html">Decizie: kernel minimal</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

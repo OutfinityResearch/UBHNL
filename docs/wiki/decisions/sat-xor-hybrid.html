@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: SAT + XOR nativ</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: solving hibrid SAT + XOR nativ</h1>
+      <p>Separă partea liniară (XOR) de partea non-liniară (AND/CNF) pentru eficiență și claritate.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../concepts/xor-linear.html">XOR linear</a>
+          <a href="../concepts/sat-cdcl.html">SAT</a>
+          <a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          UBHNL tratează XOR-urile ca ecuații GF(2) și folosește un motor Gauss incremental, în cooperare cu un SAT CDCL backend
+          pentru partea CNF (AND via Tseitin).
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li>Encodarea XOR în CNF poate fi costisitoare și poate omorî propagarea.</li>
+          <li>Gauss incremental este foarte eficient pentru sisteme liniare (pattern-uri frecvente în circuite reale).</li>
+          <li>Separarea liniar/non-liniar reflectă direct semantica GF(2): XOR=+, AND=·.</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Ai două canale de propagare și două surse de conflict; loop-ul trebuie integrat (DPLL(T)-style).</li>
+          <li>Origini trebuie propagate în ambele lumi (clauze și ecuații) pentru unsat core/explain.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

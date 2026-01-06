@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Structural decompositions (treewidth)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Structural decompositions (treewidth / DP)</h1>
+      <p>Tactică de orchestrare: decompui problema și rezolvi subprobleme prin dynamic programming.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="orchestrator.html">Orchestrator</a>
+          <a href="certificates.html">Certificate</a>
+          <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Unele probleme booleene au structură de graf cu <strong>treewidth</strong> mic. Poți construi o decompunere (tree decomposition)
+          și apoi rezolvi prin DP pe arbore.
+        </p>
+
+        <h2>În UBHNL</h2>
+        <ul>
+          <li>Este o tactică a orchestratorului: produce un plan “divide and conquer”.</li>
+          <li>Output-ul final se verifică prin recompoziție + certificate ale subproblemelor.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

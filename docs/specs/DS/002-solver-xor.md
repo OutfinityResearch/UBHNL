@@ -59,7 +59,7 @@ Required capabilities:
 Note: “originId” is a stable identifier for the higher-level constraint source, used for diagnostics.
 
 ## Interface
-- solve() returns SAT/UNSAT and optional model.
+- solve() returns `SAT/UNSAT/UNKNOWN` and optional model/certificate.
 - prove(phi) is implemented as solve(T + NOT(phi)).
 - optional unsatCore() returns contributing constraints.
 

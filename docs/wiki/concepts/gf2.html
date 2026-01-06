@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: GF(2)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>GF(2) (Galois Field cu 2 elemente)</h1>
+      <p>Modelul algebric din spatele XOR/AND.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../../theory/index.html">Theory</a>
+          <a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>
+          <a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>GF(2)</strong> este un corp cu două elemente: <code>{0,1}</code>.
+          Operațiile sunt:
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Operație</th><th>În GF(2)</th><th>În UBH</th></tr></thead>
+            <tbody>
+              <tr><td>adunare</td><td><code>a + b</code> (mod 2)</td><td><code>a ⊕ b</code> (XOR)</td></tr>
+              <tr><td>înmulțire</td><td><code>a · b</code></td><td><code>a ∧ b</code> (AND)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>De ce contează în UBHNL</h2>
+        <ul>
+          <li>Expresiile UBH pot fi privite ca <strong>polinoame peste GF(2)</strong>, evaluate pe input-uri booleene.</li>
+          <li>XOR-urile formează un sub-fragment <strong>liniar</strong> (ecuații GF(2)) care se rezolvă eficient cu <a href="xor-linear.html">Gauss</a>.</li>
+          <li>AND introduce non-linearitate (termeni de grad &gt; 1), care necesită SAT/CDCL (sau alte metode).</li>
+        </ul>
+
+        <h2>Identități utile</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Formă</th><th>Intuiție</th><th>Folosit în</th></tr></thead>
+            <tbody>
+              <tr><td><code>x ⊕ 0 = x</code></td><td>0 e element neutru la XOR</td><td><a href="simplification.html">simplificări</a></td></tr>
+              <tr><td><code>x ⊕ x = 0</code></td><td>auto-anulare</td><td><a href="simplification.html">simplificări</a></td></tr>
+              <tr><td><code>x ∧ 1 = x</code></td><td>1 e element neutru la AND</td><td><a href="simplification.html">simplificări</a></td></tr>
+              <tr><td><code>x ∧ 0 = 0</code></td><td>0 anulează produsul</td><td><a href="simplification.html">simplificări</a></td></tr>
+              <tr><td><code>¬x = 1 ⊕ x</code></td><td>negarea este XOR cu 1</td><td><a href="ubh.html">UBH basis</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li><strong>Design-ul UBH</strong> alege explicit această interpretare: baza <code>{XOR, AND, CONST}</code> este minimală și universală.</li>
+          <li><strong>Solving hibrid</strong>: se păstrează separat “partea liniară XOR” și “partea CNF” pentru eficiență.</li>
+        </ul>
+
+        <h2>Vezi și</h2>
+        <ul>
+          <li><a href="anf.html">ANF</a> (polinomul multilinear asociat unei funcții booleene)</li>
+          <li><a href="xor-linear.html">XOR linear</a> (ecuații GF(2) + eliminare Gauss)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theory 06: Sessions</title>
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Theory 06 — Session: memorie, origins, explain</h1>
+      <p>De ce există sesiune și cum se leagă fișierele (long-term) de solving (short-term).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: capitol de tutorial.</div>
+
+        <div class="nav">
+          <a href="05-languages.html">Prev</a>
+          <a href="index.html">Theory</a>
+          <a href="../wiki/index.html">Wiki</a>
+          <a href="07-fragments-orchestrator.html">Next</a>
+        </div>
+
+        <h2>1) Long-term vs short-term</h2>
+        <ul>
+          <li><strong>Theory files</strong>: pe disc, reproducibile, încărcate determinist.</li>
+          <li><strong>Session</strong>: workspace efemer care poate adăuga learn tranzitoriu și cache-uiește artefacte.</li>
+        </ul>
+
+        <h2>2) Origins: “de unde vine” fiecare fapt/regulă</h2>
+        <p>
+          Pentru explain și audit, fiecare statement produce un <a href="../wiki/concepts/origin.html">Origin</a>.
+          Unsat cores se raportează la origins, nu la detalii interne.
+        </p>
+
+        <h2>3) Holes: query-uri cu witness</h2>
+        <p>
+          Sesiunea gestionează <a href="../wiki/concepts/holes.html">holes</a> și întoarce <code>holeAssignments</code>.
+        </p>
+
+        <h2>4) Caching și reproducibilitate</h2>
+        <ul>
+          <li>Digest-uri de fișiere pentru cache keys.</li>
+          <li>Reproducere: aceeași combinație de fișiere + deltas + seeds ⇒ același plan și rezultat (în limita determinismului backend-urilor).</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a></li>
+          <li><a href="../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

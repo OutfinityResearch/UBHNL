@@ -6,7 +6,6 @@ They are written as “input → expected shape” (not exact formatting).
 ## Shared Lexicon (for examples)
 ```json
 {
-  "version": 1,
   "domains": {
     "Cell": ["c0", "c1"],
     "Person": ["p0"]
@@ -87,4 +86,3 @@ Expected: `ResolveError` (undeclared variable `x`).
 ### 6) Missing connector
 Input: `for all cell c: geneA(c) inhibitor(c)`
 Expected: `ParseError` (missing `and/or/implies`).
-

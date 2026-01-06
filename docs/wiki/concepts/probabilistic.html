@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Probabilistic inference</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Probabilistic inference</h1>
+      <p>Modele probabilistice: exact (WMC/KC) sau aproximativ (BP/MCMC/SMC/VI) cu audit explicit.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="counting.html">WMC/Counting</a>
+          <a href="kc.html">KC</a>
+          <a href="unknown.html">UNKNOWN</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Probabilistic inference înseamnă calculul unor probabilități/condiționale într-un model (ex. factor graph).
+          În UBHNL, partea discretă se leagă natural de <strong>WMC</strong>.
+        </p>
+
+        <h2>Exact vs aproximativ</h2>
+        <ul>
+          <li><strong>Exact</strong>: via WMC/#SAT + KC, cu verificări de echivalență și audit.</li>
+          <li><strong>Aproximativ</strong>: belief propagation / <a href="tensor-networks.html">factor graphs</a>, MCMC/SMC/VI; rezultatele trebuie etichetate probabilist și însoțite de metadata (seeds, convergență, bounds).</li>
+        </ul>
+
+        <h2>Consecințe (policy UBHNL)</h2>
+        <ul>
+          <li>Metodele aproximative nu pot da “UNSAT/PROVED” în sens strict; ele pot produce estimări sau ghidaj.</li>
+          <li>Fără audit metadata suficientă, status-ul rămâne <code>UNKNOWN</code> pentru cereri “exact”.</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (<code>Frag_Prob</code>)</li>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (probabilistic backends + audit)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

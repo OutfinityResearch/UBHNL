@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Separation Logic / shape analysis</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Separation Logic / shape analysis</h1>
+      <p>Verificare de proprietăți de memorie/heap: certificate ca invariants de formă, adesea reduse la CHC/SMT.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="chc.html">CHC</a>
+          <a href="smt.html">SMT</a>
+          <a href="certificates.html">Certificate</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>Separation Logic</strong> este o logică pentru reasoning despre heap (pointeri, structuri de date) care separă regiuni de memorie.
+          Shape analysis derivă invariants despre structura heap-ului.
+        </p>
+
+        <h2>În UBHNL</h2>
+        <ul>
+          <li>Tratat ca fragment opțional (<code>Frag_Sep</code>) cu backends dedicate.</li>
+          <li>Integrarea tipică: reducere la CHC/SMT și verificare de invariants.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

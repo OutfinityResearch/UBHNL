@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Gröbner bases (GF(2))</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Gröbner bases (peste GF(2))</h1>
+      <p>Metodă algebrică pentru sisteme de ecuații polinomiale; opțională în UBHNL pentru fragmente polinomiale.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="gf2.html">GF(2)</a>
+          <a href="anf.html">ANF</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Definiție (intuiție)</h2>
+        <p>
+          O bază Gröbner este un set “normalizat” de polinoame care permite decizii algoritmice precum:
+          reducerea unui polinom la o formă normală și testul de apartenență la ideal (implicare algebrică).
+        </p>
+
+        <h2>În UBHNL</h2>
+        <ul>
+          <li>Constrângerile UBH pot fi privite ca ecuații polinomiale peste GF(2) (XOR=+, AND=·).</li>
+          <li>Un backend Gröbner ar fi alternativ/complimentar la SAT/XOR pentru anumite clase de probleme.</li>
+          <li>Este “opțional”: sistemul rămâne coerent fără implementare Gröbner, deoarece SAT/XOR este ruta principală.</li>
+        </ul>
+
+        <h2>Certificate</h2>
+        <p>
+          Pentru o afirmație de tip “polinomul p este consecință a sistemului”, certificatul tipic este un traseu de reducere
+          care arată că <code>p</code> reduce la 0 modulo baza Gröbner. Checker-ul validează pașii de reducere.
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (<code>Frag_Poly_GF2</code>)</li>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (certificate Gröbner)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

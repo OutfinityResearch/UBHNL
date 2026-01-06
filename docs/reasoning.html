@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UBHNL — Reasoning: Fragments, Backends, Certificates</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Reasoning: fragmente, backends, certificate</h1>
+      <p>Cum se orchestrează SAT/SMT/QBF/MC/… fără a umfla kernelul.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: descrie modul de lucru țintă. Backends sunt pluggable; rezultatele trebuie validate.</div>
+
+        <div class="nav">
+          <a href="index.html">Index</a>
+          <a href="vision.html">Viziune</a>
+          <a href="session-api.html">Session API</a>
+          <a href="examples.html">Exemple</a>
+          <a href="wiki/index.html">Wiki</a>
+          <a href="theory/index.html">Theory</a>
+          <a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>
+          <a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+          <a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+        </div>
+
+        <h2>De ce nu “doar SAT”</h2>
+        <p>
+          Multe probleme pot fi reduse la biți, dar nu toate reducțiile sunt eficiente sau corecte în mod practic.
+          De aceea sistemul are:
+        </p>
+        <ul>
+          <li><strong>Fragments</strong>: descriu clasa de constrângeri (Bool/BV/QBF/TS/MIP/…)</li>
+          <li><strong>Backends</strong>: metode specializate (SAT, SMT, IC3/PDR, Gröbner, MIP, KC, …)</li>
+          <li><strong>Certificates</strong>: dovezi/witness-uri verificabile</li>
+          <li><strong>Orchestrator</strong>: planifică tactici (CEGAR, fallback, KC, optimize-by-bounds)</li>
+        </ul>
+
+        <h2>Goal kinds (ce cere userul)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>GoalKind</th><th>Întrebare</th><th>Output</th></tr></thead>
+            <tbody>
+              <tr><td><code>Satisfy</code></td><td>există model?</td><td>model/witness</td></tr>
+              <tr><td><code>Prove</code></td><td><code>T ⊨ φ</code>?</td><td>UNSAT cert pentru <code>T ∧ ¬φ</code></td></tr>
+              <tr><td><code>Refute</code></td><td>contraexemplu?</td><td>model pentru <code>T ∧ ¬φ</code></td></tr>
+              <tr><td><code>CountModels</code></td><td>câte modele?</td><td>count (exact/approx) + audit</td></tr>
+              <tr><td><code>Optimize</code></td><td>min/max obiectiv</td><td>witness + proof of optimality</td></tr>
+              <tr><td><code>Synthesize</code></td><td>construiește artefact</td><td>artefact + proof obligations</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Fragment → Backend → Certificate (mini-matrice)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fragment</th><th>Backend tipic</th><th>Ce verificăm</th></tr></thead>
+            <tbody>
+              <tr><td><code>Frag_UBH</code></td><td>SAT+XOR</td><td>model (UBH eval) / DRAT-LRAT</td></tr>
+              <tr><td><code>Frag_SMT_BV</code></td><td>SMT(BV) sau bit-blast</td><td>model BV / SAT certificate</td></tr>
+              <tr><td><code>Frag_QBF</code></td><td>QCDCL/CEGAR</td><td>strategie / Q-resolution</td></tr>
+              <tr><td><code>Frag_TS</code></td><td>IC3/PDR, BMC</td><td>invariant / trace</td></tr>
+              <tr><td><code>Frag_Opt</code></td><td>MaxSAT/PBO/OMT</td><td>witness + bound proof</td></tr>
+              <tr><td><code>Frag_MIP</code></td><td>branch-and-cut</td><td>primal + dual certificates</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Orchestrator: planificare și tactici</h2>
+        <p>
+          Orchestratorul construiește un plan DAG din task-uri: <code>Lower</code>, <code>Solve</code>, <code>Check</code>, <code>Refine</code>, <code>Explain</code>.
+        </p>
+        <pre><code>Task DAG (sketch)
+
+Lower(to UBH) ──► Solve(SAT) ──► Check(DRAT) ──► Explain
+       │
+       └──► (fallback) Solve(SMT) ──► Check(proof/model) ──► Explain</code></pre>
+
+        <h2>Regula de aur: acceptare doar cu verificare</h2>
+        <ul>
+          <li><code>SAT</code>: acceptat dacă witness-ul satisface constrângerile (checker determinist).</li>
+          <li><code>UNSAT</code>: acceptat doar cu certificat verificabil (DRAT/LRAT/Q-res/dual ray/invariant etc.) sau confirmat.</li>
+          <li><code>OPTIMAL</code>: acceptat doar cu witness + dovadă de optimalitate (bound certificate).</li>
+          <li>metode probabilistice/heuristic: trebuie etichetate (trust=heuristic) și însoțite de audit metadata; altfel rezultatul rămâne <code>UNKNOWN</code>.</li>
+        </ul>
+
+        <h2>Link-uri (spec-uri)</h2>
+        <ul>
+          <li><a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010 Fragments &amp; GoalKinds</a></li>
+          <li><a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011 Backends &amp; Certificates</a></li>
+          <li><a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012 Orchestrator</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

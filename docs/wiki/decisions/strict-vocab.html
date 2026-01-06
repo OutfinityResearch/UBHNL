@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: Vocabular strict</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: vocabular strict (unknown symbol = load error)</h1>
+      <p>Elimină “typo turns into new symbol” și face fișierele reproducibile/auditable.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../concepts/lexicon.html">Lexicon</a>
+          <a href="../concepts/dsl.html">DSL</a>
+          <a href="../../mdview.html?file=specs/DS/008-dsl.md">DS-008</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          În CNL/DSL, orice identificator “bare” trebuie să existe în vocabular (lexicon + export-uri).
+          Dacă nu există: <strong>eroare de încărcare</strong>.
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li><strong>Reproducibilitate</strong>: aceeași teorie încărcată azi și mâine produce același IR.</li>
+          <li><strong>Siguranță</strong>: un typo nu devine o afirmație despre un simbol nou.</li>
+          <li><strong>UX pentru ingineri</strong>: erorile sunt locale (linie/col) și reparabile imediat.</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Ai nevoie de un lexicon bun (domains/constants/predicates) și de mecanism de export <code>@name:Type</code>.</li>
+          <li>Parser-ul trebuie să distingă clar între referințe (<code>$x</code>) și vocab (<code>name</code>).</li>
+        </ul>
+
+        <h2>Vezi și</h2>
+        <ul>
+          <li><a href="../concepts/lexicon.html">Lexicon</a></li>
+          <li><a href="../concepts/cnl.html">CNL</a></li>
+          <li><a href="../concepts/dsl.html">DSL</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

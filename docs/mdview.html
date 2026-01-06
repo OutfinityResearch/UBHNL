@@ -16,11 +16,15 @@
 
       * { box-sizing: border-box; }
 
+      html { -webkit-text-size-adjust: 100%; }
+
       body {
         margin: 0;
         font-family: "IBM Plex Serif", "Georgia", "Times New Roman", serif;
         background: var(--bg);
         color: var(--ink);
+        font-size: 16px;
+        line-height: 1.55;
       }
 
       header {
@@ -143,6 +147,16 @@
       .error {
         color: #7a1b1b;
         font-weight: 600;
+      }
+
+      @media (max-width: 680px) {
+        header { padding: 18px 14px 10px; }
+        header h1 { font-size: 20px; }
+        main { margin: 16px auto 48px; padding: 0 14px; }
+        .card { padding: 16px 16px; }
+        table { display: block; overflow-x: auto; }
+        th, td { white-space: nowrap; }
+        pre { padding: 12px 12px; }
       }
     </style>
   </head>

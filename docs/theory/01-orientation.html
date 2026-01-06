@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theory 01: Orientare</title>
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Theory 01 — Orientare</h1>
+      <p>Ce construim, care sunt axiomele de design și cum se leagă toate piesele.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: capitol de tutorial; spec-urile (MD) sunt normative.</div>
+
+        <div class="nav">
+          <a href="index.html">Theory</a>
+          <a href="../wiki/index.html">Wiki</a>
+          <a href="../vision.html">Viziune</a>
+          <a href="02-boolean-gf2.html">Next</a>
+        </div>
+
+        <h2>Ce e UBHNL, în propoziția de lucru</h2>
+        <p>
+          UBHNL este un sistem universal de reasoning în care:
+          <strong>kernel-ul</strong> este un substrat boolean minimal (<a href="../wiki/concepts/ubh.html">UBH</a>),
+          iar toate celelalte logici/metode sunt <strong>front-ends + backends</strong> orchestrate, cu rezultate acceptate doar cu <a href="../wiki/concepts/certificates.html">certificate</a>.
+        </p>
+
+        <h2>De ce “universal” fără monolit</h2>
+        <ul>
+          <li>Universalitatea e obținută prin <strong>encodări</strong> (type lowering) + <strong>orchestrare</strong>, nu printr-un singur solver gigantic.</li>
+          <li><a href="../wiki/decisions/minimal-kernel.html">Decizia kernel minimal</a> păstrează trusted core mic și schimbabilitatea backends.</li>
+        </ul>
+
+        <h2>Straturi (model mental)</h2>
+        <pre><code>theory files (CNL/DSL) + learn (session)
+        │
+        ▼
+parse/type (lexicon, strict vocab) → typed semantic IR
+        │
+        ▼
+fragment detection + goal kind
+        │
+        ▼
+orchestrator plan DAG: lower/solve/check/refine/explain
+        │
+        ▼
+result (SAT/UNSAT/UNKNOWN, PROVED/DISPROVED) + witness/cert + explanation</code></pre>
+
+        <h2>Regulile care “taie” ambiguitatea</h2>
+        <ul>
+          <li><strong>Vocabular strict</strong>: simbol necunoscut = eroare (<a href="../wiki/decisions/strict-vocab.html">de ce</a>).</li>
+          <li><strong>DSL @/$</strong>: un singur <code>@</code> pe linie; <code>$</code> e referință; bare name e vocab (<a href="../wiki/decisions/dsl-at-rule.html">de ce</a>).</li>
+          <li><strong>UNKNOWN</strong> este status valid și preferabil unei afirmații neverificabile (<a href="../wiki/decisions/unknown-policy.html">de ce</a>).</li>
+        </ul>
+
+        <h2>Ce urmează în capitole</h2>
+        <ol>
+          <li>Fundamente booleene și GF(2): de ce XOR/AND (<a href="../wiki/concepts/gf2.html">GF(2)</a>).</li>
+          <li>UBH IR: noduri, hash-consing, semantica (<a href="../wiki/concepts/hash-consing.html">hash-consing</a>).</li>
+          <li>Solving: SAT + XOR, certificate și explain (<a href="../wiki/concepts/sat-cdcl.html">SAT</a>, <a href="../wiki/concepts/xor-linear.html">XOR linear</a>).</li>
+          <li>Limbaje: lexicon/CNL/DSL și typing determinist.</li>
+          <li>Sesiune și orchestrator: fragments/backends/tactici.</li>
+        </ol>
+
+        <h2>Spec-uri normative</h2>
+        <ul>
+          <li><a href="../mdview.html?file=specs/src/system-spec.md">System Spec</a></li>
+          <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

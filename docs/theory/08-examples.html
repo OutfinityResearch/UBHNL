@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theory 08: Exemple</title>
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Theory 08 — Exemple end-to-end</h1>
+      <p>Ce înseamnă “funcțional”: learn/query/explain cu witness/certificates.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: capitol de tutorial.</div>
+
+        <div class="nav">
+          <a href="07-fragments-orchestrator.html">Prev</a>
+          <a href="index.html">Theory</a>
+          <a href="../examples.html">Docs: Examples</a>
+          <a href="../wiki/index.html">Wiki</a>
+        </div>
+
+        <h2>1) Proposițional (UBH/SAT)</h2>
+        <p>
+          Un exemplu clasic de entailment:
+          îl rulezi ca <a href="../wiki/concepts/goalkind.html">GoalKind=Prove</a> și accepți doar dacă <code>T ∧ ¬φ</code> este <code>UNSAT</code> cu certificat.
+        </p>
+        <p>
+          Vezi <a href="../examples.html">pagina Examples</a> și <a href="../mdview.html?file=specs/src/system-spec.md">System Spec</a>.
+        </p>
+
+        <h2>2) SMT(BV) și bit-blast</h2>
+        <p>
+          Pentru BV, orchestratorul poate alege:
+          SMT nativ (cu proof object) sau lowering la UBH/SAT (bit-blast + DRAT/LRAT).
+          Concept: <a href="../wiki/concepts/smt.html">SMT</a> și <a href="../wiki/concepts/type-lowering.html">type lowering</a>.
+        </p>
+
+        <h2>3) Transition system (TS)</h2>
+        <p>
+          Pentru TS safety, un contraexemplu este un trace verificabil:
+          concept: <a href="../wiki/concepts/model-checking.html">model checking</a>, <a href="../wiki/concepts/ic3-pdr.html">IC3/PDR</a>.
+        </p>
+
+        <h2>4) Hole filling</h2>
+        <p>
+          Query cu <a href="../wiki/concepts/holes.html">holes</a> întoarce witness ca <code>holeAssignments</code>.
+        </p>
+
+        <h2>Următor pas</h2>
+        <p>
+          Dacă vrei, putem extinde tutorialul cu scenarii “realiste” (bio/social) care arată:
+          schema engine + explain, și o sesiune cu caching și multiple backends.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
+

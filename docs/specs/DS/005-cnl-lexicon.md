@@ -21,12 +21,11 @@ The lexicon defines:
 - **constants**: named members of domains
 - **predicates**: symbols with arity and argument types
 - optional **aliases**: surface forms that map to canonical symbols
- - optional **built-in sorts**: non-enumerated types like integers and bitvectors (used by non-CNL front-ends)
+- optional **built-in sorts**: non-enumerated types like integers and bitvectors (used by non-CNL front-ends)
 
 ### Lexicon Schema
 ```json
 {
-  "version": 1,
   "builtins": {
     "Bool": { "kind": "builtin" },
     "Int": { "kind": "builtin" },
@@ -164,34 +163,6 @@ Symbols are resolved against the lexicon:
 3) `proteinP(c0, c1)` (arity mismatch)
 4) `for all person p: proteinP(p)` (type mismatch)
 5) `for all cell c: geneA(c) inhibitor(c)` (missing connector between two atoms)
-
-## Rationale
-CNL reduces ambiguity and enables deterministic compilation while preserving an NL-like surface.
-
-## Example CNL
-- "for all cell c: if geneA(c) and not inhibitor(c) then proteinP(c)"
-- "exists person p: has_fever(p) and has_flu(p)"
-
-## Lexicon Format (JSON)
-- entities: named constants with a type
-- predicates: name + arity + argument types
-- domains: finite lists of symbols
-
-Example:
-```
-{
-  "domains": {"Cell": ["c0", "c1"]},
-  "entities": {"geneA": "Predicate"},
-  "predicates": {
-    "proteinP": {"arity": 1, "types": ["Cell"]}
-  }
-}
-```
-
-## Invariants
-- All symbols must be declared in the lexicon.
-- All quantifiers must include domain and variable names.
-- All operators must be explicit (no implicit precedence).
 
 ## Rationale
 CNL reduces ambiguity and enables deterministic compilation while preserving an NL-like surface.

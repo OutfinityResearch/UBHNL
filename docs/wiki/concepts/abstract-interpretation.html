@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Abstract interpretation</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Abstract interpretation</h1>
+      <p>Tactică/backend pentru invariants: supra-aproximări în domenii abstracte + obligații de verificare.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="model-checking.html">Model checking</a>
+          <a href="chc.html">CHC</a>
+          <a href="certificates.html">Certificate</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>Abstract interpretation</strong> derivă invariants prin interpretarea programului/sistemului într-un <em>abstract domain</em>
+          (ex. intervale, octagoane, polyhedra) care supra-aproximă mulțimea stărilor.
+        </p>
+
+        <h2>În UBHNL</h2>
+        <ul>
+          <li>Este o tactică/backend pentru <code>Frag_AI</code> și pentru generare de invariants în TS/CHC.</li>
+          <li>Rezultatul util este un invariant; acceptarea cere verificare prin obligații SAT/SMT.</li>
+        </ul>
+
+        <h2>Certificate</h2>
+        <p>
+          Certificatul este invariantul + dovada că respectă obligațiile (ex. Init⇒Inv, Inv∧Trans⇒Inv').
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (AI ca backend/tactică)</li>
+          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (artefacte: invariants)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

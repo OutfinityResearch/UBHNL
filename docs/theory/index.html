@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UBHNL Theory — Accelerated Course</title>
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Theory: curs accelerat pentru ingineri</h1>
+      <p>Explicații graduale (de la {0,1} până la orchestrator), cu link-uri către Wiki.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: “theory” este tutorialul narativ; “wiki” este referința completă (glossary). Specs rămân normative.</div>
+
+        <div class="nav">
+          <a href="../index.html">Index</a>
+          <a href="../wiki/index.html">Wiki</a>
+          <a href="../vision.html">Viziune</a>
+          <a href="../examples.html">Exemple</a>
+          <a href="../mdview.html?file=specs/src/system-spec.md">System Spec</a>
+        </div>
+
+        <h2>Cum se citește</h2>
+        <ul>
+          <li><strong>Theory</strong>: citești în ordine, ca un mini-curs (explică “de ce” și trade-offs).</li>
+          <li><strong>Wiki</strong>: sari pe un termen când ai nevoie de definiție formală și consecințe.</li>
+          <li><strong>Specs (MD)</strong>: contracte normative și criterii de acceptare.</li>
+        </ul>
+
+        <div class="toc">
+          <h2>Capitole</h2>
+          <ol>
+            <li><a href="01-orientation.html">Orientare: ce construim și de ce</a></li>
+            <li><a href="02-boolean-gf2.html">Fundamente: Bit, GF(2), ANF</a></li>
+            <li><a href="03-ubh-ir.html">UBH: IR, hash-consing, semantica</a></li>
+            <li><a href="04-solving.html">Solving: SAT + XOR, certificate, UNKNOWN</a></li>
+            <li><a href="05-languages.html">Lexicon/CNL/DSL: determinism și typing</a></li>
+            <li><a href="06-sessions.html">Session: memorie, origins, explain</a></li>
+            <li><a href="07-fragments-orchestrator.html">Fragments &amp; orchestrator: planificare și tactici</a></li>
+            <li><a href="08-examples.html">Exemple end-to-end: cum arată folosirea</a></li>
+          </ol>
+        </div>
+
+        <h2>Shortcut-uri utile</h2>
+        <div class="grid">
+          <div class="mini-card">
+            <h3><a href="../wiki/concepts/ubh.html">Wiki: UBH</a></h3>
+            <div class="muted">Nucleul: noduri XOR/AND/CONST/VAR + aserțiuni.</div>
+          </div>
+          <div class="mini-card">
+            <h3><a href="../wiki/concepts/dsl.html">Wiki: DSL</a></h3>
+            <div class="muted">Regula @/$/vocab; “un singur @ pe linie”.</div>
+          </div>
+          <div class="mini-card">
+            <h3><a href="../wiki/concepts/certificates.html">Wiki: Certificate</a></h3>
+            <div class="muted">De ce UNSAT/OPTIMAL trebuie dovedite.</div>
+          </div>
+          <div class="mini-card">
+            <h3><a href="../wiki/concepts/orchestrator.html">Wiki: Orchestrator</a></h3>
+            <div class="muted">Plan DAG + backends + checkers.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+

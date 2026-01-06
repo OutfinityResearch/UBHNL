@@ -4,28 +4,57 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBHNL Documentation</title>
+    <link rel="stylesheet" href="site.css" />
   </head>
   <body>
-    <h1>UBHNL Documentation</h1>
-    <p>Universal reasoning system spec (UBH kernel + CNL/DSL + fragments/backends).</p>
+    <header>
+      <h1>UBHNL Documentation</h1>
+      <p>Universal reasoning system spec (UBH kernel + CNL/DSL + fragments/backends).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: documentație narativă; implementarea este în lucru, dar contractele de spec sunt intenționate ca stabile.</div>
 
-    <h2>Docs</h2>
-    <ul>
-      <li><a href="architecture.html">Architecture Overview</a></li>
-      <li><a href="nl-architecture.html">CNL to UBH Pipeline</a></li>
-      <li><a href="design-choices.html">Design Choices</a></li>
-      <li><a href="usage.html">Usage Notes</a></li>
-      <li>
-        Core Specification:
-        <a href="specs/UBH-SPEC.md">MD</a> |
-        <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a>
-      </li>
-      <li>
-        System Spec:
-        <a href="specs/src/system-spec.md">MD</a> |
-        <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a>
-      </li>
-      <li><a href="gamp/metrics.html">GAMP Metrics</a></li>
-    </ul>
+        <div class="nav">
+          <a href="index.html">Index</a>
+          <a href="usage.html">Usage</a>
+          <a href="architecture.html">Architecture</a>
+          <a href="nl-architecture.html">CNL/DSL</a>
+          <a href="design-choices.html">Design Choices</a>
+          <a href="wiki/index.html">Wiki</a>
+          <a href="theory/index.html">Theory</a>
+          <a href="gamp/metrics.html">GAMP</a>
+        </div>
+
+        <h2>Start Here</h2>
+        <ul>
+          <li><a href="vision.html">Viziune și obiective (Draft)</a></li>
+          <li><a href="theory/index.html">Theory: curs accelerat (Draft)</a></li>
+          <li><a href="wiki/index.html">Wiki: concepte și decizii (Draft)</a></li>
+          <li><a href="languages.html">Lexicon + CNL + DSL (Draft)</a></li>
+          <li><a href="session-api.html">Sesiune: learn/query/explain (Draft)</a></li>
+          <li><a href="reasoning.html">Fragments, backends, certificate, orchestrator (Draft)</a></li>
+          <li><a href="examples.html">Exemple end-to-end (Draft)</a></li>
+        </ul>
+
+        <h2>Specs (MD)</h2>
+        <ul>
+          <li>
+            System Spec:
+            <a href="specs/src/system-spec.md">MD</a> |
+            <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a>
+          </li>
+          <li>
+            UBH Kernel Spec:
+            <a href="specs/UBH-SPEC.md">MD</a> |
+            <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a>
+          </li>
+          <li>
+            Design Specs:
+            <a href="gamp/metrics.html">listă + link-uri</a>
+          </li>
+        </ul>
+      </div>
+    </main>
   </body>
 </html>

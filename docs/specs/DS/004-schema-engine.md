@@ -88,7 +88,7 @@ The orchestrator may choose (1), (2), or (3) depending on domain size and goal k
   - `forall x in ∅: Body(x)` is `true` (no instances).
   - `exists x in ∅: Body(x)` is `false` (no witnesses).
 - Domain changes:
-  - if domains are mutable at the session layer, schema instances must be invalidated or versioned.
+  - if domains are mutable at the session layer, schema instances must be invalidated or keyed by a domain-generation id.
   - domains must be treated as immutable during a single `solve/query` cycle.
 
 ## Example (Biology Rule)

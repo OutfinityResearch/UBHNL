@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Budget</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Budget (time/memory/iteration)</h1>
+      <p>Limitări explicite pentru solving/planning; sunt parte din reproducibilitate și din policy-ul UNKNOWN.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="unknown.html">UNKNOWN</a>
+          <a href="orchestrator.html">Orchestrator</a>
+          <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Un <strong>budget</strong> limitează resursele disponibile pentru un query: timp, memorie, iterații (CEGAR), și eventual parametri
+          specifici metodei (ex. seeds/confidență pentru probabilistic).
+        </p>
+
+        <h2>De ce e parte din contract</h2>
+        <ul>
+          <li>Explică de ce poți primi <code>UNKNOWN</code> chiar dacă problema are răspuns (nu s-a găsit în buget).</li>
+          <li>Permite reproducere: același plan + aceleași bugete/seeds → aceeași execuție (în limita determinismului backend-ului).</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Orchestratorul trebuie să partajeze bugetul între task-uri (solve/check/refine).</li>
+          <li>Backends trebuie să fie capabile să returneze “partial” fără a pretinde SAT/UNSAT/OPTIMAL.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -6,8 +6,9 @@
 - Reasoning: solve(), prove(phi).
 
 ## Solver Behavior
-- SAT/UNSAT response with optional model.
+- `SAT/UNSAT/UNKNOWN` response with optional model/certificate.
 - XOR equations handled as linear constraints.
+- Acceptance rule: never return an uncheckable `UNSAT` claim; treat it as `UNKNOWN` until confirmed by a checkable route.
 
 ## Front-end Contract
 - Input: typed AST.

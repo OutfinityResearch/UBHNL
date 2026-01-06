@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: DRAT / LRAT</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>DRAT / LRAT (SAT UNSAT certificates)</h1>
+      <p>Formate de certificate pentru UNSAT la SAT; checker determinist în trusted core.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="certificates.html">Certificate</a>
+          <a href="sat-cdcl.html">SAT</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Idee</h2>
+        <p>
+          Pentru o formulă CNF, un solver poate produce un traseu (proof trace) care demonstrează UNSAT.
+          Un checker validează fiecare pas și confirmă contradicția finală.
+        </p>
+
+        <h2>De ce apar în UBHNL</h2>
+        <ul>
+          <li>Sunt o ancoră practic standard pentru acceptarea UNSAT în booleeni.</li>
+          <li>Permit ca backends SAT să fie “untrusted”, dar verificabile.</li>
+          <li>UBHNL poate reduce multe afirmații la CNF UNSAT via lowering, apoi acceptă doar cu DRAT/LRAT.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: Schema engine (CEGAR)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: schema engine (instanțiere lazy) pentru cuantificatori</h1>
+      <p>Menține reguli ca scheme; instanțiază doar ce e necesar pentru query (compresie).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../concepts/schema-engine.html">Schema engine</a>
+          <a href="../concepts/cegar.html">CEGAR</a>
+          <a href="../../mdview.html?file=specs/DS/004-schema-engine.md">DS-004</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          Pentru domenii mari (dar finite), nu expandăm upfront <code>forall/exists</code> în mii/milioane de instanțe.
+          Păstrăm axiomele ca scheme și instanțiem în loop CEGAR.
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li>Fără asta, compresia structurală se pierde (grounding exploziv).</li>
+          <li>Modelele solverului pot ghida exact ce instanțe sunt relevante.</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Query planner devine responsabil pentru bugete/iterații și poate termina cu <code>UNKNOWN</code>.</li>
+          <li>Explicațiile includ instanțele generate (și originea schemelor).</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

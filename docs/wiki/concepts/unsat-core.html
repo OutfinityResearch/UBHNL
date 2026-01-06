@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: UNSAT core</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>UNSAT core</h1>
+      <p>Subset de constrângeri care este deja nesatisfiabil (folosit pentru explain/debug).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="origin.html">Origin</a>
+          <a href="certificates.html">Certificate</a>
+          <a href="../../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Un <strong>UNSAT core</strong> este un subset al constrângerilor <code>C ⊆ T</code> astfel încât <code>C</code> este <code>UNSAT</code>.
+          În UBHNL, core-ul se raportează preferabil la <strong>origins</strong> (statement-level), nu la clauze interne.
+        </p>
+
+        <h2>“Minimal” vs “minimal-ish”</h2>
+        <ul>
+          <li><strong>Minimal core</strong>: dacă scoți orice constrângere, devine SAT (costisitor).</li>
+          <li><strong>Minimal-ish</strong>: un core mic obținut heuristic (suficient pentru explain în practică).</li>
+        </ul>
+
+        <h2>Rol în explain</h2>
+        <ul>
+          <li>Pentru inconsistențe: “aceste 3 reguli din fișierele X/Y sunt în conflict”.</li>
+          <li>Pentru entailment: core-ul pentru <code>T ∧ ¬φ</code> descrie “de ce φ e derivat”.</li>
+        </ul>
+
+        <h2>Legătura cu certificate</h2>
+        <p>
+          Un UNSAT core <em>nu este</em> dovada completă de UNSAT. Dovada vine dintr-un certificat checkable (ex. DRAT/LRAT).
+          Core-ul e un artefact de explicabilitate.
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a> (origins + explain)</li>
+          <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (originId grouping)</li>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (UNSAT acceptance rule)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

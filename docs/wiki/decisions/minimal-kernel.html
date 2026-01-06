@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: Kernel minimal</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: kernel minimal + trusted core mic</h1>
+      <p>Separă solving (backends) de checking (trusted core) pentru auditabilitate și evoluție sigură.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie (rationale + consecințe). Spec-urile normative rămân în MD.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../../vision.html">Viziune</a>
+          <a href="../../mdview.html?file=specs/src/system-spec.md">System Spec</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          Kernel-ul (trusted core) rămâne <strong>minimal</strong>:
+          UBH IR + evaluare + checkere de certificate.
+          Orice metodă complexă de reasoning (SAT/SMT/QBF/IC3/…) este un <strong>backend</strong> modular.
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li><strong>Auditabilitate</strong>: e mai ușor să ai încredere într-un checker mic decât într-un solver complex.</li>
+          <li><strong>Schimbabilitate</strong>: poți înlocui backends fără să schimbi semantica sistemului.</li>
+          <li><strong>Stabilitate de spec</strong>: contractele de input/output rămân aceleași, chiar dacă motorul se schimbă.</li>
+        </ul>
+
+        <h2>Consecințe inginerești</h2>
+        <ul>
+          <li>API-ul trebuie să expună certificate/witness și să accepte <code>UNKNOWN</code> când acestea lipsesc.</li>
+          <li>Trebuie “origin plumbing”: orice constrângere/artefact trebuie să păstreze legătura cu sursa.</li>
+          <li>Backends pot fi “heuristic/untrusted”, dar rezultatele lor nu sunt finale fără checking.</li>
+        </ul>
+
+        <h2>Consecințe matematice/logice</h2>
+        <ul>
+          <li>Solving produce afirmații; checking validează afirmațiile.</li>
+          <li>Reduceri (lowering) trebuie să fie sound/equisatisfiable ca să poți valida certificatele la țintă.</li>
+        </ul>
+
+        <h2>Vezi și</h2>
+        <ul>
+          <li><a href="../concepts/certificates.html">Certificate</a></li>
+          <li><a href="../concepts/ubh.html">UBH</a></li>
+          <li><a href="../concepts/orchestrator.html">Orchestrator</a></li>
+          <li><a href="certificates.html">Decizie: certificate obligatorii</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

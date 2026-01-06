@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Hash-consing</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Hash-consing</h1>
+      <p>Tehnica prin care nodurile identice sunt deduplicate, obținând compresie structurală.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="ubh.html">UBH</a>
+          <a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>Hash-consing</strong> este o tehnică de reprezentare a structurii ca DAG în care fiecare nod este creat “o singură dată”:
+          dacă încerci să creezi din nou același nod (aceeași operație + aceiași copii, în formă canonică), primești același <a href="wire-nodeid.html">NodeId</a>.
+        </p>
+
+        <h2>De ce contează în UBHNL</h2>
+        <ul>
+          <li><strong>Compresie</strong>: sub-structuri repetitive apar o dată și sunt partajate (DAG, nu arbore).</li>
+          <li><strong>Determinism</strong>: compilări repetate ale aceleiași expresii dau aceleași id-uri, ceea ce ajută caching-ul și explicațiile.</li>
+          <li><strong>Solving eficient</strong>: CNF/Tseitin și XOR-equations se generează o singură dată per nod, nu per apariție.</li>
+        </ul>
+
+        <h2>Ce înseamnă “același nod”</h2>
+        <p>
+          “Identic” înseamnă după:
+        </p>
+        <ul>
+          <li><strong>simplificări locale</strong> (vezi <a href="simplification.html">simplificări</a>),</li>
+          <li><strong>canonizare</strong> (ex.: pentru XOR/AND, ordonarea inputurilor).</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li><strong>Reutilizare maximă</strong> în teorii mari (reguli care generează același pattern).</li>
+          <li><strong>Cost model clar</strong>: numărul de noduri distincte ≈ mărimea IR-ului și a encodării CNF.</li>
+        </ul>
+
+        <h2>Vezi și</h2>
+        <ul>
+          <li><a href="simplification.html">Simplificări locale</a></li>
+          <li><a href="cnf.html">CNF/Tseitin</a> (de ce e liniar în numărul de AND-uri distincte)</li>
+          <li><a href="../decisions/minimal-kernel.html">Decizie: kernel minimal</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

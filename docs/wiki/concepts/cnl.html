@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: CNL</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>CNL (Controlled Natural Language)</h1>
+      <p>Un subset determinist de limbaj natural, mapat 1-1 la un AST logic tipat.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../../languages.html">Docs: Languages</a>
+          <a href="lexicon.html">Lexicon</a>
+          <a href="typed-ast.html">Typed AST</a>
+          <a href="../../mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>CNL</strong> este o limbă controlată (aproape-NL) cu gramatică mică și reguli stricte, astfel încât:
+          <strong>parsing-ul și typing-ul sunt deterministe</strong> și fără euristici.
+        </p>
+
+        <h2>Reguli “non-negociabile”</h2>
+        <ul>
+          <li><strong>Scope explicit</strong>: cuantificatori expliciți, fără pronume/coreferență.</li>
+          <li><strong>Typing obligatoriu</strong>: fiecare predicat are aritate și tipuri fixe (din <a href="lexicon.html">lexicon</a>).</li>
+          <li><strong>Ambiguitate respinsă</strong>: dacă există două parse-uri, e eroare (se cere parantezare/clarificare).</li>
+          <li><strong>Domenii finite</strong> pentru lowering în UBH (pentru infinite: alt fragment/backend).</li>
+        </ul>
+
+        <h2>Exemplu</h2>
+        <pre><code>for all cell c: if geneA(c) and not inhibitor(c) then proteinP(c)</code></pre>
+        <p>
+          Aceasta se transformă într-un <a href="typed-ast.html">AST tipat</a> și apoi se compilează (posibil cu schema engine) în UBH constraints.
+        </p>
+
+        <h2>De ce nu “NL liber”</h2>
+        <ul>
+          <li>NL liber introduce ambiguități și euristici → rezultate greu de auditat și de reprodus.</li>
+          <li>UBHNL pune accent pe <strong>spec stabile</strong> și “proof/counterexample” — deci input-ul trebuie să fie determinist.</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Un input invalid produce eroare tipată (Lex/Parse/Resolve/Type), nu “guess”.</li>
+          <li>Front-end-ul CNL devine un compilator: rulează ca parte din pipeline (nu “AI”).</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a> (gramatică + determinism)</li>
+          <li><a href="../../mdview.html?file=specs/DS/006-nl-pipeline.md">DS-006</a> (pipeline: tokenize/parse/type)</li>
+          <li><a href="../../mdview.html?file=specs/tests/cnl-cases.md">CNL cases</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

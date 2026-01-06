@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Type lowering (to bits)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Type lowering (cum devin tipurile biți)</h1>
+      <p>Regula centrală: kernel-ul are doar Bit; restul sunt encodări pe biți.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="bit.html">Bit</a>
+          <a href="ubh.html">UBH</a>
+          <a href="../../mdview.html?file=specs/DS/003-frontends-compile.md">DS-003</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>Type lowering</strong> este procesul prin care tipurile de nivel înalt (int, enum, set, relație, stare) sunt transformate în
+          <strong>biți</strong> și constrângeri pe biți, astfel încât solving-ul să poată rula pe fragmente finite (UBH/SAT).
+        </p>
+
+        <h2>Encodări uzuale</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tip</th><th>Encodare</th><th>Consecință</th></tr></thead>
+            <tbody>
+              <tr><td><code>Bool</code></td><td>1 bit</td><td>direct UBH</td></tr>
+              <tr><td><code>BitVector[k]</code></td><td><code>k</code> biți</td><td>operații = circuite (bit-blasting)</td></tr>
+              <tr><td><code>Enum[n]</code></td><td>binary (<code>⌈log2 n⌉</code>) sau one-hot (<code>n</code>)</td><td>necesită domain constraints</td></tr>
+              <tr><td><code>Set(U)</code></td><td>bitset (<code>|U|</code> biți)</td><td>apartenența = select bit</td></tr>
+              <tr><td><code>Rel(U,V)</code></td><td>matrice de biți (<code>|U|×|V|</code>)</td><td>util pentru grafuri/rețele</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Bit-blasting (pe scurt)</h2>
+        <p>
+          <strong>Bit-blasting</strong> este compilarea operațiilor pe BV/integers în circuite XOR/AND (full-adder, comparator, etc.).
+          De aici rezultă UBH nodes + <a href="constraints.html">asserțiuni</a>.
+        </p>
+
+        <h2>Edge cases: domenii finite goale</h2>
+        <p>
+          În finite-domain logic:
+        </p>
+        <pre><code>forall x in ∅: P(x)  == true
+exists x in ∅: P(x)  == false</code></pre>
+        <p>
+          Aceste cazuri trebuie tratate explicit în compilație și testate (DS-003).
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/003-frontends-compile.md">DS-003</a> (reguli concrete de lowering)</li>
+          <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (Frag_SMT_BV, Frag_TS, etc.)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

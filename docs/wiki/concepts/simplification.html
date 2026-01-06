@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Simplificări locale</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Simplificări locale (construction-time rewrites)</h1>
+      <p>Rescrieri O(1) aplicate la crearea nodurilor UBH, înainte de hash-consing.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="ubh.html">UBH</a>
+          <a href="gf2.html">GF(2)</a>
+          <a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Simplificările locale sunt reguli de rescriere aplicate imediat la construcția unui nod.
+          Ele trebuie să fie:
+          <strong>ieftine</strong> (O(1)),
+          <strong>deterministe</strong>,
+          și <strong>satisfiability-preserving</strong> (nu schimbă dacă teoria e SAT/UNSAT).
+        </p>
+
+        <h2>Set minim de reguli (kernel-level)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Regulă</th><th>Intuiție</th></tr></thead>
+            <tbody>
+              <tr><td><code>XOR(x, 0) = x</code></td><td>0 nu schimbă XOR</td></tr>
+              <tr><td><code>XOR(x, x) = 0</code></td><td>auto-anulare</td></tr>
+              <tr><td><code>AND(x, 0) = 0</code></td><td>0 anulează AND</td></tr>
+              <tr><td><code>AND(x, 1) = x</code></td><td>1 nu schimbă AND</td></tr>
+              <tr><td><code>AND(x, x) = x</code></td><td>idempotent booleean</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>De ce sunt în kernel (și nu “optimizer”)</h2>
+        <ul>
+          <li>Reduc imediat mărimea DAG-ului (și a CNF-ului) cu cost minim.</li>
+          <li>Îmbunătățesc hash-consing-ul: multe expresii devin literalmente identice după rescriere.</li>
+          <li>Sunt ușor de testat exhaustiv pe tabele de adevăr mici.</li>
+        </ul>
+
+        <h2>Ce NU intră aici</h2>
+        <p>
+          Rescrierile algebrice “de optimizare” care pot necesita analiză globală sau pot schimba forma în mod non-trivial
+          (ex.: factoring agresiv) sunt lăsate în module separate, ca tactici/optimizatori.
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a> (secțiunea de simplificări)</li>
+          <li><a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a> (hash-consing + simplificare)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

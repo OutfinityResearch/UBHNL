@@ -69,7 +69,7 @@ Responsibilities:
 - classify problems into fragments + goal kinds,
 - build and execute a plan DAG of tasks,
 - run backends with budgets/timeouts,
-- accept results only if checkable (or return `UNKNOWN/HEURISTIC`),
+- accept results only if checkable (or return `UNKNOWN`),
 - manage cross-backend artifacts (lemmas, invariants, cores),
 - produce explanation payloads.
 

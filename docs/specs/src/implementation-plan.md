@@ -128,7 +128,7 @@ Deliverables:
 - schema representation + instantiation loop
 - integration with solving:
   - solve → check violations → add instances → repeat
-- iteration limits + `INCOMPLETE` status when limits hit.
+- iteration limits + `UNKNOWN` status when limits hit.
 
 Acceptance tests:
 - schema example from DS-004 and end-to-end scenarios (test plan section “10”).

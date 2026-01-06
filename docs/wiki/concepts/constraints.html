@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Constrângeri (assert)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Constrângeri (assert)</h1>
+      <p>Cum reprezintă UBHNL “cunoașterea”: ca ecuații/aserțiuni booleene.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="ubh.html">UBH</a>
+          <a href="model-witness.html">Model</a>
+          <a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          O <strong>constrângere</strong> este o condiție impusă pe un wire (sau între două wire-uri) care trebuie să fie adevărată în orice model acceptat.
+          În kernel-ul UBH există un set minimal:
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Constrângere</th><th>Semantica</th><th>Forma GF(2)</th></tr></thead>
+            <tbody>
+              <tr><td><code>ASSERT1(w)</code></td><td><code>w = 1</code></td><td><code>w ⊕ 1 = 0</code></td></tr>
+              <tr><td><code>ASSERT0(w)</code></td><td><code>w = 0</code></td><td><code>w = 0</code></td></tr>
+              <tr><td><code>ASSERT_EQ(a,b)</code></td><td><code>a = b</code></td><td><code>a ⊕ b = 0</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Teorie</h2>
+        <p>
+          O <strong>teorie</strong> (în sens UBHNL) este un set de constrângeri plus definiții de noduri (circuit).
+          “Learn” adaugă constrângeri; “query” adaugă temporar constrângeri suplimentare (ex.: <code>¬φ</code> pentru entailment).
+        </p>
+
+        <h2>Reasoning: de la constraints la solve/prove</h2>
+        <ul>
+          <li><strong>Satisfy</strong>: există un <a href="model-witness.html">model</a> care satisface toate constrângerile?</li>
+          <li><strong>Prove</strong>: <code>T ⊨ φ</code> se reduce la <code>solve(T ∧ ¬φ)</code> și așteptăm <code>UNSAT</code> (cu certificat) ca dovadă.</li>
+          <li><strong>Refute</strong>: dacă <code>solve(T ∧ ¬φ)</code> întoarce <code>SAT</code>, modelul e contraexemplu.</li>
+        </ul>
+
+        <h2>Consecințe practice</h2>
+        <ul>
+          <li>Kernel-ul rămâne mic: “cunoaștere” = aserțiuni; restul sunt compilatoare către aserțiuni.</li>
+          <li>Verificarea este simplă: pentru <code>SAT</code> verifici modelul; pentru <code>UNSAT</code> verifici un <a href="certificates.html">certificat</a>.</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a> (model de constrângeri + API)</li>
+          <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (cum ajung în CNF/XOR)</li>
+          <li><a href="../../mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a> (origins + explain)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

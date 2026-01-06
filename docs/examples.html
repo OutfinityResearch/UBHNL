@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UBHNL — Exemple</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Exemple end-to-end</h1>
+      <p>Exemple normative: definesc cum arată un sistem “funcțional” (target behavior).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: exemplele descriu comportamentul țintă. CLI/API sunt ilustrative.</div>
+
+        <div class="nav">
+          <a href="index.html">Index</a>
+          <a href="languages.html">Lexicon/CNL/DSL</a>
+          <a href="session-api.html">Session API</a>
+          <a href="reasoning.html">Reasoning</a>
+          <a href="wiki/index.html">Wiki</a>
+          <a href="theory/index.html">Theory</a>
+          <a href="mdview.html?file=specs/src/system-spec.md">System Spec</a>
+        </div>
+
+        <h2>Exemplul 1 — Proposițional (UBH/SAT)</h2>
+        <p><strong>Goal:</strong> <code>Prove: (A and B) implies C</code></p>
+
+        <h3>Lexicon (minimal)</h3>
+        <pre><code>{
+  "domains": {},
+  "constants": {},
+  "predicates": {
+    "A": { "arity": 0, "args": [] },
+    "B": { "arity": 0, "args": [] },
+    "C": { "arity": 0, "args": [] }
+  }
+}</code></pre>
+
+        <h3>Theory file: <code>t.dsl</code></h3>
+        <pre><code>A() implies C()
+B() implies C()</code></pre>
+
+        <h3>Query</h3>
+        <pre><code>Prove: (A() and B()) implies C()</code></pre>
+
+        <h3>Așteptat</h3>
+        <ul>
+          <li><code>PROVED</code></li>
+          <li>certificate: <code>UNSAT</code> pentru <code>T ∧ ¬φ</code> (DRAT/LRAT sau echivalent)</li>
+          <li>explain: indică cele două implicații ca nucleu relevant</li>
+        </ul>
+
+        <hr />
+
+        <h2>Exemplul 2 — SMT(BV) (bit-blast sau SMT proof)</h2>
+        <p><strong>Goal:</strong> demonstrație pe bitvectori: <code>x=255, x+1=y ⊨ y=0</code> (mod 256).</p>
+
+        <p>
+          Acest exemplu presupune un frontend pentru BV (ex. SMT-LIB adapter) care produce semantic IR în
+          <code>Frag_SMT_BV</code> și apoi fie:
+        </p>
+        <ul>
+          <li>rulează un backend SMT(BV) cu proof/model, sau</li>
+          <li>bit-blast către UBH/SAT și folosește DRAT/LRAT pentru UNSAT/PROVED.</li>
+        </ul>
+
+        <h3>Query</h3>
+        <pre><code>Learn:
+  x:BV8, y:BV8
+  x = 255
+  y = x + 1
+
+Prove:
+  y = 0</code></pre>
+
+        <h3>Așteptat</h3>
+        <ul>
+          <li><code>PROVED</code></li>
+          <li>certificate: SMT proof object sau SAT certificate după bit-blast</li>
+        </ul>
+
+        <hr />
+
+        <h2>Exemplul 3 — Sistem de tranziție (BMC / IC3/PDR)</h2>
+        <p><strong>Goal:</strong> <code>Prove: Always(s != 3)</code> pentru un contor modulo 4.</p>
+
+        <h3>Model</h3>
+        <pre><code>State: s:BV2
+Init:  s = 0
+Trans: s' = s + 1 mod 4
+Safe:  s != 3</code></pre>
+
+        <h3>Așteptat</h3>
+        <ul>
+          <li><code>DISPROVED</code></li>
+          <li>counterexample trace (verificabil): <code>0 → 1 → 2 → 3</code></li>
+          <li>explain: prezintă pașii de tranziție și faptul că <code>s=3</code> violează <code>Safe</code></li>
+        </ul>
+
+        <hr />
+
+        <h2>Exemplu 4 — Hole filling (witness)</h2>
+        <p><strong>Goal:</strong> găsește un <code>?c</code> care satisface o proprietate.</p>
+
+        <h3>Theory file: <code>bio.dsl</code></h3>
+        <pre><code>@c0:Cell
+@c1:Cell
+@c0 proteinP</code></pre>
+
+        <h3>Query</h3>
+        <pre><code>Satisfy: exists ?c in Cell: proteinP(?c)</code></pre>
+
+        <h3>Așteptat</h3>
+        <pre><code>{
+  "status": "SAT",
+  "holeAssignments": { "?c": "c0" }
+}</code></pre>
+
+        <h2>Link-uri</h2>
+        <ul>
+          <li><a href="mdview.html?file=specs/src/system-spec.md">System Spec</a></li>
+          <li><a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009 Sessions</a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

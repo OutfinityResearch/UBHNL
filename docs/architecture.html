@@ -4,33 +4,75 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH Architecture</title>
+    <link rel="stylesheet" href="site.css" />
   </head>
   <body>
-    <h1>Architecture Overview</h1>
-    <p>
-      UBHNL is a universal reasoning system with a minimal trusted core (UBH) and pluggable backends
-      (SAT/SMT/QBF/model checking/etc.) orchestrated via fragments and tactics.
-    </p>
+    <header>
+      <h1>Architecture Overview</h1>
+      <p>UBHNL = UBH kernel + front-ends (CNL/DSL) + fragment/backends + orchestrator.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: aceasta pagină descrie arhitectura țintă, ca și cum ar fi funcțională. Unele module sunt încă neimplementate.</div>
 
-    <h2>Layers</h2>
-    <ol>
-      <li>Trusted core: UBH IR + checkers (witness/certificates)</li>
-      <li>Front-ends: CNL/DSL → typed semantic IR</li>
-      <li>Fragments: classify constraint classes and goal kinds</li>
-      <li>Backends: SAT/SMT/QBF/IC3/… with checkable artifacts</li>
-      <li>Orchestrator: planning, tactics (CEGAR), caching, explainability</li>
-    </ol>
+        <div class="nav">
+          <a href="index.html">Index</a>
+          <a href="vision.html">Viziune</a>
+          <a href="languages.html">Lexicon/CNL/DSL</a>
+          <a href="session-api.html">Session API</a>
+          <a href="reasoning.html">Reasoning</a>
+          <a href="examples.html">Exemple</a>
+          <a href="wiki/index.html">Wiki</a>
+          <a href="theory/index.html">Theory</a>
+        </div>
 
-    <p>
-      See <a href="specs/src/system-spec.md">System Spec</a> or
-      <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a> for the full architecture.
-    </p>
+        <h2>Straturi</h2>
+        <ol>
+          <li><strong>Trusted core</strong>: UBH IR + checkers (witness/certificate)</li>
+          <li><strong>Front-ends</strong>: CNL/DSL → typed semantic IR (determinist)</li>
+          <li><strong>Fragments</strong>: clasifică constrângerile și goal kinds</li>
+          <li><strong>Backends</strong>: SAT/SMT/QBF/MC/… cu artefacte verificabile</li>
+          <li><strong>Orchestrator</strong>: planificare, tactici (CEGAR), caching, explainability</li>
+        </ol>
 
-    <h2>Additional Pages</h2>
-    <ul>
-      <li><a href="nl-architecture.html">CNL to UBH Pipeline</a></li>
-      <li><a href="design-choices.html">Design Choices</a></li>
-      <li><a href="mdview.html?file=specs/UBH-SPEC.md">UBH Kernel Spec (HTML)</a></li>
-    </ul>
+        <h2>Flux (high-level)</h2>
+        <pre><code>theory files (DSL/CNL) + session learn
+           │
+           ▼
+parse/type (strict vocab) → typed semantic IR
+           │
+           ▼
+fragment detection + goal kind
+           │
+           ▼
+planner builds plan DAG (tactics/backends)
+           │
+           ▼
+backend result + certificate/witness
+           │
+           ▼
+checker validates → explain (origins) → user output</code></pre>
+
+        <h2>Link-uri către specs</h2>
+        <ul>
+          <li>
+            System Spec:
+            <a href="specs/src/system-spec.md">MD</a> |
+            <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a>
+          </li>
+          <li>
+            UBH Kernel:
+            <a href="specs/UBH-SPEC.md">MD</a> |
+            <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a>
+          </li>
+          <li>
+            Fragments/Backends/Planner:
+            <a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>,
+            <a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>,
+            <a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+          </li>
+        </ul>
+      </div>
+    </main>
   </body>
 </html>

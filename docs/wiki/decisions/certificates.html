@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decision: Certificate obligatorii</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Decizie: certificate obligatorii pentru acceptare</h1>
+      <p>UNSAT/OPTIMAL fără dovadă verificabilă nu sunt acceptate; se raportează UNKNOWN.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de decizie.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="../concepts/certificates.html">Certificate</a>
+          <a href="../concepts/unknown.html">UNKNOWN</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Decizia</h2>
+        <p>
+          UBHNL are “garda” de acceptare:
+          <strong>rezultatele sunt acceptate doar dacă sunt verificabile</strong>.
+          Altfel, status-ul este <code>UNKNOWN</code> (sau “DISPROVED” cu witness pentru contraexemple).
+        </p>
+
+        <h2>De ce</h2>
+        <ul>
+          <li>Backends reale sunt complexe și pot avea bug-uri; verificarea independentă reduce riscul.</li>
+          <li>Asigură auditability: un rezultat poate fi re-check-uit fără solverul original.</li>
+        </ul>
+
+        <h2>Consecințe</h2>
+        <ul>
+          <li>Trebuie implementate checkere (DRAT/LRAT, invariants, dual certs etc.) în trusted core.</li>
+          <li>Orchestratorul trebuie să poată “confirma” rezultate prin rute alternative când backend-ul nu produce certificat.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

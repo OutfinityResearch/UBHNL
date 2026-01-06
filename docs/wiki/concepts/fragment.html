@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Fragment</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Fragment</h1>
+      <p>“Ce fel de problemă avem”: clase de constrângeri + encodări + certificate.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="goalkind.html">GoalKind</a>
+          <a href="orchestrator.html">Orchestrator</a>
+          <a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Un <strong>fragment</strong> este o clasă formalizată de constrângeri (sorturi + operatori + reguli),
+          împreună cu encodări către alte fragmente și cu așteptări de certificate.
+        </p>
+
+        <h2>De ce nu “totul e UBH”</h2>
+        <ul>
+          <li>Unele teorii sunt mai eficiente nativ (ex. MIP/SDP/CAD) și apoi verifici certificatele.</li>
+          <li>Unele au semnificații diferite (QBF: strategii), iar certificatele nu sunt doar “model”.</li>
+          <li>Fragment-first permite orchestratorului să aleagă tactici și backends coerent.</li>
+        </ul>
+
+        <h2>Exemple de fragmente</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fragment</th><th>Constrângeri</th><th>Backend tipic</th></tr></thead>
+            <tbody>
+              <tr><td><code>Frag_UBH</code></td><td>XOR/AND DAG + assert</td><td>SAT+XOR</td></tr>
+              <tr><td><code>Frag_SMT_BV</code></td><td>bitvector constraints</td><td>SMT(BV) sau bit-blast</td></tr>
+              <tr><td><code>Frag_TS</code></td><td>init/trans/safety</td><td>IC3/PDR, BMC</td></tr>
+              <tr><td><code>Frag_MIP</code></td><td>linear + integrality</td><td>branch-and-cut</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Consecințe inginerești</h2>
+        <ul>
+          <li>Semantic IR trebuie să păstreze suficientă structură ca să detectezi fragmentul (nu doar “o mare CNF”).</li>
+          <li>Trebuie definite encodări “sound/equisatisfiable”, cu criterii de acceptare/certificate.</li>
+        </ul>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (catalog + policy de lowering)</li>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (certificate per backend)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

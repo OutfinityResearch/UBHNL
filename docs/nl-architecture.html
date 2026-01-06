@@ -4,56 +4,60 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>UBH CNL to UBH Pipeline</title>
+    <link rel="stylesheet" href="site.css" />
   </head>
   <body>
-    <h1>CNL to UBH Pipeline</h1>
-    <p>
-      UBHNL treats natural language as a controlled, typed input that compiles deterministically into a
-      typed semantic IR (via DSL), then lowers to the appropriate reasoning fragment (often UBH).
-      The pipeline rejects ambiguity rather than guessing.
-    </p>
+    <header>
+      <h1>CNL/DSL Pipeline</h1>
+      <p>Input determinist (CNL/DSL) → IR tipat → fragmente/backends → rezultate verificabile.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pipeline-ul este specificat ca target. Parser-ele și compilatoarele sunt încă în lucru.</div>
 
-    <h2>Pipeline Stages</h2>
-    <ol>
-      <li>Lexicon load and symbol table build</li>
-      <li>Tokenize and parse CNL input</li>
-      <li>Build a typed AST and validate symbol types</li>
-      <li>Lower to core logic (forall/exists/and/or/not/implies)</li>
-      <li>Lower to fragments/backends (UBH/SAT/SMT/QBF/etc.)</li>
-    </ol>
+        <div class="nav">
+          <a href="index.html">Index</a>
+          <a href="languages.html">Lexicon/CNL/DSL</a>
+          <a href="session-api.html">Session API</a>
+          <a href="reasoning.html">Reasoning</a>
+          <a href="wiki/index.html">Wiki</a>
+          <a href="theory/index.html">Theory</a>
+        </div>
 
-    <h2>Design Specs</h2>
-    <ul>
-      <li>
-        DS-005 CNL and Lexicon:
-        <a href="specs/DS/005-cnl-lexicon.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/005-cnl-lexicon.md">HTML view</a>
-      </li>
-      <li>
-        DS-006 NL Pipeline:
-        <a href="specs/DS/006-nl-pipeline.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/006-nl-pipeline.md">HTML view</a>
-      </li>
-      <li>
-        DS-007 Compile to UBH:
-        <a href="specs/DS/007-nl-ubh-compile.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/007-nl-ubh-compile.md">HTML view</a>
-      </li>
-      <li>
-        DS-008 DSL (Intermediate IR):
-        <a href="specs/DS/008-dsl.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/008-dsl.md">HTML view</a>
-      </li>
-      <li>
-        DS-009 Sessions and Queries:
-        <a href="specs/DS/009-sessions-query-proof.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">HTML view</a>
-      </li>
-      <li>
-        DS-010 Fragments and Goal Kinds:
-        <a href="specs/DS/010-fragments-goals.md">MD</a> |
-        <a href="mdview.html?file=specs/DS/010-fragments-goals.md">HTML view</a>
-      </li>
-    </ul>
+        <h2>Etape</h2>
+        <ol>
+          <li>Încărcare lexicon + construire symbol table</li>
+          <li>Tokenize + parse (CNL sau DSL)</li>
+          <li>Typing + rezolvare simboluri (strict vocab; erori la necunoscut)</li>
+          <li>Lowering la semantic IR (core logic sau IR specific fragmentului)</li>
+          <li>Clasificare fragment + planificare backend/tactică</li>
+          <li>Solving + certificate/witness</li>
+          <li>Check + Explain (origins → explicație în CNL/DSL)</li>
+        </ol>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li>
+            Lexicon + CNL:
+            <a href="mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a>,
+            <a href="mdview.html?file=specs/DS/006-nl-pipeline.md">DS-006</a>
+          </li>
+          <li>
+            DSL:
+            <a href="mdview.html?file=specs/DS/008-dsl.md">DS-008</a>
+          </li>
+          <li>
+            Sessions:
+            <a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a>
+          </li>
+          <li>
+            Fragments/Backends/Planner:
+            <a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>,
+            <a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>,
+            <a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
+          </li>
+        </ul>
+      </div>
+    </main>
   </body>
 </html>

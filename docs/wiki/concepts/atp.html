@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: ATP (resolution/superposition)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>ATP by saturation (resolution / superposition)</h1>
+      <p>Automated theorem proving pentru FOL (+ egalitate): dovezi ca trace-uri verificabile.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="certificates.html">Certificate</a>
+          <a href="rewriting.html">Rewriting</a>
+          <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>Saturation-based ATP</strong> încearcă să derive contradicție sau să construiască dovadă prin aplicarea repetată de reguli
+          (resolution, superposition pentru egalitate), până la saturare sau găsirea unei clauze goale.
+        </p>
+
+        <h2>În UBHNL</h2>
+        <ul>
+          <li>Modelat ca backend pentru <code>Frag_FOL_Eq</code>.</li>
+          <li>Poate produce lemma/proof traces care sunt verificate de un checker mic (trusted core).</li>
+        </ul>
+
+        <h2>Certificate</h2>
+        <p>
+          Certificatul tipic este un <strong>proof trace</strong> (pași de rezoluție/superposition) pe care îl verifici determinist.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
+

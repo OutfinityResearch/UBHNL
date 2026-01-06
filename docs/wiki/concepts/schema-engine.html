@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Schema engine</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Schema engine (lazy instantiation)</h1>
+      <p>Tratează cuantificatori/rule generative fără grounding complet: instanțiază doar când modelul violează schema.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="cegar.html">CEGAR</a>
+          <a href="quantifiers.html">Cuantificatori</a>
+          <a href="../../mdview.html?file=specs/DS/004-schema-engine.md">DS-004</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Un <strong>schema engine</strong> păstrează axiome/rule cuantificate ca “scheme” (nu expandate),
+          apoi folosește modele SAT ca să găsească violări și să genereze instanțe concrete.
+        </p>
+
+        <h2>Workflow (universal schemas)</h2>
+        <pre><code>schemas = { forall x in D: Body(x), ... }
+instances = {}
+
+loop:
+  solve(T + instances)
+    if UNSAT: stop
+    if SAT: find violations under model M
+      if none: fixed point (model satisfies all schemas)
+      else add instances for violating assignments and repeat</code></pre>
+
+        <h2>Ce înseamnă “violare”</h2>
+        <ul>
+          <li><code>forall x in D: Body(x)</code> e violată dacă există <code>d ∈ D</code> cu <code>Body(d)=false</code> în model.</li>
+          <li>Pentru regula <code>Premise(x) -&gt; Conclusion(x)</code>, violare = <code>Premise(d)=true</code> și <code>Conclusion(d)=false</code>.</li>
+        </ul>
+
+        <h2>Politici de instanțiere</h2>
+        <ul>
+          <li><strong>minimal</strong>: adaugă 1 instanță per iterație (teorie mică, multe iterații).</li>
+          <li><strong>batch</strong>: adaugă toate violările curente (iterații mai puține, creștere mai mare).</li>
+        </ul>
+        <p class="muted">Spec-ul recomandă batch cu limită per iterație.</p>
+
+        <h2>Exists: de ce e diferit</h2>
+        <p>
+          <code>exists x in D: Body(x)</code> e “violată” doar dacă <em>toate</em> instanțele sunt false. Opțiuni:
+        </p>
+        <ul>
+          <li>expandare completă (domenii mici),</li>
+          <li>căutare de witness prin <a href="holes.html">holes</a> (domenii mari),</li>
+          <li>creștere incrementală a disjuncției (advanced).</li>
+        </ul>
+
+        <h2>Domenii mutable</h2>
+        <p>
+          Dacă domeniile pot fi extinse în sesiune, instanțele trebuie invalidate sau “keyed” după un <strong>domain-generation id</strong>,
+          ca să nu amesteci instanțe din universuri diferite.
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/004-schema-engine.md">DS-004</a> (detalii normative)</li>
+          <li><a href="../../mdview.html?file=specs/DS/003-frontends-compile.md">DS-003</a> (expandare vs schema)</li>
+          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (CEGAR tactic)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: CNF (Conjunctive Normal Form)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>CNF (Conjunctive Normal Form)</h1>
+      <p>Reprezentarea standard pentru SAT: conjuncție de clauze (disjuncții de literali).</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="tseitin.html">Tseitin</a>
+          <a href="sat-cdcl.html">SAT</a>
+          <a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          O formulă în <strong>CNF</strong> este o conjuncție (AND) de clauze, unde fiecare clauză este o disjuncție (OR) de literali:
+        </p>
+        <pre><code>(l11 ∨ l12 ∨ ...) ∧ (l21 ∨ l22 ∨ ...) ∧ ...</code></pre>
+        <p>
+          Un <strong>literal</strong> este o variabilă booleană sau negarea ei.
+        </p>
+
+        <h2>De ce apare în UBHNL</h2>
+        <ul>
+          <li>Partea “AND” a UBH se encodează în CNF folosind <a href="tseitin.html">Tseitin</a> (linear în numărul de porți AND).</li>
+          <li>Un backend SAT (CDCL) operează natural pe CNF; UBHNL folosește SAT ca motor generic pentru non-linearitate.</li>
+        </ul>
+
+        <h2>Important: equisatisfiable vs equivalent</h2>
+        <ul>
+          <li><strong>Equivalent</strong>: exact aceeași mulțime de modele peste variabilele originale.</li>
+          <li><strong>Equisatisfiable</strong>: are SAT/UNSAT identic, dar poate introduce variabile auxiliare (modele diferite ca set, dar satisfiabilitatea se păstrează).</li>
+        </ul>
+        <p>
+          Encodarea Tseitin este în general <strong>equisatisfiable</strong> (și asta e suficient pentru solve/prove).
+        </p>
+
+        <h2>Spec-uri relevante</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (CNF encoding pentru AND)</li>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (SAT backend + certificate)</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: Tensor / factor graphs</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Tensor / factor graphs, belief propagation</h1>
+      <p>Reprezentări pentru probabilistic inference și unele clase de reasoning “structural”.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="probabilistic.html">Probabilistic</a>
+          <a href="counting.html">WMC/Counting</a>
+          <a href="unknown.html">UNKNOWN</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          Un <strong>factor graph</strong> (sau tensor network) reprezintă o funcție globală ca produs de factori locali.
+          <strong>Belief propagation</strong> este un algoritm aproximativ de mesaj-passing pentru margini/condiționale.
+        </p>
+
+        <h2>În UBHNL</h2>
+        <ul>
+          <li>Exact: preferi reducere la WMC/KC (checkable).</li>
+          <li>Aproximativ: BP/variational; rezultatul este probabilistic și necesită audit metadata.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+

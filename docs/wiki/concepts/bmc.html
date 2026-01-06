@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wiki: BMC (Bounded Model Checking)</title>
+    <link rel="stylesheet" href="../../site.css" />
+  </head>
+  <body>
+    <header>
+      <h1>BMC (Bounded Model Checking)</h1>
+      <p>Verifici proprietăți până la o adâncime k: reduci TS la SAT/SMT și cauți trace.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="nav">
+          <a href="../index.html">Wiki</a>
+          <a href="model-checking.html">Model checking</a>
+          <a href="ic3-pdr.html">IC3/PDR</a>
+          <a href="type-lowering.html">Type lowering</a>
+        </div>
+
+        <h2>Definiție</h2>
+        <p>
+          <strong>BMC</strong> encodează o execuție de lungime <code>k</code> ca o formulă:
+        </p>
+        <pre><code>Init(s0) ∧ Trans(s0,s1) ∧ ... ∧ Trans(s{k-1},sk) ∧ ¬Safe(sk)</code></pre>
+        <p>
+          Dacă formula e SAT, ai un trace; dacă e UNSAT, nu există contraexemplu de lungime ≤ k.
+        </p>
+
+        <h2>În UBHNL</h2>
+        <ul>
+          <li>Este fallback-ul standard când IC3/PDR nu produce invariant în buget.</li>
+          <li>Lowering: TS/BV → UBH/SAT (bit-level), cu certificate DRAT/LRAT pentru UNSAT la bound fix.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+
