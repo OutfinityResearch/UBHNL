@@ -10,22 +10,6 @@ The DSL is a deterministic, typed, strict-vocabulary language used for long-term
 
 ### Core rules (must match DS-008)
 - **Strict vocabulary**: any bare identifier must exist in the vocabulary (lexicon + exported declarations), otherwise it is a load error.
-- **The `@ / $ / vocab` rule**:
-  - `@name` introduces the statement target (declaration or subject-first statement).
-  - `$name` references a bound variable or a previously-defined symbol in scope.
-  - `name` (bare) is a vocabulary lookup (predicate/constant/domain).
-- **One-@ rule**: a line must contain **at most one** `@` token, and if present it must be the first token.
-
-### Common statement shapes
-- **Exported declaration** (adds a constant to the vocabulary):
-  - `@ion:Person`
-- **Subject-first fact statement** (asserts a predicate instance):
-  - `@ion has_fever`
-  - `@ion has_flu flu`
-- **Core logic expressions** (asserted statements):
-  - `forall $c in Cell: geneA($c) implies proteinP($c)`
-- **Query holes** (returnable witnesses):
-  - `exists ?c in Cell: proteinP(?c)`
 
 If a theory needs explicit DAG construction (for debugging or reuse), use named intermediates, but keep the one-@ rule.
 

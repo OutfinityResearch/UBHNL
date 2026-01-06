@@ -108,11 +108,11 @@ interface ErrorDetails {
 
 | Code | Condition | Example |
 |------|-----------|---------|
-| `E_UNKNOWN_SYMBOL` | Bare name not in vocabulary | `unknownPred(c0)` |
+| `E_UNKNOWN_SYMBOL` | Bare name not in vocabulary | `unknownPred c0` |
 | `E_UNKNOWN_TYPE` | Domain/type not declared | `IsA x UnknownType` |
-| `E_UNKNOWN_PREDICATE` | Predicate not in lexicon | `mystery(c0)` |
-| `E_ARITY_MISMATCH` | Wrong number of arguments | `geneA(c0, c1)` (arity=1) |
-| `E_TYPE_MISMATCH` | Argument type doesn't match | `geneA(ion)` (expects Cell) |
+| `E_UNKNOWN_PREDICATE` | Predicate not in lexicon | `mystery c0` |
+| `E_ARITY_MISMATCH` | Wrong number of arguments | `geneA c0 c1` (arity=1) |
+| `E_TYPE_MISMATCH` | Argument type doesn't match | `geneA ion` (expects Cell) |
 | `E_TYPE_CONFLICT` | Same name, different types | `IsA x Cell` and `IsA x Person` |
 | `E_RESERVED_WORD` | Vocabulary uses reserved keyword | Domain named "true" |
 
@@ -221,12 +221,12 @@ For `SAT`/`DISPROVED` results:
     "code": "E_UNKNOWN_SYMBOL",
     "message": "Symbol 'unknownPred' not found in vocabulary.",
     "blame": "TheoryFile",
-    "origin": {
+      "origin": {
       "sourceId": "bio.sys2",
       "path": "theories/bio.sys2",
       "line": 15,
       "column": 1,
-      "snippet": "unknownPred(c0)",
+      "snippet": "unknownPred c0",
       "format": "DSL"
     },
     "details": {
@@ -246,11 +246,11 @@ For `SAT`/`DISPROVED` results:
     "code": "E_TYPE_MISMATCH",
     "message": "Argument type mismatch: expected 'Cell', got 'Person'.",
     "blame": "UserInput",
-    "origin": {
+      "origin": {
       "sourceId": "input-002",
       "line": 1,
       "column": 7,
-      "snippet": "geneA(ion)",
+      "snippet": "geneA ion",
       "format": "DSL"
     },
     "details": {
@@ -269,9 +269,9 @@ The test suite must verify:
 | Input | Expected Code | Expected Blame |
 |-------|---------------|----------------|
 | `@x P @y` (DSL) | `E_DSL_TWO_AT` | `UserInput` |
-| `unknownPred(c0)` | `E_UNKNOWN_SYMBOL` | `TheoryFile` |
-| `geneA(c0, c1)` | `E_ARITY_MISMATCH` | `UserInput` |
-| `geneA(ion)` | `E_TYPE_MISMATCH` | `UserInput` |
+| `unknownPred c0` | `E_UNKNOWN_SYMBOL` | `TheoryFile` |
+| `geneA c0 c1` | `E_ARITY_MISMATCH` | `UserInput` |
+| `geneA ion` | `E_TYPE_MISMATCH` | `UserInput` |
 | `For all c: P(c).` (CNL) | `E_CNL_MISSING_DOMAIN` | `UserInput` |
 | UNSAT without DRAT | `E_CERT_MISSING` | `Backend` |
 | Wrong problemDigest | `E_CERT_DIGEST_MISMATCH` | `System` |
