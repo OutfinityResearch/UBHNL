@@ -1,0 +1,3 @@
+[
+  { "input": "Check Next(Next(Red(l1)))", "kind": "check_ltl", "expected": "Trace found." }
+]

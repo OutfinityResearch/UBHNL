@@ -1,0 +1,3 @@
+[
+  { "input": "Explain HasFever(p1)", "kind": "abduce", "expected": "Diagnosis: HasFlu(p1)." }
+]

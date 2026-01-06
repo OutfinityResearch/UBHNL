@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>ML-guided proof search / premise selection</h1>
-      <p>Heuristică pentru a ghida solver-ele; nu este niciodată sursă de adevăr fără checking.</p>
+      <p>A heuristic layer to guide solvers; it is never a source of truth without checking.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,32 +23,37 @@
           <a href="unknown.html">UNKNOWN</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          ML-guided methods folosesc modele statistice/neuronale pentru a sugera decizii:
-          ordonarea literaliilor, selecția de premise, alegerea tacticii, etc.
+          ML-guided methods use statistical/neural models to suggest decisions:
+          literal ordering, premise selection, tactic choice, and related heuristics.
         </p>
 
-        <h2>Policy în UBHNL</h2>
+        <h2>Policy in UBHNL</h2>
         <ul>
-          <li>Este <strong>heuristic</strong> by design: nu produce rezultate acceptabile singură.</li>
-          <li>Poate doar să propună: “încearcă lemma X” / “rulează backend Y”.</li>
-          <li>Rezultatul final trebuie să fie validat de un checker (model/certificat/invariant).</li>
+          <li>It is <strong>heuristic</strong> by design: it cannot produce acceptable results on its own.</li>
+          <li>It can only propose: “try lemma X” / “run backend Y”.</li>
+          <li>The final result must be validated by a checker (model/certificate/invariant).</li>
         </ul>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Auditability: păstrezi log-uri despre ce a sugerat ML, dar nu îl consideri “trusted”.</li>
-          <li>Dacă ML-guided route nu produce certificate în buget: status <code>UNKNOWN</code>.</li>
+          <li>Auditability: keep logs of what ML suggested, but do not treat it as trusted.</li>
+          <li>If an ML-guided route does not produce certificates within budget, the status is <code>UNKNOWN</code>.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (ML guidance as heuristic)</li>
           <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (planner + budgets)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Premise_selection" target="_blank" rel="noreferrer">Premise selection (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank" rel="noreferrer">Machine learning (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

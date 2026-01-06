@@ -1,0 +1,11 @@
+@Nat __Atom
+@Zero __Atom
+
+IsA Zero Nat
+
+@rule1 ForAll Nat graph n
+    @c1 Nat $n
+    @imp1 Implies $c1 $error
+    return $imp1
+end
+@f1 Nat Zero

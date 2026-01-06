@@ -1,0 +1,3 @@
+[
+  { "input": "Find Products", "kind": "query", "expected": "Reacts(H2, O2) produced." }
+]

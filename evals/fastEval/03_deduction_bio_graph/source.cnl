@@ -1,0 +1,11 @@
+# Test 03: Biology - Cell Protein Expression
+# STYLE: Definition block + natural predicates
+
+Let Cell be a Domain.
+Let Protein be a Domain.
+Let c0 be a Cell.
+
+# Definition using explicit syntax (needed for graph variable)
+Definition: Producer <Cell c> is:
+    For all Protein p:
+        If c expresses p then p is Active.

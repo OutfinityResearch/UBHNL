@@ -1,0 +1,14 @@
+@Switch __Atom
+@switch1 __Atom
+
+IsA switch1 Switch
+
+@f1 On switch1
+@f2 Off switch1
+@rule1 ForAll Switch graph s
+    @c1 On $s
+    @c2 Off $s
+    @and1 And $c1 $c2
+    @not2 Not $and1
+    return $not2
+end

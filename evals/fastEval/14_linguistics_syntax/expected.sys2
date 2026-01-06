@@ -1,0 +1,37 @@
+@Word __Atom
+@The __Atom
+@Cat __Atom
+@Runs __Atom
+
+IsA The Word
+IsA Cat Word
+IsA Runs Word
+
+@rule1 ForAll Word graph w1
+    @inner1 ForAll Word graph w2
+        @c1 Det $w1
+        @c2 Noun $w2
+        @and1 And $c1 $c2
+        @c3 Forms $w1 $w2
+        @imp2 Implies $and1 $c3
+        return $imp2
+    end
+    return $inner1
+end
+@rule2 ForAll Word graph w1
+    @inner2 ForAll Word graph w2
+        @inner3 ForAll Word graph w3
+            @c4 Forms $w1 $w2
+            @c5 Verb $w3
+            @and3 And $c4 $c5
+            @c6 Completes $w1 $w3
+            @imp4 Implies $and3 $c6
+            return $imp4
+        end
+        return $inner3
+    end
+    return $inner2
+end
+@f1 Det The
+@f2 Noun Cat
+@f3 Verb Runs

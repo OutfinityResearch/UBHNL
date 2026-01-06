@@ -1,0 +1,34 @@
+@Person __Atom
+@Alice __Atom
+@Bob __Atom
+@Charlie __Atom
+
+IsA Alice Person
+IsA Bob Person
+IsA Charlie Person
+
+@f1 Parent Alice Bob
+@f2 Parent Bob Charlie
+@rule1 ForAll Person graph x
+    @inner1 ForAll Person graph y
+        @inner2 ForAll Person graph z
+            @c1 Parent $x $y
+            @c2 Ancestor $y $z
+            @and1 And $c1 $c2
+            @c3 Ancestor $x $z
+            @imp2 Implies $and1 $c3
+            return $imp2
+        end
+        return $inner2
+    end
+    return $inner1
+end
+@rule2 ForAll Person graph x
+    @inner3 ForAll Person graph y
+        @c4 Parent $x $y
+        @c5 Ancestor $x $y
+        @imp3 Implies $c4 $c5
+        return $imp3
+    end
+    return $inner3
+end

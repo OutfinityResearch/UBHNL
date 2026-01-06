@@ -1,0 +1,14 @@
+# Test 09: Traffic Light State Machine
+# STYLE: State predicates + Next() function
+
+Light is a Domain.
+l1 is a Light.
+
+# State transitions - function needed for Next()
+For all Light x:
+    If x is Green then Next(Yellow(x)).
+    If x is Yellow then Next(Red(x)).
+    If x is Red then Next(Green(x)).
+
+# Initial state
+l1 is Green.

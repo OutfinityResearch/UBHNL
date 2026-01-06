@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>QBF (Quantified Boolean Formula)</h1>
-      <p>Boolean logic cu cuantificatori peste biți: ∀/∃ peste variabile booleene.</p>
+      <p>Boolean logic with quantifiers over bits: ∀/∃ over Boolean variables.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,40 +23,45 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un QBF tipic este în formă prenex:
+          A typical QBF is in prenex form:
         </p>
         <pre><code>Q1 x1  Q2 x2  ...  Qn xn :  φ(x1..xn)</code></pre>
         <p>
-          unde fiecare <code>Qi</code> este <code>∀</code> sau <code>∃</code>, iar <code>φ</code> este o formulă booleană (adesea CNF).
+          where each <code>Qi</code> is <code>∀</code> or <code>∃</code>, and <code>φ</code> is a Boolean formula (often CNF).
         </p>
 
-        <h2>De ce e diferit de SAT</h2>
+        <h2>Why it differs from SAT</h2>
         <ul>
-          <li>SAT cere un model (o atribuire).</li>
-          <li>QBF cere o <strong>strategie</strong> pentru existențiale în funcție de universale (Skolem functions / winning strategy).</li>
+          <li>SAT asks for a model (an assignment).</li>
+          <li>QBF asks for a <strong>strategy</strong> for existentials as a function of universals (Skolem functions / winning strategy).</li>
         </ul>
 
-        <h2>Certificate</h2>
+        <h2>Certificates</h2>
         <ul>
-          <li><code>SAT</code>: strategie/funcții Skolem verificabile.</li>
-          <li><code>UNSAT</code>: certificate de tip Q-resolution (sau alte formate acceptate).</li>
+          <li><code>SAT</code>: checkable strategies / Skolem functions.</li>
+          <li><code>UNSAT</code>: Q-resolution-style proofs (or other accepted formats).</li>
         </ul>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>QBF este un fragment separat (<code>Frag_QBF</code>), cu backends dedicate (QCDCL/CEGAR).</li>
-          <li>Unele instanțe pot fi reduse bounded la SAT/UBH, dar asta este o tactică, nu regula.</li>
+          <li>QBF is a separate fragment (<code>Frag_QBF</code>) with dedicated backends (QCDCL/CEGAR).</li>
+          <li>Some instances can be bounded-reduced to SAT/UBH, but that is a tactic, not the default rule.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (<code>Frag_QBF</code>)</li>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (certificate QBF)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/True_quantified_Boolean_formula" target="_blank" rel="noreferrer">Quantified Boolean formula (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Skolem_normal_form" target="_blank" rel="noreferrer">Skolemization (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

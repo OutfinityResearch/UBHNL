@@ -26,11 +26,11 @@
 
         <h2>Definition</h2>
         <p>
-          Un <strong>transition system</strong> este definit de:
+          A <strong>transition system</strong> is defined by:
         </p>
-        <pre><code>Init(s)      - condiția inițială
-Trans(s,s')  - relația de tranziție
-Safe(s)      - proprietatea de siguranță</code></pre>
+        <pre><code>Init(s)      - the initial condition
+Trans(s,s')  - the transition relation
+Safe(s)      - the safety property</code></pre>
 
         <h2>Two typical outcomes</h2>
         <ul>
@@ -40,7 +40,7 @@ Safe(s)      - proprietatea de siguranță</code></pre>
 
         <h2>Certificate (checking invariants)</h2>
         <p>
-          Pentru un invariant <code>Inv</code>, checker-ul validează:
+          For an invariant <code>Inv</code>, the checker validates:
         </p>
         <pre><code>1) Init(s) ⇒ Inv(s)
 2) Inv(s) ∧ Trans(s,s') ⇒ Inv(s')
@@ -56,6 +56,12 @@ Safe(s)      - proprietatea de siguranță</code></pre>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (certificate TS)</li>
           <li><a href="../../mdview.html?file=specs/src/system-spec.md">System Spec</a> (TS example)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Model_checking" target="_blank" rel="noreferrer">Model checking (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Transition_system" target="_blank" rel="noreferrer">Transition system (Wikipedia)</a></li>
         </ul>
       </div>
     </main>

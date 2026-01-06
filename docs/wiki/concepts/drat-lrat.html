@@ -28,11 +28,67 @@
           contradiction.
         </p>
 
+        <h2>What the files contain (high level)</h2>
+        <p>
+          Both DRAT and LRAT are proof-trace formats that let a checker validate an UNSAT claim without re-solving the problem.
+          The checker starts from the original CNF and processes a sequence of proof steps (typically clause additions and sometimes deletions).
+          If the steps are valid and the empty clause is derived, the original CNF is UNSAT.
+        </p>
+        <p>
+          This matters for UBHNL because many fragments ultimately lower to SAT obligations. DRAT/LRAT gives UBHNL a standard,
+          checkable “anchor” for accepting UNSAT.
+        </p>
+
+        <h2>DRAT vs LRAT (intuition)</h2>
+        <ul>
+          <li><strong>DRAT</strong>: compact proof traces where the checker must do more work to justify each step.</li>
+          <li><strong>LRAT</strong>: an “annotated” format where each step includes justification hints, making checking faster and more explicit.</li>
+        </ul>
+
+        <h2>How checking works (conceptual)</h2>
+        <svg viewBox="0 0 860 150" width="100%" height="auto" role="img" aria-label="DRAT/LRAT checking conceptual diagram">
+          <rect x="20" y="40" width="220" height="70" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="130" y="78" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="14">CNF</text>
+          <text x="130" y="98" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">original clauses</text>
+
+          <rect x="300" y="40" width="240" height="70" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="420" y="78" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="14">Proof trace</text>
+          <text x="420" y="98" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">DRAT / LRAT steps</text>
+
+          <rect x="600" y="40" width="240" height="70" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="720" y="78" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="14">Checker</text>
+          <text x="720" y="98" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">derives empty clause?</text>
+
+          <path d="M240 75 L300 75" stroke="#2f5d50" stroke-width="3" />
+          <path d="M540 75 L600 75" stroke="#2f5d50" stroke-width="3" />
+          <polygon points="298,75 288,70 288,80" fill="#2f5d50" />
+          <polygon points="598,75 588,70 588,80" fill="#2f5d50" />
+        </svg>
+
         <h2>Why they appear in UBHNL</h2>
         <ul>
           <li>They are a practical standard anchor for accepting UNSAT in Boolean reasoning.</li>
           <li>They allow SAT backends to be untrusted yet verifiable.</li>
           <li>UBHNL can lower many claims to CNF UNSAT, and accepts only with DRAT/LRAT evidence.</li>
+        </ul>
+
+        <h2>In UBHNL</h2>
+        <ul>
+          <li>DRAT/LRAT are accepted as <code>CertificateKind</code> for SAT-level UNSAT obligations.</li>
+          <li>Certificates must be wrapped in the standard envelope and tied to a <code>problemDigest</code> (see DS-014).</li>
+          <li>If the checker is not available or the certificate is invalid, UBHNL must return <code>UNKNOWN</code> (not a guessed UNSAT).</li>
+        </ul>
+
+        <h2>Relevant specs</h2>
+        <ul>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (acceptance policy)</li>
+          <li><a href="../../mdview.html?file=specs/DS/014-certificate-formats-verification.md">DS-014</a> (formats + checking protocol)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem" target="_blank" rel="noreferrer">SAT (Wikipedia)</a></li>
+          <li><a href="https://www.cs.utexas.edu/~marijn/drat-trim/" target="_blank" rel="noreferrer">drat-trim (reference checker/tool)</a></li>
         </ul>
       </div>
     </main>

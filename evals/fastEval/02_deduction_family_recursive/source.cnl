@@ -1,0 +1,14 @@
+# Test 02: Family Relations
+# STYLE: Natural SVO facts + shorthand quantifiers
+
+Let Person be a Domain.
+Let Alice, Bob, Charlie be Persons.
+
+# Facts using natural "X is Y of Z" pattern
+Alice is Parent of Bob.
+Bob is Parent of Charlie.
+
+# Rules with natural language in conditions
+For any Person x, y, z:
+    If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
+    If x is Parent of y then x is Ancestor of y.

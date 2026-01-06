@@ -1,0 +1,13 @@
+# Test 04: SAT Conflict - Switch States
+# STYLE: Natural predicates with "is" for states
+
+Switch is a Domain.
+switch1 is a Switch.
+
+# Contradictory facts - natural "X is Y" 
+switch1 is On.
+switch1 is Off.
+
+# Exclusion rule
+For every Switch s:
+    It is not the case that (s is On and s is Off).

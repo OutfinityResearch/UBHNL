@@ -1,0 +1,4 @@
+[
+  { "input": "Assume 'a' is true", "kind": "assume", "expected": "Accepted." },
+  { "input": "Prove 'c' follows from 'a'", "kind": "prove", "expected": "Yes, c is true." }
+]

@@ -1,0 +1,16 @@
+Proof TrafficLightTransition:
+    Given:
+        Green(l1).
+        For all Light x: If Green(x) then Next(Yellow(x)).
+        For all Light x: If Yellow(x) then Next(Red(x)).
+        For all Light x: If Red(x) then Next(Green(x)).
+    Apply:
+        Transition Rule on Green(l1).
+    Derive:
+        Next(Yellow(l1)).
+    Apply:
+        Transition Rule on Yellow(l1).
+    Derive:
+        Next(Red(l1)).
+    Therefore:
+        Trace: Green -> Yellow -> Red.

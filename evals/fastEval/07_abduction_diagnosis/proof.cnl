@@ -1,0 +1,11 @@
+Proof DiagnosePatient:
+    Observed:
+        p1 has Fever.
+        p1 coughs.
+    Hypothesis:
+        p1 has Flu.
+    Verify:
+        If p1 has Flu then p1 has Fever. (consistent)
+        If p1 has Flu then p1 coughs. (consistent)
+    Therefore:
+        Hypothesis "p1 has Flu" is consistent with observations.

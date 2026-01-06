@@ -1,0 +1,12 @@
+@Person __Atom
+@p1 __Atom
+
+IsA p1 Person
+
+@rule1 ForAll Person graph p
+    @c1 Minor $p
+    @c2 Restricted $p
+    @imp1 Implies $c1 $c2
+    return $imp1
+end
+@f1 Minor p1

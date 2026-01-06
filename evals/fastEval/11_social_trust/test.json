@@ -1,0 +1,3 @@
+[
+  { "input": "Check Trusts(Alice, Charlie)", "kind": "query", "expected": "Yes, Alice trusts Charlie." }
+]

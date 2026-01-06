@@ -1,0 +1,24 @@
+@Object __Atom
+@ball __Atom
+
+IsA ball Object
+
+@rule1 ForAll Object graph o
+    @c1 HasForce $o
+    @c2 Accelerates $o
+    @imp1 Implies $c1 $c2
+    return $imp1
+end
+@rule2 ForAll Object graph o
+    @c3 Accelerates $o
+    @c4 Changes $o
+    @imp2 Implies $c3 $c4
+    return $imp2
+end
+@rule3 ForAll Object graph o
+    @c5 Changes $o
+    @c6 Moves $o
+    @imp3 Implies $c5 $c6
+    return $imp3
+end
+@f1 HasForce ball

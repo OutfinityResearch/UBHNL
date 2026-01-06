@@ -1,0 +1,15 @@
+Proof ChainedImplication:
+    Given:
+        a is true.
+        If a then b.
+        If b then c.
+    Apply:
+        Modus Ponens on a and (If a then b).
+    Derive:
+        b is true.
+    Apply:
+        Modus Ponens on b and (If b then c).
+    Derive:
+        c is true.
+    Therefore:
+        c is true.

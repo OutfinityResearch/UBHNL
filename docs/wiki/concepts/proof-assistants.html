@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,50 +10,56 @@
   <body>
     <header>
       <h1>Proof assistants (HOL / Type Theory)</h1>
-      <p>Backends pentru dovezi formale: proof objects verificate de un kernel mic (trusted core).</p>
+      <p>Backends for formal proofs: proof objects checked by a small kernel (trusted core).</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="certificates.html">Certificate</a>
-          <a href="../decisions/minimal-kernel.html">Kernel minimal</a>
+          <a href="../decisions/minimal-kernel.html">Minimal kernel</a>
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un <strong>proof assistant</strong> (ex. HOL/Type Theory) construiește dovezi ca obiecte (proof terms)
-          care pot fi verificate de un kernel mic, determinist.
+          A <strong>proof assistant</strong> (e.g., HOL/Type Theory) constructs proofs as objects (proof terms)
+          that can be checked by a small, deterministic kernel.
         </p>
 
-        <h2>Rol în UBHNL</h2>
+        <h2>Role in UBHNL</h2>
         <ul>
-          <li>Nu mută complexitatea în kernel UBH; rămâne un backend modular.</li>
-          <li>Poate gestiona fragmente foarte expresive (<code>Frag_HOL</code>, <code>Frag_TypeTheory</code>).</li>
-          <li>Integrare tipică: proof scripts ca artefacte long-term (theory files) + discharge automat de sub-goal-uri cu SAT/SMT.</li>
+          <li>It does not move complexity into the UBH kernel; it remains a modular backend.</li>
+          <li>It can handle very expressive fragments (<code>Frag_HOL</code>, <code>Frag_TypeTheory</code>).</li>
+          <li>Typical integration: proof scripts as long-term artifacts (theory files) plus automated discharge of sub-goals via SAT/SMT.</li>
         </ul>
 
         <h2>Certificate</h2>
         <p>
-          Certificatul este chiar <strong>proof object-ul</strong>. Checker-ul este kernel-ul proof assistant-ului (trusted core).
+          The certificate is the <strong>proof object</strong> itself. The checker is the proof assistant’s kernel (trusted core).
         </p>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Acceptarea devine puternică (formal), dar costul în experiența userului poate fi mai mare (proof engineering).</li>
-          <li>UBHNL tratează asta ca “slot arhitectural”: nu e obligatoriu pentru nucleul UBH, dar e compatibil.</li>
+          <li>Acceptance is very strong (formal), but the user experience cost can be higher (proof engineering).</li>
+          <li>UBHNL treats this as an architectural “slot”: not required for the UBH kernel, but compatible.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (<code>Frag_HOL</code>, <code>Frag_TypeTheory</code>)</li>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (certificate proof assistants)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Proof_assistant" target="_blank" rel="noreferrer">Proof assistant (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Higher-order_logic" target="_blank" rel="noreferrer">Higher-order logic (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Type_theory" target="_blank" rel="noreferrer">Type theory (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

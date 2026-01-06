@@ -1,0 +1,15 @@
+Proof PeanoSuccessor:
+    Given:
+        Zero is a Nat.
+        IsNat(Zero).
+        For all Nat n: If IsNat(n) then IsNat(Succ(n)).
+    Apply:
+        Base case: IsNat(Zero).
+    Derive:
+        IsNat(Succ(Zero)).
+    Apply:
+        Inductive step on Succ(Zero).
+    Derive:
+        IsNat(Succ(Succ(Zero))).
+    Therefore:
+        IsNat(Succ(Succ(Zero))).

@@ -1,0 +1,3 @@
+[
+  { "input": "Prove IsNat(Succ(Succ(Zero)))", "kind": "prove", "expected": "Yes, IsNat(Succ(Succ(Zero))) is true." }
+]

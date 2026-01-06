@@ -1,7 +1,0 @@
-Let Cell be a Domain.
-Let Protein be a Domain.
-Let c0 be a Cell.
-
-Definition: Producer <Cell c> is:
-    For all Protein p:
-        If Expresses(c, p) then Active(p)

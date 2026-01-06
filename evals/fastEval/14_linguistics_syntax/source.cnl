@@ -1,0 +1,19 @@
+# Test 14: Linguistics - Syntax Parsing
+# STYLE: Grammar predicates as natural "is" states
+
+Let Word be a Domain.
+Let The be a Word.
+Let Cat be a Word.
+Let Runs be a Word.
+
+# Grammar rules - natural predicates
+For all Word w1, Word w2:
+    If w1 is Det and w2 is Noun then w1 forms w2.
+
+For all Word w1, Word w2, Word w3:
+    If w1 forms w2 and w3 is Verb then w1 completes w3.
+
+# Lexical facts - natural "is"
+The is Det.
+Cat is Noun.
+Runs is Verb.

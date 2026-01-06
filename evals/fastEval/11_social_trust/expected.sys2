@@ -1,0 +1,25 @@
+@User __Atom
+@Alice __Atom
+@Bob __Atom
+@Charlie __Atom
+
+IsA Alice User
+IsA Bob User
+IsA Charlie User
+
+@rule1 ForAll User graph x
+    @inner1 ForAll User graph y
+        @inner2 ForAll User graph z
+            @c1 Trusts $x $y
+            @c2 Trusts $y $z
+            @and1 And $c1 $c2
+            @c3 Trusts $x $z
+            @imp2 Implies $and1 $c3
+            return $imp2
+        end
+        return $inner2
+    end
+    return $inner1
+end
+@f1 Trusts Alice Bob
+@f2 Trusts Bob Charlie

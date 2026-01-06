@@ -1,0 +1,15 @@
+# Test 12: Chemistry - Reaction
+# STYLE: Mixed natural + explicit for complex predicates
+
+Let Mol be a Domain.
+Let H2 be a Mol.
+Let O2 be a Mol.
+
+# Reaction rule - natural predicates where possible
+For all Mol m1, Mol m2:
+    If m1 is Present and m2 is Present and m1 reacts m2 then m1 combines m2.
+
+# Facts
+H2 is Present.
+O2 is Present.
+H2 reacts O2.

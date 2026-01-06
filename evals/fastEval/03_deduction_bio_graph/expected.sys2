@@ -1,0 +1,14 @@
+@Cell __Atom
+@Protein __Atom
+@c0 __Atom
+
+IsA c0 Cell
+
+@Producer graph c
+    @inner1 ForAll Protein graph p
+        @c1 Expresses $c $p
+        @c2 Active $p
+        @imp1 Implies $c1 $c2
+        return $imp1
+    end
+end

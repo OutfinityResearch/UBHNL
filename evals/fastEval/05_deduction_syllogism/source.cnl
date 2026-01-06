@@ -1,0 +1,12 @@
+# Test 05: Classic Syllogism - Socrates
+# STYLE: "Each" quantifier + natural "is" predicates
+
+Entity is a Domain.
+Let Socrates be a Entity.
+
+# Universal rule - "Each X: If... then..."
+Each Entity x:
+    If x is Man then x is Mortal.
+
+# Fact - natural predicate
+Socrates is Man.

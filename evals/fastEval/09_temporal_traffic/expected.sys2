@@ -1,0 +1,27 @@
+@Light __Atom
+@l1 __Atom
+
+IsA l1 Light
+
+@rule1 ForAll Light graph x
+    @c1 Green $x
+    @func1 Yellow $x
+    @c2 Next $func1
+    @imp2 Implies $c1 $c2
+    return $imp2
+end
+@rule2 ForAll Light graph x
+    @c3 Yellow $x
+    @func3 Red $x
+    @c4 Next $func3
+    @imp4 Implies $c3 $c4
+    return $imp4
+end
+@rule3 ForAll Light graph x
+    @c5 Red $x
+    @func5 Green $x
+    @c6 Next $func5
+    @imp6 Implies $c5 $c6
+    return $imp6
+end
+@f1 Green l1

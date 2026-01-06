@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Structural decompositions (treewidth / DP)</h1>
-      <p>Tactică de orchestrare: decompui problema și rezolvi subprobleme prin dynamic programming.</p>
+      <p>An orchestrator tactic: decompose the problem and solve subproblems via dynamic programming.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="orchestrator.html">Orchestrator</a>
@@ -22,19 +22,24 @@
           <a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Unele probleme booleene au structură de graf cu <strong>treewidth</strong> mic. Poți construi o decompunere (tree decomposition)
-          și apoi rezolvi prin DP pe arbore.
+          Some Boolean problems have an underlying graph structure with small <strong>treewidth</strong>. You can build a tree decomposition
+          and then solve via dynamic programming on the tree.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Este o tactică a orchestratorului: produce un plan “divide and conquer”.</li>
-          <li>Output-ul final se verifică prin recompoziție + certificate ale subproblemelor.</li>
+          <li>It is an orchestrator tactic: produces a “divide and conquer” plan.</li>
+          <li>The final output is checked via recomposition plus certificates for subproblems.</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Treewidth" target="_blank" rel="noreferrer">Treewidth (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Tree_decomposition" target="_blank" rel="noreferrer">Tree decomposition (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

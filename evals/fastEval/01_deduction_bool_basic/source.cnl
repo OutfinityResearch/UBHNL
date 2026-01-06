@@ -1,0 +1,10 @@
+# Test 01: Boolean Deduction
+# STYLE: Minimal declarations + simple If-then
+
+a is a Bit.
+b is a Bit.
+c is a Bit.
+
+# Chain of implications (natural "If X then Y")
+If a then b.
+If b then c.

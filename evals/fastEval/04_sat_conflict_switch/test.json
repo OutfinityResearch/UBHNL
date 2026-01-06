@@ -1,0 +1,3 @@
+[
+  { "input": "Detect global contradiction", "kind": "check", "expected": "Contradiction found." }
+]

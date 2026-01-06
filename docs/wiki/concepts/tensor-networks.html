@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Tensor / factor graphs, belief propagation</h1>
-      <p>Reprezentări pentru probabilistic inference și unele clase de reasoning “structural”.</p>
+      <p>Representations for probabilistic inference and some classes of “structural” reasoning.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="probabilistic.html">Probabilistic</a>
@@ -22,19 +22,24 @@
           <a href="unknown.html">UNKNOWN</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Un <strong>factor graph</strong> (sau tensor network) reprezintă o funcție globală ca produs de factori locali.
-          <strong>Belief propagation</strong> este un algoritm aproximativ de mesaj-passing pentru margini/condiționale.
+          A <strong>factor graph</strong> (or tensor network) represents a global function as a product of local factors.
+          <strong>Belief propagation</strong> is an approximate message-passing algorithm for marginals/conditionals.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Exact: preferi reducere la WMC/KC (checkable).</li>
-          <li>Aproximativ: BP/variational; rezultatul este probabilistic și necesită audit metadata.</li>
+          <li>Exact: prefer reduction to WMC/KC (checkable).</li>
+          <li>Approximate: BP/variational methods; results are probabilistic and require audit metadata.</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Factor_graph" target="_blank" rel="noreferrer">Factor graph (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Belief_propagation" target="_blank" rel="noreferrer">Belief propagation (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

@@ -40,6 +40,17 @@
           Result: the number of clauses grows linearly in the number of gates (it does not explode exponentially).
         </p>
 
+        <h2>Equisatisfiable (not necessarily equivalent)</h2>
+        <p>
+          Tseitin encodings usually introduce auxiliary variables (one per gate). That means the CNF is typically
+          <strong>equisatisfiable</strong> with the original formula: it has the same SAT/UNSAT answer, but the set of models
+          over <em>all</em> variables is different because auxiliaries can appear.
+        </p>
+        <p>
+          UBHNL relies on this because solve/prove needs only SAT/UNSAT correctness. For explanations, UBHNL maps models back
+          to user-level atoms via the session’s symbol table and origins.
+        </p>
+
         <h2>Why UBHNL does this</h2>
         <ul>
           <li>UBH is a circuit; Tseitin is the standard method to reach CNF efficiently.</li>
@@ -56,6 +67,12 @@
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (AND clauses)</li>
           <li><a href="../../mdview.html?file=specs/DS/001-ir-hashcons.md">DS-001</a> (IR size drives CNF size)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Tseytin_transformation" target="_blank" rel="noreferrer">Tseytin transformation (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Conjunctive_normal_form" target="_blank" rel="noreferrer">CNF (Wikipedia)</a></li>
         </ul>
       </div>
     </main>

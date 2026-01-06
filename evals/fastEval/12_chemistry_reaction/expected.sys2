@@ -1,0 +1,22 @@
+@Mol __Atom
+@H2 __Atom
+@O2 __Atom
+
+IsA H2 Mol
+IsA O2 Mol
+
+@rule1 ForAll Mol graph m1
+    @inner1 ForAll Mol graph m2
+        @c1 Present $m1
+        @c2 Present $m2
+        @c3 Reacts $m1 $m2
+        @and1 And $c1 $c2 $c3
+        @c4 Combines $m1 $m2
+        @imp2 Implies $and1 $c4
+        return $imp2
+    end
+    return $inner1
+end
+@f1 Present H2
+@f2 Present O2
+@f3 Reacts H2 O2

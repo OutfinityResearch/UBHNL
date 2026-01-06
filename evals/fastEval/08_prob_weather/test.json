@@ -1,0 +1,3 @@
+[
+  { "input": "Probability Rain(today)", "kind": "query_prob", "expected": "Probability is 0.8." }
+]

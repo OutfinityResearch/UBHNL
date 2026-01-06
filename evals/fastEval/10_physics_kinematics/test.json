@@ -1,0 +1,3 @@
+[
+  { "input": "Predict Moves(ball)", "kind": "predict", "expected": "Yes, ball moves." }
+]

@@ -1,0 +1,3 @@
+[
+  { "input": "Prove transitivity of Ancestor", "kind": "prove", "expected": "Yes, Ancestor is transitive." }
+]

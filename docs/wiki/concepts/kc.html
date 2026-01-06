@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Knowledge compilation (BDD/d-DNNF/SDD)</h1>
-      <p>Compilezi o teorie booleană într-o reprezentare care răspunde rapid la query-uri (prove/count/conditionals).</p>
+      <p>Compile a Boolean theory into a representation that answers repeated queries quickly (prove/count/conditionals).</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,37 +23,42 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Knowledge compilation (KC)</strong> transformă o formulă/teorie booleană într-o structură (BDD, d-DNNF, SDD)
-          în care anumite operații devin ieftine: satisfiability checks repetate, counting, query-uri condiționale.
+          <strong>Knowledge compilation (KC)</strong> transforms a Boolean formula/theory into a structure (BDD, d-DNNF, SDD)
+          where certain operations become cheap: repeated satisfiability checks, model counting, conditional queries.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>KC este un fragment/artefact (<code>Frag_KC</code>) folosit ca accelerator pentru <code>CountModels</code> și pentru query-uri repetate.</li>
-          <li>Planner-ul poate alege tactic: “CompileKC → Check(equivalence) → AnswerQueriesFast”.</li>
+          <li>KC is treated as a fragment/artifact (<code>Frag_KC</code>) used as an accelerator for <code>CountModels</code> and repeated queries.</li>
+          <li>The planner can choose a tactic: “CompileKC → Check(equivalence) → AnswerQueriesFast”.</li>
         </ul>
 
         <h2>Certificate</h2>
         <p>
-          Când un backend produce un obiect KC, UBHNL cere o verificare de <strong>echivalență</strong> între teoria originală și forma compilată.
-          Tipic: reduci equivalence checking la SAT/UBH.
+          When a backend produces a KC object, UBHNL requires a check of <strong>equivalence</strong> between the original theory and the compiled form.
+          Typically: reduce equivalence checking to SAT/UBH.
         </p>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>KC e util când ai multe query-uri asupra aceleiași teorii (session caching).</li>
-          <li>Costul inițial poate fi mare; bugetele și heuristics sunt parte din orchestrator.</li>
+          <li>KC is useful when you run many queries over the same theory (session caching).</li>
+          <li>Upfront compilation cost can be high; budgets and heuristics are part of the orchestrator.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (KC certificate)</li>
-          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (tactică KC)</li>
+          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (KC tactic)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Binary_decision_diagram" target="_blank" rel="noreferrer">Binary decision diagram (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Knowledge_compilation" target="_blank" rel="noreferrer">Knowledge compilation (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

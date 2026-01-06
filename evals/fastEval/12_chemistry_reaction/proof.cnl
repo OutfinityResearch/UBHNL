@@ -1,0 +1,12 @@
+Proof ChemicalReaction:
+    Given:
+        Present(H2).
+        Present(O2).
+        CanReact(H2, O2).
+        For all Mol m1, m2: If Present(m1) and Present(m2) and CanReact(m1, m2) then Reacts(m1, m2).
+    Apply:
+        Reaction Rule on H2, O2.
+    Derive:
+        All conditions met: Present(H2), Present(O2), CanReact(H2, O2).
+    Therefore:
+        Reacts(H2, O2).

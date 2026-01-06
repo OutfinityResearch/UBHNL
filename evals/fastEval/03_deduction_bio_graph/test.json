@@ -1,0 +1,3 @@
+[
+  { "input": "Find cell producing protein", "kind": "query", "expected": "Cell c0 produces Protein p." }
+]

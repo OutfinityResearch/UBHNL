@@ -1,0 +1,11 @@
+@Bit __Atom
+@a __Atom
+@b __Atom
+@c __Atom
+
+IsA a Bit
+IsA b Bit
+IsA c Bit
+
+@rule1 Implies a b
+@rule2 Implies b c

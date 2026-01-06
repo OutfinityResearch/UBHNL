@@ -1,9 +1,14 @@
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { performance } from 'perf_hooks';
 
-// --- UTILS ---
+// Get current directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const fastEvalDir = path.join(__dirname, 'fastEval');
+
+// --- COLORS ---
 const COLORS = {
     reset: "\x1b[0m",
     red: "\x1b[31m",
@@ -14,72 +19,121 @@ const COLORS = {
     dim: "\x1b[2m"
 };
 
-function color(text, colorName) {
-    return `${COLORS[colorName] || ''}${text}${COLORS.reset}`;
+function color(text, col) {
+    return (COLORS[col] || "") + text + COLORS.reset;
 }
 
+// Helper to pad strings considering ANSI colors
 function pad(str, len) {
-    return (str + ' '.repeat(len)).slice(0, len);
+    str = String(str);
+    const visibleLen = str.replace(/\x1b\[[0-9;]*m/g, "").length;
+    if (visibleLen >= len) return str;
+    return str + " ".repeat(len - visibleLen);
 }
 
-// --- MOCK SESSION SKELETON (Fails by default) ---
+// --- MOCK SESSION (Simulated) ---
 class MockSession {
     constructor() {
-        this.loadedFiles = [];
+        this.kb = [];
     }
-
-    async loadTheoryFile(filePath) {
-        try {
-            await fs.stat(filePath);
-            this.loadedFiles.push(path.basename(filePath));
-            return { ok: true, docId: path.basename(filePath) };
-        } catch (err) {
-            return { ok: false, error: err.message };
-        }
+    async loadTheoryFile(filepath) {
+        // Simulate loading
     }
-
     async query(input, kind) {
-        // SKELETON: Since implementation is missing, we simply return NOT_IMPLEMENTED or UNKNOWN.
-        // This ensures tests FAIL until valid logic is hooked up.
-        await new Promise(resolve => setTimeout(resolve, 10));
-        return { status: 'ERROR', note: 'Not Implemented' };
+        // Simple mock responses for "boolean" suite based on input keywords
+        // This is a placeholder until the real engine is connected
+        if (input.includes('implies $a $b')) return { status: 'OK' }; // Rules
+        if (input.includes('$rule')) return { status: 'OK' }; // Assertions
+
+        // Contradiction suite mocks
+        if (input.includes('IsA switch1 Switch')) return { status: 'OK' };
+
+        // Default ERROR for everything else to prove tests define "Expected" behavior
+        // And we see the FAILs
+        return { status: 'ERROR', note: 'Not implemented' };
     }
 }
 
-// --- TEST RUNNER ---
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const FAST_EVAL_DIR = path.join(__dirname, 'fastEval');
-
 async function runTests() {
-    console.log(color("UBHNL FastEval Suite (Strict Verification Mode)", "cyan"));
-    console.log(color("===============================================", "cyan"));
+    console.log(color("UBHNL FastEval Suite (Strict Verification Mode)", "green"));
+    console.log("=".repeat(120));
 
-    const suiteConfig = JSON.parse(await fs.readFile(path.join(FAST_EVAL_DIR, 'suite.json'), 'utf-8'));
+    const suites = await fs.readdir(fastEvalDir, { withFileTypes: true });
+    let results = [];
 
-    const results = [];
     const startTotal = performance.now();
 
-    for (const suite of suiteConfig) {
-        const suiteDir = path.join(FAST_EVAL_DIR, suite.directory);
-        const testDefPath = path.join(suiteDir, 'test.json');
+    for (const dirent of suites) {
+        if (!dirent.isDirectory()) continue;
+        const suiteDir = path.join(fastEvalDir, dirent.name);
 
-        if (!await fs.stat(testDefPath).catch(() => false)) {
-            console.warn(color(`Skipping ${suite.id}: test.json not found.`, "yellow"));
-            continue;
-        }
+        // Load suite metadata if exists, else infer
+        const suite = { id: dirent.name, description: "Unknown Suite" };
+
+        const testDefPath = path.join(suiteDir, 'test.json');
+        if (!await fs.stat(testDefPath).catch(() => false)) continue;
 
         const testDef = JSON.parse(await fs.readFile(testDefPath, 'utf-8'));
-        console.log(`\nRunning Suite: ${color(suite.id, "blue")} (${suite.description})`);
+        
+        // Load proof.cnl
+        const proofPath = path.join(suiteDir, 'proof.cnl');
+        let proofContent = null;
+        if (await fs.stat(proofPath).catch(() => false)) {
+             proofContent = await fs.readFile(proofPath, 'utf-8');
+             proofContent = proofContent.trim();
+        }
+
+        console.log(`\nRunning Suite: ${color(suite.id, "blue")}`);
 
         const session = new MockSession();
 
-        // Load all .dsl/.cnl files in the dir
-        const dirFiles = await fs.readdir(suiteDir);
-        const theoryFiles = dirFiles.filter(f => f.endsWith('.dsl') || f.endsWith('.cnl'));
+        // --- TRANSLATION AND LOADING ---
+        let translationPassed = true;
+        let finalSys2 = "";
 
-        for (const file of theoryFiles) {
-            await session.loadTheoryFile(path.join(suiteDir, file));
+        try {
+            const cnlPath = path.join(suiteDir, 'source.cnl');
+            const sys2ExpectedPath = path.join(suiteDir, 'expected.sys2');
+
+            // 1. Check if files exist
+            const hasCnl = await fs.stat(cnlPath).catch(() => false);
+            const hasSys2 = await fs.stat(sys2ExpectedPath).catch(() => false);
+
+            if (hasCnl && hasSys2) {
+                const cnlContent = await fs.readFile(cnlPath, 'utf-8');
+                const expectedSys2 = await fs.readFile(sys2ExpectedPath, 'utf-8');
+
+                // 2. Run Translation
+                const { translate } = await import('../src/cnlTranslator/index.mjs');
+                const generatedSys2 = translate(cnlContent);
+
+                // 3. Normalize for comparison (trim whitespace)
+                const normGen = generatedSys2.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#')).join('\n');
+                const normExp = expectedSys2.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#')).join('\n');
+
+                if (normGen !== normExp) {
+                    translationPassed = false;
+                    console.log(color(`  [TRANSLATION FAIL]`, "red"));
+                    console.log(color(`   Expected:\n${normExp}`, "dim"));
+                    console.log(color(`   Got:\n${normGen}`, "dim"));
+                } else {
+                    console.log(color(`  [TRANSLATION PASS]`, "green"));
+                    finalSys2 = generatedSys2;
+                }
+            } else {
+                // Fallback for non-CNL suites
+                const dirFiles = await fs.readdir(suiteDir);
+                const legacyFiles = dirFiles.filter(f => f.endsWith('.dsl') || f.endsWith('.sys2'));
+                for (const file of legacyFiles) await session.loadTheoryFile(path.join(suiteDir, file));
+
+                if (legacyFiles.length === 0 && (!hasCnl || !hasSys2)) {
+                    console.log(color(`  [WARN] No source files found`, "yellow"));
+                    translationPassed = null; // N/A
+                }
+            }
+        } catch (err) {
+            console.error(color(`  [TRANSLATION ERROR] ${err.message}`, "red"));
+            translationPassed = false;
         }
 
         for (const testCase of testDef) {
@@ -90,33 +144,39 @@ async function runTests() {
             const endTest = performance.now();
             const duration = (endTest - startTest).toFixed(2);
 
-            let passed = true;
-            if (result.status !== testCase.expected) passed = false;
-            if (testCase.witness) {
-                if (!result.witness || JSON.stringify(result.witness) !== JSON.stringify(testCase.witness)) passed = false;
-            }
+            // Detailed Checks
+            const reasonPassed = result.status !== 'ERROR';
+            const correctPassed = result.answer === testCase.expected;
+            const proofPassed = proofContent && result.proof && result.proof.trim() === proofContent;
 
+            // Overall Pass?
+            // If we require EVERYTHING:
+            // const passed = reasonPassed && correctPassed && proofPassed;
+            // But for now, we just log "FAIL" for reason if reason failed.
+            // The logic was: result.status !== testCase.expected.
+            // But testCase.expected is now "Yes, ...". result.status is "OK" or "ERROR".
+            // So result.status !== expected is ALWAYS true (FAIL).
+            // We should decouple "Reasoning Status" from "Correct Answer".
+            
+            // For the summary table, we track all 3.
+            
             results.push({
                 suite: suite.id,
-                input: testCase.input,
                 description: testCase.description || testCase.input,
-                expected: testCase.expected,
-                got: result.status,
-                passed: passed,
+                translationPassed: translationPassed,
+                reasonPassed: reasonPassed,
+                correctPassed: correctPassed,
+                proofPassed: proofPassed,
                 duration: duration
             });
 
             const indent = "      ";
-            console.log(`${indent}Action:   ${testCase.kind}`);
-            console.log(`${indent}Input:    ${testCase.input}`);
-            console.log(`${indent}Expected: ${testCase.expected}`);
-
-            if (passed) {
-                console.log(`${indent}Got:      ${color(result.status, "green")}`);
-                console.log(`${indent}Result:   ${color(`PASS (${duration}ms)`, "green")}`);
+            if (reasonPassed && correctPassed && proofPassed) {
+                console.log(`${indent}Result:   ${color(`PASS`, "green")}`);
             } else {
-                console.log(`${indent}Got:      ${color(result.status, "red")} (${result.note || ''})`);
-                console.log(`${indent}Result:   ${color(`FAIL (${duration}ms)`, "red")}`);
+                console.log(`${indent}Reason:   ${reasonPassed ? color("PASS", "green") : color("FAIL", "red")}`);
+                console.log(`${indent}Correct:  ${correctPassed ? color("PASS", "green") : color("FAIL", "red")}`);
+                console.log(`${indent}Proof:    ${proofPassed ? color("PASS", "green") : color("FAIL", "red")}`);
             }
         }
     }
@@ -125,31 +185,43 @@ async function runTests() {
 
     // --- TABLE REPORT ---
     console.log("\n" + color("Execution Summary", "cyan"));
-    console.log(color("--------------------------------------------------------------------------------------", "dim"));
+    const line = color("-".repeat(110), "dim");
+    console.log(line);
     console.log(
         "| " + pad("Suite", 16) +
         " | " + pad("Description", 30) +
-        " | " + pad("Exp", 8) +
-        " | " + pad("Got", 8) +
+        " | " + pad("Trans?", 8) +
+        " | " + pad("Reason?", 8) +
+        " | " + pad("Correct?", 8) +
+        " | " + pad("Proof?", 8) +
         " | " + pad("Time (ms)", 9) + " |"
     );
-    console.log(color("--------------------------------------------------------------------------------------", "dim"));
+    console.log(line);
 
     let passedCount = 0;
     for (const r of results) {
-        if (r.passed) passedCount++;
-        // Truncate description if too long
+        // Overall pass condition?
+        // Currently translation must pass. Reasoning/Correct/Proof are failing.
+        // Let's count "Translation Passed" as partial success for this task?
+        // Or keep strict: All must pass.
+        const allPass = r.translationPassed !== false && r.reasonPassed && r.correctPassed && r.proofPassed;
+        if (allPass) passedCount++;
+
         let descDisp = r.description.length > 27 ? r.description.substring(0, 27) + "..." : r.description;
         descDisp = pad(descDisp, 30);
 
-        const statusColor = r.passed ? "green" : "red";
-        const gotText = color(pad(r.got, 8), statusColor);
+        let suiteDisp = r.suite.length > 16 ? r.suite.substring(0, 13) + "..." : r.suite;
+
+        const transStatus = r.translationPassed === false ? color("FAIL", "red") : (r.translationPassed === true ? color("PASS", "green") : color("N/A", "dim"));
+        const reasonStatus = r.reasonPassed ? color("PASS", "green") : color("FAIL", "red");
+        const correctStatus = r.correctPassed ? color("PASS", "green") : color("FAIL", "red");
+        const proofStatus = r.proofPassed ? color("PASS", "green") : color("FAIL", "red");
 
         console.log(
-            `| ${pad(r.suite, 16)} | ${descDisp} | ${pad(r.expected, 8)} | ${gotText} | ${pad(r.duration, 9)} |`
+            `| ${pad(suiteDisp, 16)} | ${descDisp} | ${pad(transStatus, 8)} | ${pad(reasonStatus, 8)} | ${pad(correctStatus, 8)} | ${pad(proofStatus, 8)} | ${pad(r.duration, 9)} |`
         );
     }
-    console.log(color("--------------------------------------------------------------------------------------", "dim"));
+    console.log(line);
 
     const totalTime = (endTotal - startTotal).toFixed(0);
     console.log(`Total Time: ${totalTime}ms`);
@@ -158,7 +230,7 @@ async function runTests() {
     console.log(`Tests Passed: ${color(`${passedCount}/${results.length}`, scoreColor)}`);
 
     if (passedCount < results.length) {
-        console.log(color("\nFAILURE: System implementation missing or incorrect.", "red"));
+        console.log(color("\nFAILURE: System verification failed.", "red"));
         process.exit(1);
     } else {
         console.log(color("\nSUCCESS: All systems operational.", "green"));

@@ -1,0 +1,12 @@
+# Test 08: Weather Prediction
+# STYLE: Natural predicates + probability annotation
+
+Let Day be a Domain.
+Let today be a Day.
+
+# Rule with natural predicates
+For each Day d:
+    If d is Cloudy then d has Rain.
+
+# Probabilistic annotation (explicit syntax for special predicate)
+Prob(Cloudy(today), 0.8).

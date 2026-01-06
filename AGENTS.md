@@ -1,29 +1,33 @@
 # Agent Guidelines for UBHNL
 
+## Language policy (repo-wide)
+- Chat responses may be in Romanian.
+- Repository artifacts (code, comments, docs, specs, site pages) must be written in **English**.
+- Exception: temporary review notes placed at the repo root (when explicitly requested) may be in Romanian.
+
 ## DSL (Intermediate Representation) Restrictions
-The DSL serves as the rigid, semantic graph (DAG) underlying all logic. It is NOT for human convenience but for structural clarity and auditability.
+The DSL is a deterministic, typed, strict-vocabulary language used for long-term theory files and reproducible learn/query inputs.
 
-2.  **Strict Graph Structure**:
-    *   Every complex expression MUST be decomposed into a DAG of named nodes.
-    *   **Prohibited**: Deeply nested expressions like `implies(and(a, b), c)` as a single statement.
-    *   **Required**: SSA-like flattening.
-        ```dsl
-        @t1 = and($a, $b)
-        @root = implies($t1, $c)
-        ```
+### Core rules (must match DS-008)
+- **Strict vocabulary**: any bare identifier must exist in the vocabulary (lexicon + exported declarations), otherwise it is a load error.
+- **The `@ / $ / vocab` rule**:
+  - `@name` introduces the statement target (declaration or subject-first statement).
+  - `$name` references a bound variable or a previously-defined symbol in scope.
+  - `name` (bare) is a vocabulary lookup (predicate/constant/domain).
+- **One-@ rule**: a line must contain **at most one** `@` token, and if present it must be the first token.
 
-3.  **Statement Format**:
-    *   Strictly: `@variable Verb Param1 Param2 ...`
-    *   **No Equal Sign**: Assignment is implied by position.
-    *   **No Parentheses**: Arguments are space-separated.
-    *   **Blocks**: Use `@var Verb Args begin ... end` for scopes.
-    *   `Verb` is the operator (e.g., `and`, `forall`, `implies`).
-    *   `Parameters` are references to other variables (`$t1`) or constants.
+### Common statement shapes
+- **Exported declaration** (adds a constant to the vocabulary):
+  - `@ion:Person`
+- **Subject-first fact statement** (asserts a predicate instance):
+  - `@ion has_fever`
+  - `@ion has_flu flu`
+- **Core logic expressions** (asserted statements):
+  - `forall $c in Cell: geneA($c) implies proteinP($c)`
+- **Query holes** (returnable witnesses):
+  - `exists ?c in Cell: proteinP(?c)`
 
-
-4.  **No "Syntactic Sugar"**:
-    *   No infix operators (`a implies b`).
-    *   No implicit variable creation.
+If a theory needs explicit DAG construction (for debugging or reuse), use named intermediates, but keep the one-@ rule.
 
 ## CNL (Controlled Natural Language) Guidelines
 1.  **Map to DAG**: The CNL parser's job is to read "natural" sentences and explode them into the rigorous DSL DAG.

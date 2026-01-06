@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Term rewriting &amp; completion (Knuth–Bendix)</h1>
-      <p>Metode pentru egalități și rescrieri: convergență, critical pairs, și proof traces verificabile.</p>
+      <p>Methods for equalities and rewriting: confluence, critical pairs, and checkable proof traces.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -22,36 +22,41 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiții</h2>
+        <h2>Definitions</h2>
         <ul>
-          <li><strong>Term rewriting</strong>: reguli <code>l → r</code> aplicate pentru a transforma termeni într-o formă normală.</li>
-          <li><strong>Completion</strong> (Knuth–Bendix): încearcă să transforme un set de egalități într-un sistem de rescriere convergent.</li>
+          <li><strong>Term rewriting</strong>: rules <code>l → r</code> applied to transform terms toward a normal form.</li>
+          <li><strong>Completion</strong> (Knuth–Bendix): attempts to turn a set of equalities into a convergent rewrite system.</li>
         </ul>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Modelat ca fragment de egalități (<code>Frag_Eq</code>) și/sau FOL cu egalitate (<code>Frag_FOL_Eq</code>).</li>
-          <li>Poate fi folosit ca backend/tactică pentru simplificări simbolice și pentru generarea de lemma.</li>
+          <li>Modeled as an equality fragment (<code>Frag_Eq</code>) and/or FOL with equality (<code>Frag_FOL_Eq</code>).</li>
+          <li>Can be used as a backend/tactic for symbolic simplifications and lemma generation.</li>
         </ul>
 
         <h2>Certificate</h2>
         <p>
-          Certificatele tipice includ: dovezi de joinability pentru critical pairs și trasee de rescriere.
-          Checker-ul validează pașii de rescriere și obligațiile rămase (posibil reduce unele sub-obligații la SMT/SAT).
+          Typical certificates include: joinability proofs for critical pairs and rewrite traces.
+          The checker validates rewrite steps and any remaining obligations (possibly discharging sub-obligations via SMT/SAT).
         </p>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Aceste metode sunt puternice pentru probleme de egalitate, dar nu înlocuiesc SAT/SMT pentru constrângeri booleene/numerice.</li>
-          <li>În UBHNL, rolul lor este modular (backend/tactică), iar acceptarea cere certificate.</li>
+          <li>These methods are strong for equality-heavy problems, but they do not replace SAT/SMT for Boolean/numeric constraints.</li>
+          <li>In UBHNL, their role is modular (backend/tactic) and acceptance requires certificates.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (rewriting + completion)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Term_rewriting" target="_blank" rel="noreferrer">Term rewriting (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Knuth%E2%80%93Bendix_completion_algorithm" target="_blank" rel="noreferrer">Knuth–Bendix completion algorithm (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

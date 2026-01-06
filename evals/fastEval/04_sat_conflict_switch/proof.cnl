@@ -1,0 +1,10 @@
+Proof SwitchContradiction:
+    Assume:
+        switch1 is On.
+        switch1 is Off.
+    Constraint:
+        For all Switch s: It is not the case that (s is On and s is Off).
+    Contradiction:
+        switch1 is both On and Off, violating the exclusion constraint.
+    Therefore:
+        UNSAT

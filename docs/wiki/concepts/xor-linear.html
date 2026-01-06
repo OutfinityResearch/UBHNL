@@ -32,6 +32,20 @@
           It is “linear” in the sense of algebra over <a href="gf2.html">GF(2)</a>. Such systems are solved efficiently with <strong>Gaussian elimination</strong>.
         </p>
 
+        <h2>A tiny example (solving by elimination)</h2>
+        <p>
+          Consider the system:
+        </p>
+        <pre><code>x ⊕ y = 1
+y ⊕ z = 0</code></pre>
+        <p>
+          From the second equation we get <code>z = y</code>. Substitute into the first: <code>x ⊕ y = 1</code>.
+          If we additionally learn <code>y = 0</code>, then <code>x = 1</code> and <code>z = 0</code>.
+        </p>
+        <p>
+          A Gaussian-elimination implementation does this mechanically using row operations over GF(2).
+        </p>
+
         <h2>What maps here in UBH</h2>
         <ul>
           <li>XOR gate definitions: <code>z = xor(a,b)</code> becomes <code>z ⊕ a ⊕ b = 0</code>.</li>
@@ -63,6 +77,13 @@
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (backend XOR incremental + propagation model)</li>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (UNSAT acceptance)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Gaussian_elimination" target="_blank" rel="noreferrer">Gaussian elimination (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Linear_equation" target="_blank" rel="noreferrer">Linear equations (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Finite_field" target="_blank" rel="noreferrer">Finite fields (Wikipedia)</a></li>
         </ul>
       </div>
     </main>

@@ -1,0 +1,25 @@
+@Patient __Atom
+@p1 __Atom
+
+IsA p1 Patient
+
+@rule1 ForAll Patient graph p
+    @c1 HasFlu $p
+    @c2 HasFever $p
+    @imp1 Implies $c1 $c2
+    return $imp1
+end
+@rule2 ForAll Patient graph p
+    @c3 HasFlu $p
+    @c4 Coughs $p
+    @imp2 Implies $c3 $c4
+    return $imp2
+end
+@rule3 ForAll Patient graph p
+    @c5 HasCold $p
+    @c6 Coughs $p
+    @imp3 Implies $c5 $c6
+    return $imp3
+end
+@f1 HasFever p1
+@f2 Coughs p1

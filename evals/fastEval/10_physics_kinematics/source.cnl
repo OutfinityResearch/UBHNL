@@ -1,0 +1,18 @@
+# Test 10: Physics - Causal Chain
+# STYLE: Natural intransitive verbs
+
+Object is a Domain.
+ball is a Object.
+
+# Causal chain - natural verbs
+For every Object o:
+    If o has Force then o accelerates.
+
+For every Object o:
+    If o accelerates then o changes.
+
+For every Object o:
+    If o changes then o moves.
+
+# Initial condition
+ball has Force.

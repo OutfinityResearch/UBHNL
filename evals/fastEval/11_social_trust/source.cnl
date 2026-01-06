@@ -1,0 +1,13 @@
+# Test 11: Social Network - Transitive Trust
+# STYLE: Natural SVO "x trusts y"
+
+Let User be a Domain.
+Let Alice, Bob, Charlie be Users.
+
+# Transitivity rule - natural SVO
+For any User x, y, z:
+    If x trusts y and y trusts z then x trusts z.
+
+# Facts - natural SVO
+Alice trusts Bob.
+Bob trusts Charlie.

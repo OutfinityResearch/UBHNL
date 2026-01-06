@@ -1,8 +1,0 @@
-[
-    {
-        "input": "Ancestor(p1, p3)",
-        "description": "Prove transitivity of Ancestor",
-        "kind": "Prove",
-        "expected": "PROVED"
-    }
-]

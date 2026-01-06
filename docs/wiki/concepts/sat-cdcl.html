@@ -30,6 +30,19 @@
           propagation, conflict analysis, and clause learning.
         </p>
 
+        <h2>How CDCL works (engineer-level sketch)</h2>
+        <ol>
+          <li><strong>Decide</strong>: pick a variable and assign a value (a guess).</li>
+          <li><strong>Propagate</strong>: apply unit propagation on clauses; this deduces forced assignments.</li>
+          <li><strong>Conflict</strong>: if a clause becomes false, analyze the implication graph.</li>
+          <li><strong>Learn</strong>: add a new clause that prevents repeating the same conflicting combination.</li>
+          <li><strong>Backtrack</strong>: jump back to a safe decision level and continue.</li>
+        </ol>
+        <p>
+          This process either finds a satisfying assignment (SAT) or proves that none exists (UNSAT) and emits a certificate
+          (typically DRAT/LRAT).
+        </p>
+
         <h2>Role in UBHNL</h2>
         <ul>
           <li>UBH encodes AND gates into CNF (Tseitin); the CNF is solved with CDCL.</li>
@@ -53,6 +66,12 @@
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/002-solver-xor.md">DS-002</a> (pluggable SAT backend + mixed loop)</li>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (DRAT/LRAT + acceptance)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem" target="_blank" rel="noreferrer">SAT (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/DPLL_algorithm" target="_blank" rel="noreferrer">DPLL / CDCL family (Wikipedia)</a></li>
         </ul>
       </div>
     </main>

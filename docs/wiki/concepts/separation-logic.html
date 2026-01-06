@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Separation Logic / shape analysis</h1>
-      <p>Verificare de proprietăți de memorie/heap: certificate ca invariants de formă, adesea reduse la CHC/SMT.</p>
+      <p>Reasoning about memory/heap properties: shape invariants as certificates, often reduced to CHC/SMT.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
         <div class="nav">
           <a href="../index.html">Wiki</a>
           <a href="chc.html">CHC</a>
@@ -23,19 +23,24 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Separation Logic</strong> este o logică pentru reasoning despre heap (pointeri, structuri de date) care separă regiuni de memorie.
-          Shape analysis derivă invariants despre structura heap-ului.
+          <strong>Separation Logic</strong> is a logic for reasoning about heap memory (pointers, data structures) that separates memory regions.
+          Shape analysis derives invariants about heap structure.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Tratat ca fragment opțional (<code>Frag_Sep</code>) cu backends dedicate.</li>
-          <li>Integrarea tipică: reducere la CHC/SMT și verificare de invariants.</li>
+          <li>Treated as an optional fragment (<code>Frag_Sep</code>) with dedicated backends.</li>
+          <li>Typical integration: reduction to CHC/SMT plus invariant checking.</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Separation_logic" target="_blank" rel="noreferrer">Separation logic (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Shape_analysis" target="_blank" rel="noreferrer">Shape analysis (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

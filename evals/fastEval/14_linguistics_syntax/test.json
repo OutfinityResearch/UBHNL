@@ -1,0 +1,3 @@
+[
+  { "input": "Parse 'The Cat Runs'", "kind": "parse", "expected": "Parse tree: IsSentence(The, Cat, Runs)." }
+]

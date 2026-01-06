@@ -12,6 +12,9 @@
 - Canonical input case lists:
   - CNL: `docs/specs/tests/cnl-cases.md`
   - DSL: `docs/specs/tests/dsl-cases.md`
+  - Probabilistic: `docs/specs/tests/probabilistic-cases.md`
+  - Certificates: `docs/specs/tests/certificate-cases.md`
+  - Errors: `docs/specs/tests/error-cases.md`
 
 ## Execution Model
 - Primary harness: `npm run devtest` (Node scripts under `src/devtests/`).
@@ -92,6 +95,36 @@ Concrete scenario (CNL):
 2) Learn: `geneA(c0)`
 3) Query: `proteinP(c0)`
 Expected: `PROVED` and explanation mentions both learned statements (or their origins).
+
+### 11) Certificate Envelopes and Verification
+These tests validate DS-014 at the orchestration/checking boundary.
+
+- Reject certificate when `problemDigest` does not match the normalized problem (`E_CERT_DIGEST_MISMATCH`).
+- Reject certificate when the format is unsupported by available checkers (`E_CERT_UNSUPPORTED_FORMAT`).
+- DRAT/LRAT:
+  - accept a valid UNSAT proof log for a tiny CNF,
+  - reject a corrupted log deterministically.
+- TS invariants:
+  - accept when all three obligations hold,
+  - reject when any obligation fails (with origin references).
+
+### 12) Error Handling and Diagnostics
+These tests validate DS-016 error taxonomy, blame, and origin reporting.
+
+- DSL: two `@` tokens on one line yields `E_DSL_TWO_AT` with correct `Origin` (path/line/column).
+- DSL/CNL: unknown bare symbol yields `E_UNKNOWN_SYMBOL` (strict vocabulary).
+- Typing: wrong arity yields `E_ARITY_MISMATCH`; wrong sort yields `E_TYPE_MISMATCH`.
+- Certificate checking failures yield `CertificateError` with stable `problemDigest`.
+
+### 13) Probabilistic (WMC/KC) and Audit Policy
+These tests validate DS-013 and the exact-vs-approx policy.
+
+- Exact WMC (small):
+  - parse weights as rationals deterministically,
+  - compute `P(Q|E)` as a rational ratio (when using the KC exact route).
+- Policy:
+  - if `requireExact=true` and no checkable exact route is available, return `UNKNOWN`,
+  - if `allowApprox=true`, return an approximate estimate with audit metadata (seeds, parameters).
 
 ## Tooling Notes
 - Keep the base suite deterministic; no randomness in the default run.

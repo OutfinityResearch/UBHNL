@@ -1,0 +1,10 @@
+Proof ProducerDefinition:
+    Given:
+        c0 is a Cell.
+        Definition Producer(Cell c): For all Protein p: If c expresses p then p is active.
+    Query:
+        Find a Cell that is a Producer.
+    Found:
+        c0 satisfies Producer definition if all proteins it expresses are active.
+    Therefore:
+        c0 is a candidate Producer.

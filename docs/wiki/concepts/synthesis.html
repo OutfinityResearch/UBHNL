@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Synthesis (SyGuS / invariant synthesis)</h1>
-      <p>Nu doar “găsește un model”: construiește un artefact (program/circuit/invariant) care satisface o specificație.</p>
+      <p>Not just “find a model”: construct an artifact (program/circuit/invariant) that satisfies a specification.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,36 +23,41 @@
           <a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          <strong>Synthesis</strong> cere sistemului să construiască un obiect (artefact) care satisface o proprietate:
-          ex. un circuit care implementează o relație, un invariant inductiv, un program mic care trece teste.
+          <strong>Synthesis</strong> asks the system to construct an object (artifact) that satisfies a property:
+          e.g., a circuit that implements a relation, an inductive invariant, a small program that passes tests.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>GoalKind: <code>Synthesize</code>. Fragmente tipice: TS/CHC/SMT/UBH.</li>
-          <li>Output: artefact + obligații de corectitudine verificate (SAT/SMT/UBH).</li>
+          <li>GoalKind: <code>Synthesize</code>. Typical fragments: TS/CHC/SMT/UBH.</li>
+          <li>Output: an artifact plus correctness obligations checked by SAT/SMT/UBH.</li>
         </ul>
 
         <h2>Certificate</h2>
         <p>
-          Certificatul este “artefactul” plus dovada că trece obligațiile: un set de query-uri checkable (UNSAT/SAT cu witness/cert).
+          The certificate is the artifact plus evidence that it discharges the obligations: a set of checkable queries (UNSAT/SAT with witness/cert).
         </p>
 
-        <h2>Consecințe</h2>
+        <h2>Consequences</h2>
         <ul>
-          <li>Necesită un format serializabil pentru artefacte (ex. AST, circuit, invariant) și un checker pentru obligații.</li>
-          <li>Orchestratorul poate folosi heuristici (inclusiv ML guidance), dar acceptarea depinde de checkers.</li>
+          <li>Requires a serializable artifact format (e.g., AST, circuit, invariant) and a checker for the obligations.</li>
+          <li>The orchestrator may use heuristics (including ML guidance), but acceptance depends on checkers.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
           <li><a href="../../mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a> (Synthesize)</li>
           <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (synthesis slot)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Program_synthesis" target="_blank" rel="noreferrer">Program synthesis (Wikipedia)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Syntax-guided_synthesis" target="_blank" rel="noreferrer">Syntax-guided synthesis (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-

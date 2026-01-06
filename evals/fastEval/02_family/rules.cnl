@@ -1,3 +1,0 @@
-For all Person p: if Parent(p, child) then Child(child, p)
-For all Person p: Parent(p, x) implies Ancestor(p, x)
-For all Person p: Ancestor(p, y) and Parent(y, z) implies Ancestor(p, z)

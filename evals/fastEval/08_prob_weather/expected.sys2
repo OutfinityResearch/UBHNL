@@ -1,0 +1,13 @@
+@Day __Atom
+@today __Atom
+
+IsA today Day
+
+@rule1 ForAll Day graph d
+    @c1 Cloudy $d
+    @c2 HasRain $d
+    @imp1 Implies $c1 $c2
+    return $imp1
+end
+@func2 Cloudy today
+@f1 Prob $func2 0.8

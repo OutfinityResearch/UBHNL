@@ -1,20 +1,20 @@
 # NFS (Non-Functional Specification)
 
 ## Performance
-- Hash-consing must deduplicate identical gates.
-- XOR reasoning must be incremental to avoid full re-solve.
+- NFS-PERF-001: Hash-consing must deduplicate identical gates.
+- NFS-PERF-002: XOR reasoning must be incremental to avoid full re-solve.
 
 ## Reliability
-- The kernel must not mutate existing nodes.
-- All simplifications must preserve satisfiability.
+- NFS-REL-001: The kernel must not mutate existing nodes.
+- NFS-REL-002: All simplifications must preserve satisfiability.
 
 ## Determinism
-- CNL/DSL parsing must be deterministic; ambiguous inputs are rejected.
-- For a given kernel instance, identical node constructions must yield identical ids (hash-consing).
+- NFS-DET-001: CNL/DSL parsing must be deterministic; ambiguous inputs are rejected.
+- NFS-DET-002: For a given kernel instance, identical node constructions must yield identical ids (hash-consing).
 
 ## Maintainability
-- Keep the core small; add features via front-ends.
-- Clear separation between IR, solver, and compilers.
+- NFS-MAINT-001: Keep the core small; add features via front-ends.
+- NFS-MAINT-002: Clear separation between IR, solver, and compilers.
 
 ## Portability
-- Node.js runtime, ES modules (.mjs), async-first API.
+- NFS-PORT-001: Node.js runtime, ES modules (.mjs), async-first API.

@@ -1,0 +1,12 @@
+@Entity __Atom
+@Socrates __Atom
+
+IsA Socrates Entity
+
+@rule1 ForAll Entity graph x
+    @c1 Man $x
+    @c2 Mortal $x
+    @imp1 Implies $c1 $c2
+    return $imp1
+end
+@f1 Man Socrates

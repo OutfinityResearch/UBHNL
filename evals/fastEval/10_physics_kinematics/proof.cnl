@@ -1,0 +1,20 @@
+Proof BallMotion:
+    Given:
+        ForceApplied(ball).
+        For all Object o: If ForceApplied(o) then Accelerates(o).
+        For all Object o: If Accelerates(o) then ChangesVelocity(o).
+        For all Object o: If ChangesVelocity(o) then Moves(o).
+    Apply:
+        Rule 1 on ball.
+    Derive:
+        Accelerates(ball).
+    Apply:
+        Rule 2 on ball.
+    Derive:
+        ChangesVelocity(ball).
+    Apply:
+        Rule 3 on ball.
+    Derive:
+        Moves(ball).
+    Therefore:
+        Moves(ball).

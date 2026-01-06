@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ro">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,11 +10,11 @@
   <body>
     <header>
       <h1>Symbolic execution</h1>
-      <p>Analiză de programe: explorezi căi, generezi path constraints și folosești SMT/SAT pentru a găsi counterexample.</p>
+      <p>Program analysis: explore paths, generate path constraints, and use SMT/SAT to find counterexamples.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: pagină de Wiki.</div>
+        <div class="draft">DRAFT: Wiki page.</div>
 
         <div class="nav">
           <a href="../index.html">Wiki</a>
@@ -23,31 +23,35 @@
           <a href="chc.html">CHC</a>
         </div>
 
-        <h2>Definiție</h2>
+        <h2>Definition</h2>
         <p>
-          Symbolic execution execută programul pe input-uri simbolice, acumulând constrângeri (path constraints).
-          Când vrei un bug/counterexample, rezolvi constrângerile cu SMT/SAT.
+          Symbolic execution runs a program on symbolic inputs while accumulating constraints (path constraints).
+          When you want a bug/counterexample, you solve those constraints with SMT/SAT.
         </p>
 
-        <h2>În UBHNL</h2>
+        <h2>In UBHNL</h2>
         <ul>
-          <li>Tratat ca tactic/backends peste fragmente SMT: generează probleme SMT din cod.</li>
-          <li>Output-ul principal: contraexemplu (input concret) sau invariants/cores când dovedești absența unui bug pe un subset.</li>
+          <li>Treated as a tactic/backend over SMT fragments: it generates SMT problems from code.</li>
+          <li>Main output: a counterexample (concrete input) or invariants/cores when proving absence of a bug on a bounded subset.</li>
         </ul>
 
-        <h2>Certificate</h2>
+        <h2>Certificates</h2>
         <ul>
-          <li>Counterexample: witness input + verificare prin re-execuție/simulare.</li>
-          <li>Dovezi de safety: invariants + obligații verificate de SMT/SAT.</li>
+          <li>Counterexample: witness input plus replay verification (re-execution/simulation).</li>
+          <li>Safety proofs: invariants plus obligations checked by SMT/SAT.</li>
         </ul>
 
-        <h2>Spec-uri relevante</h2>
+        <h2>Relevant specs</h2>
         <ul>
-          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (symbolic execution ca tactic)</li>
-          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (tactici + artefacte)</li>
+          <li><a href="../../mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a> (symbolic execution as a tactic)</li>
+          <li><a href="../../mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a> (tactics + artifacts)</li>
+        </ul>
+
+        <h2>External references</h2>
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Symbolic_execution" target="_blank" rel="noreferrer">Symbolic execution (Wikipedia)</a></li>
         </ul>
       </div>
     </main>
   </body>
 </html>
-
