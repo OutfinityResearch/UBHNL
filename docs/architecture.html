@@ -7,26 +7,30 @@
   </head>
   <body>
     <h1>Architecture Overview</h1>
-    <p>UBH is a minimal kernel over {0,1} with XOR/AND/CONST gates and SAT/XOR solving.</p>
+    <p>
+      UBHNL is a universal reasoning system with a minimal trusted core (UBH) and pluggable backends
+      (SAT/SMT/QBF/model checking/etc.) orchestrated via fragments and tactics.
+    </p>
 
     <h2>Layers</h2>
     <ol>
-      <li>Core IR: wires + XOR/AND/CONST DAG</li>
-      <li>Constraints: assertions and equations</li>
-      <li>Solver: SAT + XOR linear reasoning</li>
-      <li>Front-ends: FOL, CNL, temporal, probabilistic</li>
-      <li>NL pipeline: lexicon, typed AST, lowering, compilation</li>
+      <li>Trusted core: UBH IR + checkers (witness/certificates)</li>
+      <li>Front-ends: CNL/DSL → typed semantic IR</li>
+      <li>Fragments: classify constraint classes and goal kinds</li>
+      <li>Backends: SAT/SMT/QBF/IC3/… with checkable artifacts</li>
+      <li>Orchestrator: planning, tactics (CEGAR), caching, explainability</li>
     </ol>
 
     <p>
-      See <a href="specs/UBH-SPEC.md">UBH-SPEC</a> or
-      <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a> for details.
+      See <a href="specs/src/system-spec.md">System Spec</a> or
+      <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a> for the full architecture.
     </p>
 
     <h2>Additional Pages</h2>
     <ul>
       <li><a href="nl-architecture.html">CNL to UBH Pipeline</a></li>
       <li><a href="design-choices.html">Design Choices</a></li>
+      <li><a href="mdview.html?file=specs/UBH-SPEC.md">UBH Kernel Spec (HTML)</a></li>
     </ul>
   </body>
 </html>

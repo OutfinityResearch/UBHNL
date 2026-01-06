@@ -13,3 +13,14 @@
 - Input: typed AST.
 - Output: UBH wires and assertions.
 - Quantifiers: finite expansion or lazy instantiation.
+
+## Session Functions (System-Level)
+- Manage a lexicon (domains/constants/predicates) for typing.
+- `learn(input)`:
+  - accept CNL or DSL,
+  - compile and add constraints/schemas incrementally,
+  - attach origin ids for explainability.
+- `query(input)`:
+  - accept CNL or DSL,
+  - support entailment (`T ⊨ φ`), model finding, and hole filling (`?`),
+  - return explanations as unsat cores or counterexample summaries.

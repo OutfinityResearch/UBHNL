@@ -8,8 +8,9 @@
   <body>
     <h1>CNL to UBH Pipeline</h1>
     <p>
-      UBH treats natural language as a controlled, typed input that compiles into
-      Boolean constraints. The pipeline is deterministic and rejects ambiguity.
+      UBHNL treats natural language as a controlled, typed input that compiles deterministically into a
+      typed semantic IR (via DSL), then lowers to the appropriate reasoning fragment (often UBH).
+      The pipeline rejects ambiguity rather than guessing.
     </p>
 
     <h2>Pipeline Stages</h2>
@@ -18,7 +19,7 @@
       <li>Tokenize and parse CNL input</li>
       <li>Build a typed AST and validate symbol types</li>
       <li>Lower to core logic (forall/exists/and/or/not/implies)</li>
-      <li>Compile to UBH gates and constraints</li>
+      <li>Lower to fragments/backends (UBH/SAT/SMT/QBF/etc.)</li>
     </ol>
 
     <h2>Design Specs</h2>
@@ -37,6 +38,21 @@
         DS-007 Compile to UBH:
         <a href="specs/DS/007-nl-ubh-compile.md">MD</a> |
         <a href="mdview.html?file=specs/DS/007-nl-ubh-compile.md">HTML view</a>
+      </li>
+      <li>
+        DS-008 DSL (Intermediate IR):
+        <a href="specs/DS/008-dsl.md">MD</a> |
+        <a href="mdview.html?file=specs/DS/008-dsl.md">HTML view</a>
+      </li>
+      <li>
+        DS-009 Sessions and Queries:
+        <a href="specs/DS/009-sessions-query-proof.md">MD</a> |
+        <a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">HTML view</a>
+      </li>
+      <li>
+        DS-010 Fragments and Goal Kinds:
+        <a href="specs/DS/010-fragments-goals.md">MD</a> |
+        <a href="mdview.html?file=specs/DS/010-fragments-goals.md">HTML view</a>
       </li>
     </ul>
   </body>

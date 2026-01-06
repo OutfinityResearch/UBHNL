@@ -106,6 +106,40 @@
         padding-left: 22px;
       }
 
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 18px 0;
+        font-size: 15px;
+      }
+
+      th, td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        vertical-align: top;
+      }
+
+      th {
+        background: #efe7da;
+        font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+        text-align: left;
+      }
+
+      tbody tr:nth-child(even) td {
+        background: #fbfaf7;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 18px 0;
+      }
+
       .error {
         color: #7a1b1b;
         font-weight: 600;
@@ -140,23 +174,48 @@
 
       function inlineFormat(text) {
         let escaped = escapeHtml(text);
-        escaped = escaped.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+        const codeSpans = [];
+        escaped = escaped.replace(/`([^`]+)`/g, (_, code) => {
+          const idx = codeSpans.length;
+          codeSpans.push("<code>" + code + "</code>");
+          return "\u0000CODE" + idx + "\u0000";
+        });
+
+        escaped = escaped.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, "<img alt=\"$1\" src=\"$2\" />");
         escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href=\"$2\">$1</a>");
+        escaped = escaped.replace(/~~([^~]+)~~/g, "<del>$1</del>");
+        escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+        escaped = escaped.replace(/\u0000CODE(\d+)\u0000/g, (_, n) => codeSpans[Number(n)] ?? "");
         return escaped;
       }
 
       function renderMarkdown(markdown) {
         const lines = markdown.replace(/\r\n/g, "\n").split("\n");
         const html = [];
+
         let inCode = false;
         let codeLines = [];
         let codeLang = "";
-        let listType = null;
 
-        function closeList() {
-          if (listType) {
-            html.push("</" + listType + ">");
-            listType = null;
+        let paragraphLines = [];
+        const listStack = []; // { type: "ul"|"ol", indent: number }
+
+        function flushParagraph() {
+          if (paragraphLines.length === 0) return;
+          const text = paragraphLines.join(" ").trim();
+          if (text) html.push("<p>" + inlineFormat(text) + "</p>");
+          paragraphLines = [];
+        }
+
+        function closeLists(toIndent = -1) {
+          while (listStack.length) {
+            const top = listStack[listStack.length - 1];
+            if (toIndent >= 0 && top.indent < toIndent) break;
+            html.push("</" + top.type + ">");
+            listStack.pop();
           }
         }
 
@@ -167,13 +226,70 @@
           codeLang = "";
         }
 
-        for (const line of lines) {
+        function isHr(line) {
+          const t = line.trim();
+          return /^(-{3,}|\*{3,}|_{3,})$/.test(t);
+        }
+
+        function parseTableRow(line) {
+          const raw = line.trim();
+          if (!raw.includes("|")) return null;
+          let s = raw;
+          if (s.startsWith("|")) s = s.slice(1);
+          if (s.endsWith("|")) s = s.slice(0, -1);
+          const cells = s.split("|").map((c) => c.trim());
+          if (cells.length < 2) return null;
+          return cells;
+        }
+
+        function parseTableAlign(line) {
+          const cells = parseTableRow(line);
+          if (!cells) return null;
+          const aligns = [];
+          for (const cell of cells) {
+            const t = cell.replace(/\s+/g, "");
+            if (!/^:?-+:?$/.test(t)) return null;
+            const left = t.startsWith(":");
+            const right = t.endsWith(":");
+            aligns.push(left && right ? "center" : left ? "left" : right ? "right" : "");
+          }
+          return aligns;
+        }
+
+        function renderTable(headerCells, aligns, bodyRows) {
+          html.push("<table>");
+          html.push("<thead><tr>");
+          for (let i = 0; i < headerCells.length; i++) {
+            const align = aligns[i] ? " style=\"text-align:" + aligns[i] + "\"" : "";
+            html.push("<th" + align + ">" + inlineFormat(headerCells[i]) + "</th>");
+          }
+          html.push("</tr></thead>");
+          if (bodyRows.length) {
+            html.push("<tbody>");
+            for (const row of bodyRows) {
+              html.push("<tr>");
+              for (let i = 0; i < headerCells.length; i++) {
+                const align = aligns[i] ? " style=\"text-align:" + aligns[i] + "\"" : "";
+                const cell = row[i] ?? "";
+                html.push("<td" + align + ">" + inlineFormat(cell) + "</td>");
+              }
+              html.push("</tr>");
+            }
+            html.push("</tbody>");
+          }
+          html.push("</table>");
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+
           if (line.startsWith("```")) {
             if (inCode) {
               flushCodeBlock();
               inCode = false;
             } else {
-              closeList();
+              flushParagraph();
+              closeLists();
               inCode = true;
               codeLang = line.slice(3).trim();
             }
@@ -186,38 +302,95 @@
           }
 
           if (!line.trim()) {
-            closeList();
+            flushParagraph();
+            closeLists();
             continue;
           }
 
+          // Blockquote
+          if (line.trimStart().startsWith(">")) {
+            flushParagraph();
+            closeLists();
+            const quoteLines = [];
+            while (i < lines.length && lines[i].trimStart().startsWith(">")) {
+              const q = lines[i].trimStart().replace(/^>\s?/, "");
+              quoteLines.push(q);
+              i++;
+            }
+            i--;
+            html.push("<blockquote>" + renderMarkdown(quoteLines.join("\n")) + "</blockquote>");
+            continue;
+          }
+
+          // Headings
           const heading = line.match(/^(#{1,6})\s+(.*)$/);
           if (heading) {
-            closeList();
+            flushParagraph();
+            closeLists();
             const level = heading[1].length;
             html.push("<h" + level + ">" + inlineFormat(heading[2]) + "</h" + level + ">");
             continue;
           }
 
-          const listMatch = line.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
-          if (listMatch) {
-            const type = /\d+\./.test(listMatch[2]) ? "ol" : "ul";
-            if (listType !== type) {
-              closeList();
-              listType = type;
-              html.push("<" + listType + ">");
+          // Horizontal rule
+          if (isHr(line)) {
+            flushParagraph();
+            closeLists();
+            html.push("<hr />");
+            continue;
+          }
+
+          // Tables (GFM-style)
+          const headerRow = parseTableRow(line);
+          const alignRow = i + 1 < lines.length ? parseTableAlign(lines[i + 1]) : null;
+          if (headerRow && alignRow) {
+            flushParagraph();
+            closeLists();
+            i += 2;
+            const bodyRows = [];
+            while (i < lines.length) {
+              if (!lines[i].trim()) break;
+              const row = parseTableRow(lines[i]);
+              if (!row) break;
+              bodyRows.push(row);
+              i++;
             }
+            i--;
+            renderTable(headerRow, alignRow, bodyRows);
+            continue;
+          }
+
+          // Lists (supports nesting by indent)
+          const listMatch = line.match(/^(\s*)([-*+]|\d+\.)\s+(.*)$/);
+          if (listMatch) {
+            flushParagraph();
+            const indent = listMatch[1].length;
+            const type = /\d+\./.test(listMatch[2]) ? "ol" : "ul";
+
+            while (listStack.length && indent < listStack[listStack.length - 1].indent) {
+              html.push("</" + listStack.pop().type + ">");
+            }
+
+            if (listStack.length && indent === listStack[listStack.length - 1].indent && listStack[listStack.length - 1].type !== type) {
+              html.push("</" + listStack.pop().type + ">");
+            }
+
+            if (!listStack.length || indent > listStack[listStack.length - 1].indent) {
+              html.push("<" + type + ">");
+              listStack.push({ type, indent });
+            }
+
             html.push("<li>" + inlineFormat(listMatch[3]) + "</li>");
             continue;
           }
 
-          closeList();
-          html.push("<p>" + inlineFormat(line.trim()) + "</p>");
+          // Default: paragraph text (merge consecutive lines)
+          paragraphLines.push(line.trim());
         }
 
-        if (inCode) {
-          flushCodeBlock();
-        }
-        closeList();
+        if (inCode) flushCodeBlock();
+        flushParagraph();
+        closeLists();
         return html.join("\n");
       }
 
