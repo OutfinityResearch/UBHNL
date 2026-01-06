@@ -12,12 +12,13 @@ The “NL pipeline” is intentionally split into:
 The compiler (DS-007) should not care whether the source was CNL or DSL.
 
 ## Pipeline Stages (CNL → Typed AST)
-1) Load lexicon (JSON) and build a symbol table (domains, constants, predicates, aliases).
+1) Load lexicon (JSON) and build a symbol table (domains, predicates, CNL surface patterns).
+   - Constants are derived from `lexicon.domains` (finite domain elements).
 2) Tokenize input (keywords, identifiers, punctuation).
 3) Parse tokens to a **concrete syntax tree** (CST).
 4) Normalize:
    - keyword casing,
-   - alias expansion (surface → canonical symbol),
+   - pattern expansion (CNL surface → canonical predicate form, see DS-005),
    - punctuation sugar (`->` → `implies`, `!` → `not`, etc.).
 5) Build a **surface AST** that preserves source locations (for errors).
 6) Resolve symbols and build a **typed AST**:
@@ -64,7 +65,7 @@ Given a lexicon `L`:
   - each term `ti` resolves to a type compatible with `args(P)[i]`.
 - A term `t` resolves as:
   1) a bound variable if it is in the current quantifier environment, else
-  2) a constant if it exists in `L.constants`, else
+  2) a constant if it is an element of some `L.domains[DomainName]`, else
   3) error: unknown identifier.
 
 ## Error Handling (Required)
@@ -73,7 +74,7 @@ Errors must be deterministic, categorized, and include source positions.
 ### Categories
 Error payloads must follow DS-016. The NL pipeline must at minimum distinguish:
 - `ParseError`: violates the grammar (DS-005), unexpected token, invalid punctuation.
-- `LexiconError` / `VocabError`: unknown predicate/domain/constant, unknown alias, unknown identifier.
+- `LexiconError` / `VocabError`: unknown predicate/domain/constant, unknown CNL pattern, unknown identifier.
 - `TypeError`: arity mismatch, argument type mismatch, domain mismatch.
 
 ### Policy
@@ -82,7 +83,10 @@ Error payloads must follow DS-016. The NL pipeline must at minimum distinguish:
 
 ## Example (CNL → Typed AST)
 Input:
-`for all cell c: if geneA(c) and not inhibitor(c) then proteinP(c)`
+```cnl
+For any Cell c:
+    If geneA(c) and not inhibitor(c) then proteinP(c).
+```
 
 Normalized core form:
 `forall c in Cell: implies(and(geneA(c), not(inhibitor(c))), proteinP(c))`

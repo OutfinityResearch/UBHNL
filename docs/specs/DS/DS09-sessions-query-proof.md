@@ -1,11 +1,11 @@
-# DS-009: Sessions, Theory Store, Learn/Query, Holes, Explainability
+# DS-009: Sessions, Theory Store, Learn/Query, Witnesses, Explainability
 
 ## Goal
 Specify the user-facing layer that:
 - loads **theory files** (long-term memory) written in DSL/CNL,
 - maintains a **session** (short-term working memory),
 - runs queries via the orchestrator (fragments/backends/tactics),
-- fills holes (`?`) and returns witnesses,
+- returns witnesses for existential queries,
 - and produces explanations tied to file origins.
 
 This DS defines behavior and data contracts; solver internals are covered by DS-010/011/012 and UBH-SPEC.
@@ -13,7 +13,7 @@ This DS defines behavior and data contracts; solver internals are covered by DS-
 ## Long-term vs Short-term Memory
 ### Long-term memory: Theory files
 Theory files are plain text files on disk, typically:
-- `*.dsl` (DS-008)
+- `*.sys2` (DS-008)
 - `*.cnl` (DS-005)
 
 Properties:
@@ -96,7 +96,7 @@ Query responsibilities:
 - require checkable witness/certificate (DS-011),
 - return:
   - normalized status,
-  - witness assignments (including holes),
+  - witness assignments (when the query introduces existential binders),
   - explanation payload with origins.
 
 ### Explain
@@ -110,25 +110,25 @@ Sessions expose the goal kinds defined in DS-010:
 
 Not every loaded theory enables every goal kind; the planner decides applicability by fragments/backends.
 
-## Holes (`?`) — Meaning and Contract
-Holes are existential unknowns that must be filled by solving.
+## Witness Variables (Existential Queries) — Meaning and Contract
+Witnesses are returned for queries that introduce **existential binders**.
 
-### How holes are introduced
-In DSL, holes are introduced explicitly:
-- `exists ?x in Type: <expr using ?x>`
+### How witness variables are introduced
+- **CNL (DS-005)**: witness queries use an interrogative form ending in `?`, e.g. `Which Person p has fever?`.
+- **DSL (DS-008)**: witness queries are expressed as an `Exists ... graph v ... end` block.
 
-In CNL, holes may be introduced by a query form (surface sugar), but the semantic IR must mark them explicitly.
+Sys2 DSL has no special `?` token: the **binder variable** `v` introduced by `Exists ... graph v` is the witness variable.
 
-### Hole typing
-Each hole must have a type (domain/sort). This can come from:
-- an explicit `exists ?x in Type:` binder, or
-- unambiguous context (predicate signature).
+### Witness typing
+Each witness variable must have a declared type/domain:
+- in CNL, the type is explicit in the query header (e.g., `Which Person p ... ?`);
+- in DSL, the type is explicit in `Exists TypeName graph v`.
 
 If the type cannot be determined deterministically: load error.
 
-### Hole results
-A successful query returns a `holeAssignments` map:
-`?x -> value`
+### Witness results
+A successful query returns a `witnessAssignments` map:
+`v -> value`
 
 Value kinds depend on fragments:
 - finite-domain witness (a vocabulary constant),
@@ -138,7 +138,7 @@ Value kinds depend on fragments:
 
 ### Multiple solutions
 When multiple witnesses exist:
-- default: return one witness from the first accepted checkable model,
+- default: return one witness from the first accepted checkable model (deterministic selection policy),
 - optional: allow enumeration with budgets (`EnumerateModels`) or a bounded list.
 
 ## Explainability Contracts
@@ -187,27 +187,37 @@ Instead:
 
 ## Example (Long-term files + short session)
 Files on disk:
-- `bio.dsl`:
+- `bio.sys2`:
   ```
-  @c0:Cell
-  @c1:Cell
-  forall $c in Cell: geneA($c) implies proteinP($c)
-  @c0 geneA
+  @Cell __Atom
+  @c0 __Atom
+  @c1 __Atom
+  IsA c0 Cell
+  IsA c1 Cell
+
+  @rule1 ForAll Cell graph c
+      @g geneA $c
+      @p proteinP $c
+      @imp Implies $g $p
+      return $imp
+  end
+
+  @f1 geneA c0
   ```
 
 Session flow:
-1) `loadTheoryFile("bio.dsl")`
-2) `query("proteinP(c0)", kind="Prove")`
+1) `loadTheoryFile("bio.sys2")`
+2) `query("proteinP c0", kind="Prove")`
 
 Expected:
 - `PROVED`
 - explanation points to:
-  - the quantified rule origin in `bio.dsl`,
-  - the fact `@c0 geneA`.
+  - the quantified rule origin in `bio.sys2`,
+  - the fact `@f1 geneA c0`.
 
-Query with hole:
-- `query("exists ?c in Cell: proteinP(?c)", kind="Satisfy")`
+Query with witness:
+- `query("Which Cell c has protein P?", kind="Satisfy")`
 
 Expected:
 - `SAT`
-- `holeAssignments: { ?c: c0 }` (one possible witness)
+- `witnessAssignments: { c: c0 }` (one possible witness)

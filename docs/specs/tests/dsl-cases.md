@@ -1,61 +1,85 @@
 # DSL Test Cases (Parsing + Typing)
 
-These cases are normative for the DSL in `docs/specs/DS/008-dsl.md`.
+These cases are normative for the DSL in `docs/specs/DS/DS08-dsl.md`.
 
 ## Shared Lexicon (for examples)
 Use the lexicon from `docs/specs/tests/cnl-cases.md`.
 
 ## Accepted Inputs
-### 1) Exported entity declaration
+### 1) Constant declaration + typing
 Input:
 ```
-@c2:Cell
+@Cell __Atom
+@c2 __Atom
+IsA c2 Cell
 ```
 Expected:
-- `c2` becomes a vocabulary constant of type `Cell` (load-time symbol table update).
+- `c2` is declared and typed as a `Cell`.
 
-### 2) Fact statement (unary predicate)
+### 2) Fact statement (unary predicate, named)
 Input:
 ```
-@c0 proteinP
+@Cell __Atom
+@c0 __Atom
+IsA c0 Cell
+
+@f1 proteinP c0
 ```
 Expected:
-- parses as a fact statement,
-- desugars to predicate application `proteinP(c0)`,
+- parses as a named fact statement,
+- desugars to predicate application `proteinP(c0)` with a named binding `f1`,
 - `proteinP` must exist in the vocabulary and have arity 1 with args `[Cell]`.
 
-### 3) Export + use bare vocabulary constant
+### 3) Multi-argument predicate (typed)
 Input:
 ```
-@ion:Person
-@flu:Disease
-@ion has_flu flu
+@Person __Atom
+@p0 __Atom
+@p1 __Atom
+IsA p0 Person
+IsA p1 Person
+
+@f1 trusts p0 p1
 ```
 Expected:
-- `has_flu(ion, flu)` with correct typing.
+- `trusts(p0, p1)` with correct typing.
 
-### 4) Quantified rule (core logic)
+### 4) Quantified rule (core logic, block form)
 Input:
 ```
-forall $c in Cell: geneA($c) implies proteinP($c)
+@Cell __Atom
+
+@rule1 ForAll Cell graph c
+    @g geneA $c
+    @p proteinP $c
+    @imp Implies $g $p
+    return $imp
+end
 ```
 Expected core AST shape:
 `ForAll(c:Cell, Implies(Pred(geneA,[c]), Pred(proteinP,[c])))`
 
-### 5) Hole binder (query witness)
+### 5) Existential query (witness is the binder variable)
 Input:
 ```
-exists ?c in Cell: proteinP(?c)
+@Person __Atom
+
+@query1 Exists Person graph p
+    @c1 has_fever $p
+    return $c1
+end
 ```
 Expected:
-- parses as an existential quantifier with a “returnable witness” binder,
-- `?c` is tracked as a hole for the session/orchestrator (DS-009).
+- parses as an existential block,
+- the witness is the bound variable `p` introduced by `Exists ... graph p`,
+- the session/orchestrator may return a concrete assignment for `p` on `SAT`.
 
 ## Rejected Inputs (must error)
 ### 1) Unknown type
 Input:
 ```
-@x:UnknownType
+@x __Atom
+IsA x UnknownType
 ```
 Expected: `ResolveError`.
 
@@ -70,22 +94,27 @@ Hint in error: “use `$p1` to reference a variable, or declare `p1` as a vocabu
 ### 3) `$` reference out of scope
 Input:
 ```
-@p0 likes $p1
+geneA $c
 ```
-Expected: `ResolveError` (unbound `$p1`).
+Expected: `ResolveError` (unbound `$c`).
 
 ### 4) Unknown bare vocabulary symbol
 Input:
 ```
-@p0 likes p999
+geneA c99
 ```
-Expected: `ResolveError` (unknown vocabulary constant `p999`).
+Expected: `ResolveError` (unknown constant `c99`).
 
 ### 5) Arity mismatch via fact statement
 Assume `proteinP(Cell)` has arity 1.
 Input:
 ```
-@c0 proteinP c1
+@Cell __Atom
+@c0 __Atom
+@c1 __Atom
+IsA c0 Cell
+IsA c1 Cell
+
+proteinP c0 c1
 ```
 Expected: `TypeError` (attempts `proteinP(c0, c1)` but `proteinP` is arity 1).
-

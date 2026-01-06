@@ -8,8 +8,8 @@ This plan assumes incremental delivery: each milestone is testable and keeps the
 
 ## Milestone 1 — Kernel IR + Hash-Consing
 Specs:
-- `docs/specs/UBH-SPEC.md`
-- `docs/specs/DS/001-ir-hashcons.md`
+- `docs/specs/DS/DS00-vision.md`
+- `docs/specs/DS/DS01-ir-hashcons.md`
 
 Deliverables:
 - `src/ir/node-store.mjs` with `const0/const1/var/xor/and`.
@@ -21,8 +21,8 @@ Acceptance tests:
 
 ## Milestone 2 — Constraint Store + Origins
 Specs:
-- `docs/specs/UBH-SPEC.md` (constraints)
-- `docs/specs/DS/009-sessions-query-proof.md` (origin ids)
+- `docs/specs/DS/DS00-vision.md` (constraints)
+- `docs/specs/DS/DS09-sessions-query-proof.md` (origin ids)
 
 Deliverables:
 - `src/api/kernel.mjs` that wraps IR and stores constraints with an `origin` payload.
@@ -33,7 +33,7 @@ Acceptance tests:
 
 ## Milestone 3 — CNF Encoding for AND
 Specs:
-- `docs/specs/DS/002-solver-xor.md` (Tseitin for AND)
+- `docs/specs/DS/DS02-solver-xor.md` (Tseitin for AND)
 
 Deliverables:
 - `src/solver/cnf.mjs` to emit CNF clauses for AND gates.
@@ -44,7 +44,7 @@ Acceptance tests:
 
 ## Milestone 4 — XOR Linear Engine
 Specs:
-- `docs/specs/DS/002-solver-xor.md`
+- `docs/specs/DS/DS02-solver-xor.md`
 
 Deliverables:
 - `src/solver/xor-linear.mjs` implementing incremental Gaussian elimination on GF(2).
@@ -55,7 +55,7 @@ Acceptance tests:
 
 ## Milestone 5 — Minimal SAT Backend + Mixed Propagation
 Specs:
-- `docs/specs/DS/002-solver-xor.md`
+- `docs/specs/DS/DS02-solver-xor.md`
 
 Deliverables:
 - `src/solver/engine.mjs` that:
@@ -74,8 +74,8 @@ Notes:
 
 ## Milestone 6 — Lexicon Loader + Typed Core Logic AST
 Specs:
-- `docs/specs/DS/005-cnl-lexicon.md`
-- `docs/specs/DS/006-nl-pipeline.md`
+- `docs/specs/DS/DS05-cnl-lexicon.md`
+- `docs/specs/DS/DS06-nl-pipeline.md`
 
 Deliverables:
 - `src/frontend/cnl/lexicon.mjs` (load/validate lexicon JSON).
@@ -86,8 +86,8 @@ Acceptance tests:
 
 ## Milestone 7 — CNL Parser (Deterministic)
 Specs:
-- `docs/specs/DS/005-cnl-lexicon.md`
-- `docs/specs/DS/006-nl-pipeline.md`
+- `docs/specs/DS/DS05-cnl-lexicon.md`
+- `docs/specs/DS/DS06-nl-pipeline.md`
 
 Deliverables:
 - `src/frontend/cnl/lexer.mjs`
@@ -100,7 +100,7 @@ Acceptance tests:
 
 ## Milestone 8 — DSL Parser (Intermediate IR)
 Specs:
-- `docs/specs/DS/008-dsl.md`
+- `docs/specs/DS/DS08-dsl.md`
 
 Deliverables:
 - `src/frontend/dsl/parser.mjs`
@@ -111,7 +111,7 @@ Acceptance tests:
 
 ## Milestone 9 — Compile Typed AST to UBH
 Specs:
-- `docs/specs/DS/007-nl-ubh-compile.md`
+- `docs/specs/DS/DS07-nl-ubh-compile.md`
 
 Deliverables:
 - `src/frontend/compile.mjs` that compiles typed AST → UBH nodes + assertions.
@@ -122,7 +122,7 @@ Acceptance tests:
 
 ## Milestone 10 — Schema Engine (Lazy Quantifiers)
 Specs:
-- `docs/specs/DS/004-schema-engine.md`
+- `docs/specs/DS/DS04-schema-engine.md`
 
 Deliverables:
 - schema representation + instantiation loop
@@ -135,7 +135,7 @@ Acceptance tests:
 
 ## Milestone 11 — Sessions + Explainability
 Specs:
-- `docs/specs/DS/009-sessions-query-proof.md`
+- `docs/specs/DS/DS09-sessions-query-proof.md`
 
 Deliverables:
 - `src/session/session.mjs` implementing:

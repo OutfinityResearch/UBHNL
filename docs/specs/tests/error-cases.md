@@ -27,15 +27,15 @@ Expected:
 - blame: `TheoryFile` (if in a file) or `UserInput` (if entered interactively),
 - origin included.
 
-## Case E-003: Hole cannot be typed deterministically
+## Case E-003: DSL forbidden parentheses
 Input (DSL):
 ```sys2
-exists ?x: ?x
+Trusts(p0, p1)
 ```
 
 Expected:
-- error kind: `TypeError`,
-- code: `E_HOLE_UNTYPED`,
+- error kind: `ParseError`,
+- code: `E_DSL_FORBIDDEN_PAREN`,
 - blame: `UserInput`,
 - origin included.
 
@@ -47,4 +47,3 @@ Expected:
 - code: `E_CERT_DIGEST_MISMATCH`,
 - blame: `System` (if generated internally) or `Backend` (if returned by a backend adapter),
 - include `problemDigest` in `details`.
-

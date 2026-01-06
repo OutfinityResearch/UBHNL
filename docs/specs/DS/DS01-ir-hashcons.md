@@ -56,7 +56,7 @@ The kernel applies only *local* rewrites that are:
 - satisfiability-preserving, and
 - compatible with hash-consing.
 
-Rules (from `docs/specs/UBH-SPEC.md`):
+Rules (from `docs/specs/DS/DS00-vision.md`):
 - `xor(x, CONST0) = x`
 - `xor(x, x) = CONST0`
 - `and(x, CONST0) = CONST0`

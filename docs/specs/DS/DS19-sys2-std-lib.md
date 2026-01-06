@@ -1,194 +1,82 @@
-# DS19: Reserved Keywords and Operators
+# DS19: Reserved Keywords and Tokens (CNL + Sys2 DSL)
 
 ## Goal
 
-Define the complete set of reserved keywords and operators for both CNL and DSL, ensuring:
-- No conflicts between keywords and vocabulary symbols
-- Deterministic parsing in both languages
-- Clear mapping between CNL and DSL keywords
+Define the reserved keywords/tokens for:
+- **CNL** (DS-005), and
+- **Sys2 DSL** (DS-008),
+so parsing remains deterministic and vocabulary symbols cannot collide with language keywords.
 
-## CNL Reserved Keywords
+## CNL Reserved Keywords (DS-005)
 
-CNL uses natural language-like keywords. All are **case-insensitive**.
+CNL keywords are **case-insensitive**.
 
-### Quantifiers
-| Keyword | Role | DSL Equivalent |
-|---------|------|----------------|
-| `for` | Part of "for all" | - |
-| `all` | Part of "for all" | - |
-| `every` | Alias for "all" | - |
-| `each` | Alias for "all" | - |
-| `for all` | Universal quantifier | `forall` |
-| `for every` | Universal quantifier | `forall` |
-| `for each` | Universal quantifier | `forall` |
-| `exists` | Existential quantifier | `exists` |
-| `there` | Part of "there exists" | - |
-| `there exists` | Existential quantifier | `exists` |
-| `some` | Existential quantifier | `exists` |
-| `find` | Query hole marker | `exists ?` |
-| `which` | Query hole marker | `exists ?` |
+### Quantifiers / binders
+- `For any`, `For all`, `For every`, `For each`
+- `Every`, `Each`
+- `There exists`, `Some`
+- `Which` (witness query)
+- `Find` (witness query)
 
-### Logical Connectives
-| Keyword | Role | DSL Equivalent |
-|---------|------|----------------|
-| `and` | Conjunction | `and` |
-| `or` | Disjunction | `or` |
-| `not` | Negation | `not` |
-| `implies` | Implication | `implies` |
-| `if` | Part of "if...then" | - |
-| `then` | Part of "if...then" | - |
-| `whenever` | Implication sugar | `implies` |
-| `means` | Implication sugar | `implies` |
+### Logical words
+- `and`, `or`
+- `not`, `does not`, `is not`
+- `If`, `then`
+- `implies`, `iff`
 
-### Other Reserved Words
-| Keyword | Role |
-|---------|------|
-| `in` | Domain binding |
-| `is` | Declaration ("X is a Y") |
-| `a` | Article (ignored) |
-| `an` | Article (ignored) |
-| `has` | Subject-predicate sugar |
-| `have` | Subject-predicate sugar |
-| `such` | Part of "such that" |
-| `that` | Part of "such that" |
-| `true` | Boolean literal |
-| `false` | Boolean literal |
+### Declaration / sugar
+- `Let`, `be`, `a`, `an`, `Domain`
+- `is` (type declaration / adjective forms)
+- `has` (subject–predicate sugar)
 
-## DSL Reserved Keywords
+### Boolean literals
+- `true`, `false`
 
-DSL uses programming-language-like keywords. All are **case-sensitive** (lowercase).
+## Sys2 DSL Reserved Keywords (DS-008)
 
-### Core Keywords
-| Keyword | Role |
-|---------|------|
-| `forall` | Universal quantifier |
-| `exists` | Existential quantifier |
-| `in` | Domain binding |
-| `and` | Conjunction |
-| `or` | Disjunction |
-| `not` | Negation |
-| `implies` | Implication |
-| `true` | Boolean literal |
-| `false` | Boolean literal |
+Sys2 DSL keywords are **case-sensitive**.
 
-### Operator Symbols (DSL only)
-| Symbol | Equivalent Keyword |
-|--------|-------------------|
-| `->` | `implies` |
-| `!` | `not` |
-| `&` | `and` |
-| `\|` | `or` |
+### Core keywords and operators
+- Quantifiers / blocks: `ForAll`, `Exists`, `graph`, `return`, `end`
+- Logical connectives: `And`, `Or`, `Not`, `Implies`, `Iff`, `Xor`
+- Typing / declarations: `IsA`, `__Atom`
+- Literals: `true`, `false`
 
-### Special Prefixes (DSL only)
-| Prefix | Meaning |
-|--------|---------|
-| `@` | Statement target / declaration |
-| `$` | Bound variable reference |
-| `?` | Hole (returnable witness) |
-| `#` | Comment to end of line |
+### Special tokens (not identifiers)
+- `@` declaration target (start of statement only; at most one per line)
+- `$` reference to a bound variable or previously defined symbol in scope
+- `:` KB storage name (after `@name`) or KB naming (`@:kbName`)
+- `{` `}` anonymous grouping
+- `#` comment to end of line
 
-## Keyword Mapping Table
+Sys2 DSL does **not** define a `?` token.
 
-| CNL (case-insensitive) | DSL (case-sensitive) |
-|------------------------|----------------------|
-| `for all` | `forall` |
-| `for every` | `forall` |
-| `for each` | `forall` |
-| `there exists` | `exists` |
-| `exists` | `exists` |
-| `some` | `exists` |
-| `find ... such that` | `exists ?...` |
-| `which ... has` | `exists ?...` |
-| `if A then B` | `A implies B` |
-| `whenever A, B` | `A implies B` |
-| `A means B` | `A implies B` |
-| `A implies B` | `A implies B` |
-| `A and B` | `A and B` |
-| `A or B` | `A or B` |
-| `not A` | `not A` |
-| `X is a Type.` | `@x:Type` |
-| `X has pred.` | `@x pred` |
-| `true` | `true` |
-| `false` | `false` |
+## Keyword Mapping (CNL → Sys2 DSL)
 
-## Naming Conventions
+| CNL (surface) | Sys2 DSL (canonical target) |
+|---|---|
+| `For any Type x:` (block) | `@ruleN ForAll Type graph x ... return $expr end` |
+| `There exists Type x:` (block) | `@exN Exists Type graph x ... return $expr end` |
+| `Which Type x ... ?` | `@queryN Exists Type graph x ... return $expr end` |
+| `If A then B.` | `@impN Implies { A } { B }` (after lowering) |
+| `A and B` | `And ...` |
+| `A or B` | `Or ...` |
+| `not A` | `Not ...` |
 
-### Type/Domain Names
-- **Style**: `PascalCase`
-- **Examples**: `Cell`, `Person`, `GeneProduct`
+Note: concrete predicate surface forms in CNL are governed by the lexicon `cnlPatterns` (DS-005).
 
-### Predicate Names
-- **Style**: `snake_case` or `lowerCamelCase` (project-wide choice)
-- **Examples**: `has_fever`, `proteinP`, `geneA`
+## Reserved-word conflicts (policy)
 
-### Constant Names
-- **Style**: `lowerCamelCase` or indexed (`c0`, `p1`)
-- **Examples**: `ion`, `maria`, `c0`, `cell1`
+Reserved keywords must not be used as:
+- domain/type names,
+- predicate names,
+- constants (domain elements).
 
-### Variable Names (in quantifiers)
-- **Style**: Single lowercase letter or short lowercase word
-- **Examples**: `c`, `x`, `person`, `cell`
-
-## Escaping Reserved Words
-
-If a vocabulary symbol conflicts with a reserved word:
-
-**DSL**: Use backticks
-```sys2
-@`true`:Bool    # declares a constant named "true"
-```
-
-**CNL**: Use quotes
-```cnl
-"true" is a Bool.
-```
-
-**Recommendation**: Avoid conflicts by choosing different names.
-
-## Validation Rules
-
-### Lexicon Validation
-The lexicon loader must reject:
-- Domain names that are reserved words
-- Predicate names that are reserved words
-- Constant names that are reserved words
-- Alias keys that conflict with predicates
-
-### Parse-time Validation
-- CNL: Keywords take precedence over vocabulary lookup
-- DSL: `@`/`$`/`?` prefixes are lexed before keyword matching
-
-## Examples
-
-### Valid Vocabulary
-```json
-{
-  "domains": {
-    "Cell": ["c0", "c1"],
-    "Person": ["ion", "maria"]
-  },
-  "predicates": {
-    "geneA": { "arity": 1, "args": ["Cell"] },
-    "has_fever": { "arity": 1, "args": ["Person"] }
-  }
-}
-```
-
-### Invalid Vocabulary (rejected)
-```json
-{
-  "domains": {
-    "true": ["t1", "t2"]     // ERROR: "true" is reserved
-  },
-  "predicates": {
-    "and": { "arity": 2, ... }  // ERROR: "and" is reserved
-  }
-}
-```
+No escaping mechanism is defined in Sys2 DSL; choose different vocabulary symbols.
 
 ## References
 
 - DS-005 (CNL grammar and lexicon)
-- DS-008 (DSL grammar)
-- DS-016 (error codes for keyword conflicts)
-- DS-018 (CNL ↔ DSL translation)
+- DS-008 (Sys2 DSL grammar)
+- DS-016 (error codes)
+- DS-018 (CNL ↔ Sys2 translator)

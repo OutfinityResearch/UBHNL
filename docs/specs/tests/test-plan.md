@@ -57,22 +57,23 @@ Given `prove(phi)` defined as `solve(T ∧ ¬phi)`:
 ### 6) Lexicon + Symbol Resolution
 - Reject unknown domains, unknown predicates, wrong arity, wrong argument types.
 - Reject use of reserved keywords as identifiers (unless quoted).
-- Accept aliases/surface forms if declared in the lexicon (see DS-005).
+- Accept CNL surface patterns/aliases if declared in the lexicon (see DS-005).
 
 ### 7) CNL Parsing and Typing
-- Parse: `for all x in Cell: P(x) implies Q(x)` into a typed AST.
-- Parse: `for all cell c: if geneA(c) and not inhibitor(c) then proteinP(c)` (keywords + punctuation variants).
+- Parse a DS-005 block quantifier into a typed AST:
+  - `For any Cell c:` with an indented `If ... then ... .` body.
+- Parse a DS-005 conditional with conjunction and negation inside a quantifier block.
 - Reject:
-  - missing domain: `for all x: P(x)`,
+  - missing type in binder (e.g., `For any c:`),
   - unknown symbol: `P(unknown)`,
   - type mismatch: `proteinP(person0)` when `proteinP: Cell -> Bool`.
 
 ### 8) DSL Parsing and Typing
-- Parse fact statement: `@c0 proteinP` as `proteinP(c0)` (subject-first, arity=1).
-- Parse: `@a:Cell` (exported entity declaration).
-- Parse query holes with binder: `exists ?c in Cell: proteinP(?c)`.
+- Parse a typed fact statement: `@f1 proteinP c0`.
+- Parse constant typing: `@c0 __Atom` + `IsA c0 Cell`.
+- Parse existential witness query as an `Exists ... graph ... end` block (DS-008/DS-018).
 - Reject:
-  - `@x:UnknownType`,
+  - `IsA x UnknownType` (unknown type),
   - two `@...` tokens on one line,
   - `$` reference out of scope,
   - bare symbol not found in vocabulary,
@@ -81,19 +82,23 @@ Given `prove(phi)` defined as `solve(T ∧ ¬phi)`:
 ### 9) CNL/DSL to UBH Compilation
 - Predicate instances map to stable wire ids in the same session/kernel.
 - Quantifier edge cases:
-  - `forall x in Empty: ...` compiles to `CONST1` (no constraints added).
-  - `exists x in Empty: ...` compiles to `CONST0` (immediately falsified).
+  - `ForAll` over an empty domain compiles to `CONST1` (no constraints added).
+  - `Exists` over an empty domain compiles to `CONST0` (immediately falsified).
 
 ### 10) Session `learn/query` End-to-End
 With a small finite domain and lexicon:
 - `learn` a rule schema, then `query` a concrete entailment; expect `PROVED` with an explanation referencing the instantiated rule.
 - `learn` facts that make the theory inconsistent; `query` anything; expect `UNSAT` with an unsat explanation/core.
-- `query` with a hole `?x` that has multiple solutions; ensure result policy is deterministic (e.g., first model, or all models if requested).
+- `query` with an existential witness that has multiple solutions; ensure result policy is deterministic (e.g., stable witness choice, or enumeration if requested).
 
 Concrete scenario (CNL):
-1) Learn: `for all cell c: geneA(c) implies proteinP(c)`
-2) Learn: `geneA(c0)`
-3) Query: `proteinP(c0)`
+1) Learn:
+   ```cnl
+   For any Cell c:
+       If geneA(c) then proteinP(c).
+   ```
+2) Learn: `geneA(c0).`
+3) Query (goal kind `Prove`): `proteinP(c0)`
 Expected: `PROVED` and explanation mentions both learned statements (or their origins).
 
 ### 11) Certificate Envelopes and Verification

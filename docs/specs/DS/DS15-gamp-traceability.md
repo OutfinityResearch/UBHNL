@@ -47,25 +47,25 @@ Each requirement must map to:
 ### Matrix
 | Requirement | Statement (short) | Normative specs | Design specs (DS) | Tests |
 |---|---|---|---|---|
-| URS-001 | Represent Boolean theories as GF(2) circuits | `../UBH-SPEC.md` | `001-ir-hashcons.md`, `002-solver-xor.md` | `../tests/test-plan.md` (1–5) |
-| URS-002 | Prove/refute via checkable solving | `../src/system-spec.md` | `009-sessions-query-proof.md`, `011-backends-certificates.md` | `../tests/test-plan.md` (3,10) |
-| URS-003 | “Accept only with verification” policy | `../src/system-spec.md` | `011-backends-certificates.md`, `014-certificate-formats-verification.md` | `../tests/test-plan.md` (3,5,11) |
-| URS-004 | Compile higher-level logics into UBH | `../src/system-spec.md` | `003-frontends-compile.md`, `007-nl-ubh-compile.md`, `010-fragments-goals.md` | `../tests/test-plan.md` (7–9) |
-| URS-005 | Incremental sessions (learn/query) | `../src/system-spec.md` | `009-sessions-query-proof.md`, `012-orchestrator-planner.md` | `../tests/test-plan.md` (10) |
-| URS-006 | Explainability in user vocabulary | `../src/system-spec.md` | `009-sessions-query-proof.md`, `016-error-handling-diagnostics.md` | `../tests/test-plan.md` (10,12) |
-| FS-001 | Create wires and gates API | `../UBH-SPEC.md` | `001-ir-hashcons.md` | `../tests/test-plan.md` (1–2) |
-| FS-002 | Add constraints API | `../UBH-SPEC.md` | `009-sessions-query-proof.md` | `../tests/test-plan.md` (2,10) |
-| FS-003 | solve()/prove(phi) behavior | `../src/system-spec.md` | `002-solver-xor.md`, `011-backends-certificates.md` | `../tests/test-plan.md` (3–5) |
-| FS-004 | Strict acceptance rule (no uncheckable UNSAT) | `../src/system-spec.md` | `011-backends-certificates.md`, `014-certificate-formats-verification.md` | `../tests/test-plan.md` (11) |
-| FS-005 | Front-end contract (typed AST → UBH) | `../src/system-spec.md` | `005-cnl-lexicon.md`, `006-nl-pipeline.md`, `007-nl-ubh-compile.md` | `../tests/test-plan.md` (6–9) |
-| FS-006 | Session functions (learn/query/explain) | `../src/system-spec.md` | `009-sessions-query-proof.md`, `016-error-handling-diagnostics.md` | `../tests/test-plan.md` (10,12) |
-| NFS-PERF-001 | Hash-consing deduplicates gates | `../UBH-SPEC.md` | `001-ir-hashcons.md` | `../tests/test-plan.md` (1) |
-| NFS-PERF-002 | Incremental XOR reasoning | `../UBH-SPEC.md` | `002-solver-xor.md` | `../tests/test-plan.md` (4–5) |
-| NFS-REL-001 | Kernel nodes are immutable | `../UBH-SPEC.md` | `001-ir-hashcons.md` | `../tests/test-plan.md` (1–2) |
-| NFS-REL-002 | Simplifications preserve satisfiability | `../UBH-SPEC.md` | `001-ir-hashcons.md` | `../tests/test-plan.md` (2) |
-| NFS-DET-001 | Deterministic parsing/typing | `../src/system-spec.md` | `005-cnl-lexicon.md`, `008-dsl.md`, `016-error-handling-diagnostics.md` | `../tests/test-plan.md` (6–8) |
-| NFS-MAINT-001 | Minimal kernel; extensions as modules | `../src/system-spec.md` | `010-fragments-goals.md`, `011-backends-certificates.md`, `012-orchestrator-planner.md` | `../tests/test-plan.md` (10) |
-| NFS-PORT-001 | Node.js runtime; async-first API | `../src/system-spec.md` | `009-sessions-query-proof.md` | `../tests/test-plan.md` (smoke) |
+| URS-001 | Represent Boolean theories as GF(2) circuits | `DS00-vision.md` | `DS01-ir-hashcons.md`, `DS02-solver-xor.md` | `../tests/test-plan.md` (1–5) |
+| URS-002 | Prove/refute via checkable solving | `../src/system-spec.md` | `DS09-sessions-query-proof.md`, `DS11-backends-certificates.md` | `../tests/test-plan.md` (3,10) |
+| URS-003 | “Accept only with verification” policy | `../src/system-spec.md` | `DS11-backends-certificates.md`, `DS14-certificate-formats-verification.md` | `../tests/test-plan.md` (3,5,11) |
+| URS-004 | Compile higher-level logics into UBH | `../src/system-spec.md` | `DS03-frontends-compile.md`, `DS07-nl-ubh-compile.md`, `DS10-fragments-goals.md` | `../tests/test-plan.md` (7–9) |
+| URS-005 | Incremental sessions (learn/query) | `../src/system-spec.md` | `DS09-sessions-query-proof.md`, `DS12-orchestrator-planner.md` | `../tests/test-plan.md` (10) |
+| URS-006 | Explainability in user vocabulary | `../src/system-spec.md` | `DS09-sessions-query-proof.md`, `DS16-error-handling-diagnostics.md` | `../tests/test-plan.md` (10,12) |
+| FS-001 | Create wires and gates API | `DS00-vision.md` | `DS01-ir-hashcons.md` | `../tests/test-plan.md` (1–2) |
+| FS-002 | Add constraints API | `DS00-vision.md` | `DS09-sessions-query-proof.md` | `../tests/test-plan.md` (2,10) |
+| FS-003 | solve()/prove(phi) behavior | `../src/system-spec.md` | `DS02-solver-xor.md`, `DS11-backends-certificates.md` | `../tests/test-plan.md` (3–5) |
+| FS-004 | Strict acceptance rule (no uncheckable UNSAT) | `../src/system-spec.md` | `DS11-backends-certificates.md`, `DS14-certificate-formats-verification.md` | `../tests/test-plan.md` (11) |
+| FS-005 | Front-end contract (typed AST → UBH) | `../src/system-spec.md` | `DS05-cnl-lexicon.md`, `DS06-nl-pipeline.md`, `DS07-nl-ubh-compile.md` | `../tests/test-plan.md` (6–9) |
+| FS-006 | Session functions (learn/query/explain) | `../src/system-spec.md` | `DS09-sessions-query-proof.md`, `DS16-error-handling-diagnostics.md` | `../tests/test-plan.md` (10,12) |
+| NFS-PERF-001 | Hash-consing deduplicates gates | `DS00-vision.md` | `DS01-ir-hashcons.md` | `../tests/test-plan.md` (1) |
+| NFS-PERF-002 | Incremental XOR reasoning | `DS00-vision.md` | `DS02-solver-xor.md` | `../tests/test-plan.md` (4–5) |
+| NFS-REL-001 | Kernel nodes are immutable | `DS00-vision.md` | `DS01-ir-hashcons.md` | `../tests/test-plan.md` (1–2) |
+| NFS-REL-002 | Simplifications preserve satisfiability | `DS00-vision.md` | `DS01-ir-hashcons.md` | `../tests/test-plan.md` (2) |
+| NFS-DET-001 | Deterministic parsing/typing | `../src/system-spec.md` | `DS05-cnl-lexicon.md`, `DS08-dsl.md`, `DS16-error-handling-diagnostics.md` | `../tests/test-plan.md` (6–8) |
+| NFS-MAINT-001 | Minimal kernel; extensions as modules | `../src/system-spec.md` | `DS10-fragments-goals.md`, `DS11-backends-certificates.md`, `DS12-orchestrator-planner.md` | `../tests/test-plan.md` (10) |
+| NFS-PORT-001 | Node.js runtime; async-first API | `../src/system-spec.md` | `DS09-sessions-query-proof.md` | `../tests/test-plan.md` (smoke) |
 
 Notes:
 - The “Tests” column references the normative test plan; individual test cases are enumerated there.

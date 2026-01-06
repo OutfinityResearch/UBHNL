@@ -39,7 +39,7 @@ The solver runs a CDCL/DPLL(T)-style search with two propagation channels:
 2) XOR propagation via incremental Gaussian elimination
 
 ## Solver Interface (Kernel-Level)
-The kernel’s external API is defined in `docs/specs/UBH-SPEC.md`. Internally, the solver is split as:
+The kernel’s external API is defined in `docs/specs/DS/DS00-vision.md`. Internally, the solver is split as:
 
 ### SAT Backend (Pluggable)
 Required capabilities:

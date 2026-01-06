@@ -196,7 +196,7 @@ query(input: CNL | DSL | AST, kind: GoalKind, options) -> QueryResult
 Query must support:
 - entailment (`Prove`) via `T ∧ ¬φ`,
 - refutation (`Refute`) via counterexample model/trace,
-- hole filling (`exists ?x in D: ...`) returning witnesses,
+- witness queries (CNL `Which ...?`, DSL `Exists ... graph ... end`) returning witnesses,
 - counting/optimization/synthesis via fragments/backends.
 
 Error handling: see `DS16-error-handling-diagnostics.md`.
@@ -232,15 +232,27 @@ Explanation must:
 c0 is a Cell.
 c0 has gene A.
 
-For all Cell c: if geneA(c) and not inhibitor(c) then proteinP(c).
+For any Cell c:
+    If geneA(c) and not inhibitor(c) then proteinP(c).
 ```
 
 **DSL** (`biology.sys2`):
 ```sys2
-@c0:Cell
-@c0 geneA
+@Cell __Atom
+@c0 __Atom
+IsA c0 Cell
 
-forall $c in Cell: geneA($c) and not inhibitor($c) implies proteinP($c)
+@f1 geneA c0
+
+@rule1 ForAll Cell graph c
+    @g geneA $c
+    @inh inhibitor $c
+    @ninh Not $inh
+    @prem And $g $ninh
+    @p proteinP $c
+    @imp Implies $prem $p
+    return $imp
+end
 ```
 
 **Query**: Does c0 have protein P?
@@ -256,24 +268,34 @@ forall $c in Cell: geneA($c) and not inhibitor($c) implies proteinP($c)
 Ion is a Person.
 Ion has flu.
 
-For all Person p: if p has flu then p has fever.
+For any Person p:
+    If p has flu then p has fever.
 
 Which Person p has fever?
 ```
 
 **Expected**:
 - result: `SAT`
-- hole assignment: `?p = ion`
+- witness assignment: `p = Ion`
 
 ### Example 3 — Contradiction Detection
 
 **DSL** (`contradiction.sys2`):
 ```sys2
-@c0:Cell
-@c0 geneA
-@c0 inhibitor
+@Cell __Atom
+@c0 __Atom
+IsA c0 Cell
 
-forall $c in Cell: geneA($c) implies not inhibitor($c)
+@f1 geneA c0
+@f2 inhibitor c0
+
+@rule1 ForAll Cell graph c
+    @g geneA $c
+    @inh inhibitor $c
+    @ninh Not $inh
+    @imp Implies $g $ninh
+    return $imp
+end
 ```
 
 **Expected**:

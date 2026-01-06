@@ -1,88 +1,123 @@
-# CNL Test Cases (Determinism + Typing)
+# CNL Test Cases (DS-005)
 
-These cases are normative for the CNL grammar in `docs/specs/DS/005-cnl-lexicon.md`.
-They are written as “input → expected shape” (not exact formatting).
+These cases are normative for the CNL grammar and lexicon contract in `docs/specs/DS/DS05-cnl-lexicon.md`.
+They focus on determinism (one parse) and typing (lexicon-driven).
 
 ## Shared Lexicon (for examples)
 ```json
 {
+  "version": "1.0",
   "domains": {
     "Cell": ["c0", "c1"],
-    "Person": ["p0"]
-  },
-  "constants": {
-    "c0": "Cell",
-    "c1": "Cell",
-    "p0": "Person"
+    "Person": ["p0", "p1"]
   },
   "predicates": {
     "geneA": { "arity": 1, "args": ["Cell"] },
     "inhibitor": { "arity": 1, "args": ["Cell"] },
     "proteinP": { "arity": 1, "args": ["Cell"] },
     "has_flu": { "arity": 1, "args": ["Person"] },
-    "has_fever": { "arity": 1, "args": ["Person"] }
+    "has_fever": { "arity": 1, "args": ["Person"] },
+    "trusts": { "arity": 2, "args": ["Person", "Person"] }
   },
-  "aliases": {
-    "protein p": "proteinP"
+  "cnlPatterns": {
+    "has gene A": "geneA($1)",
+    "has inhibitor": "inhibitor($1)",
+    "has protein P": "proteinP($1)",
+    "protein p": "proteinP($1)",
+    "has flu": "has_flu($1)",
+    "has fever": "has_fever($1)",
+    "trusts": "trusts($1, $2)"
   }
 }
 ```
 
 ## Accepted Inputs
-### 1) Basic quantifier + implication
-Input:
-`for all x in Cell: geneA(x) implies proteinP(x)`
 
+### 1) Natural fact (SVO + lexicon pattern)
+Input:
+```cnl
+c0 has gene A.
+```
 Expected core AST shape:
-`ForAll(x:Cell, Implies(Pred(geneA,[x]), Pred(proteinP,[x])))`
+`Pred(geneA,[ConstRef(c0:Cell)])`
 
-### 2) “Domain var” binder form
+### 2) Semi-formal quantified rule (block + If/then)
 Input:
-`for all cell c: geneA(c) implies proteinP(c)`
+```cnl
+For any Cell c:
+    If c has gene A then c has protein P.
+```
+Expected core AST shape:
+`ForAll(c:Cell, Implies(Pred(geneA,[c]), Pred(proteinP,[c])))`
 
-Expected: same as case (1).
-
-### 3) If/then sugar
+### 3) Conjunction + negation in a rule
 Input:
-`for all cell c: if geneA(c) and not inhibitor(c) then proteinP(c)`
-
+```cnl
+For any Cell c:
+    If c has gene A and c does not have inhibitor then c has protein P.
+```
 Expected core AST shape:
 `ForAll(c:Cell, Implies(And(Pred(geneA,[c]), Not(Pred(inhibitor,[c]))), Pred(proteinP,[c])))`
 
-### 4) Exists + conjunction
+### 4) Query (witness search)
 Input:
-`exists person p: has_fever(p) and has_flu(p)`
+```cnl
+Which Person p has fever?
+```
+Expected core AST shape:
+`Exists(p:Person, Pred(has_fever,[p]))`
 
+### 5) Alias / surface phrase expansion
+Input:
+```cnl
+For any Cell c:
+    If c has gene A then protein p(c).
+```
 Expected:
-`Exists(p:Person, And(Pred(has_fever,[p]), Pred(has_flu,[p])))`
+- `protein p(c)` expands via `cnlPatterns` to `proteinP(c)`.
 
-### 5) Aliases
+### 6) Transitive verb (SVO with 2-arg predicate)
 Input:
-`for all cell c: geneA(c) implies protein p(c)`
-
-Expected: alias `protein p` resolves to `proteinP`.
+```cnl
+p0 trusts p1.
+```
+Expected core AST shape:
+`Pred(trusts,[ConstRef(p0:Person), ConstRef(p1:Person)])`
 
 ## Rejected Inputs (with expected category)
-### 1) Missing domain
-Input: `for all x: proteinP(x)`
-Expected: `ResolveError` or `TypeError` (missing domain/binder type).
 
-### 2) Unknown predicate
-Input: `for all cell c: unknownPred(c)`
-Expected: `ResolveError`.
+### 1) Missing statement terminator
+Input:
+```cnl
+c0 has gene A
+```
+Expected: `ParseError` (`E_CNL_MISSING_PERIOD`).
 
-### 3) Arity mismatch
-Input: `proteinP(c0, c1)`
-Expected: `TypeError` (arity mismatch).
+### 2) Unknown surface phrase (strict lexicon patterns)
+Input:
+```cnl
+p0 has headache.
+```
+Expected: `LexiconError` / `VocabError` (`E_CNL_UNKNOWN_ALIAS`).
 
-### 4) Type mismatch
-Input: `proteinP(p0)`
-Expected: `TypeError` (expected `Cell`, got `Person`).
+### 3) Type mismatch (predicate expects Person, got Cell)
+Input:
+```cnl
+c0 has fever.
+```
+Expected: `TypeError` (`E_TYPE_MISMATCH`).
 
-### 5) Undeclared variable
-Input: `for all cell c: proteinP(x)`
-Expected: `ResolveError` (undeclared variable `x`).
+### 4) Unknown constant (not in any declared domain)
+Input:
+```cnl
+c99 has gene A.
+```
+Expected: `VocabError` (unknown identifier).
 
-### 6) Missing connector
-Input: `for all cell c: geneA(c) inhibitor(c)`
-Expected: `ParseError` (missing `and/or/implies`).
+### 5) Missing connector in an expression
+Input:
+```cnl
+For any Cell c:
+    If geneA(c) inhibitor(c) then proteinP(c).
+```
+Expected: `ParseError` (`E_CNL_MISSING_CONNECTOR`).

@@ -243,7 +243,7 @@ If Alice has Flu then Alice has Fever.
 
 | CNL | DSL |
 |-----|-----|
-| `For all Type var: body.` | `@ruleN ForAll Type graph var ... return $expr end` |
+| `For all Type var:` (block) | `@ruleN ForAll Type graph var ... return $expr end` |
 
 **Example**:
 ```cnl
@@ -264,7 +264,7 @@ end
 
 | CNL | DSL |
 |-----|-----|
-| `For all Type x, Type y: body.` | Nested `ForAll` blocks |
+| `For all Type x, Type y:` (block) | Nested `ForAll` blocks |
 
 **Example**:
 ```cnl
@@ -288,7 +288,7 @@ end
 
 | CNL | DSL |
 |-----|-----|
-| `There exists Type var: body.` | `@exN Exists Type graph var ... return $expr end` |
+| `There exists Type var:` (block) | `@exN Exists Type graph var ... return $expr end` |
 
 **Example**:
 ```cnl
@@ -366,7 +366,8 @@ end
 
 **Example**:
 ```cnl
-For all Cell c: geneA(c) implies proteinP(c).
+For all Cell c:
+    If geneA(c) then proteinP(c).
 ```
 ↔
 ```sys2
@@ -403,12 +404,12 @@ end
 |-----|-----|
 | Multi-word phrase | Single predicate name |
 
-Via lexicon `cnlAliases`:
+Via lexicon `cnlPatterns`:
 ```json
 {
-  "has Fever": "HasFever",
-  "is Parent of": "Parent",
-  "is Ancestor of": "Ancestor"
+  "has Fever": "HasFever($1)",
+  "is Parent of": "Parent($1, $2)",
+  "is Ancestor of": "Ancestor($1, $2)"
 }
 ```
 

@@ -92,30 +92,28 @@ interface ErrorDetails {
 | `E_CNL_MISSING_PERIOD` | Statement not terminated | `Ion has fever` (no `.`) |
 | `E_CNL_MISSING_DOMAIN` | Quantifier without domain | `For all c: P(c).` |
 | `E_CNL_MISSING_CONNECTOR` | Adjacent atoms without connector | `geneA(c) proteinP(c)` |
-| `E_CNL_UNKNOWN_ALIAS` | Predicate phrase not in lexicon aliases | `Ion has headache.` |
+| `E_CNL_UNKNOWN_ALIAS` | Predicate phrase not mapped in lexicon `cnlPatterns` | `Ion has headache.` |
 | `E_CNL_AMBIGUOUS` | Multiple valid parses | Rare if grammar is correct |
 
 ### DSL Parsing Errors
 
 | Code | Condition | Example |
 |------|-----------|---------|
-| `E_DSL_SYNTAX` | General DSL syntax error | `forall c Cell:` |
+| `E_DSL_SYNTAX` | General DSL syntax error | `@rule1 ForAll Cell c` (missing `graph`) |
 | `E_DSL_TWO_AT` | Two `@` tokens on one line | `@x P @y` |
 | `E_DSL_AT_NOT_FIRST` | `@` not at start of line | `P(@x)` |
-| `E_DSL_UNBOUND_VAR` | `$x` used outside scope | `forall $c: P($x)` |
-| `E_DSL_HOLE_IN_FORALL` | `?x` used with forall | `forall ?c in Cell:` |
+| `E_DSL_UNBOUND_VAR` | `$x` used outside scope | `geneA $x` |
 
 ### Vocabulary / Typing Errors
 
 | Code | Condition | Example |
 |------|-----------|---------|
 | `E_UNKNOWN_SYMBOL` | Bare name not in vocabulary | `unknownPred(c0)` |
-| `E_UNKNOWN_TYPE` | Domain/type not declared | `@x:Unknown` |
+| `E_UNKNOWN_TYPE` | Domain/type not declared | `IsA x UnknownType` |
 | `E_UNKNOWN_PREDICATE` | Predicate not in lexicon | `mystery(c0)` |
 | `E_ARITY_MISMATCH` | Wrong number of arguments | `geneA(c0, c1)` (arity=1) |
 | `E_TYPE_MISMATCH` | Argument type doesn't match | `geneA(ion)` (expects Cell) |
-| `E_TYPE_CONFLICT` | Same name, different types | `@x:Cell` and `@x:Person` |
-| `E_HOLE_UNTYPED` | Hole cannot be typed | `exists ?x: P(?x)` |
+| `E_TYPE_CONFLICT` | Same name, different types | `IsA x Cell` and `IsA x Person` |
 | `E_RESERVED_WORD` | Vocabulary uses reserved keyword | Domain named "true" |
 
 ### Translation Errors
@@ -124,7 +122,7 @@ interface ErrorDetails {
 |------|-----------|---------|
 | `E_TRANSLATE_AMBIGUOUS` | Multiple possible translations | Unlikely |
 | `E_TRANSLATE_UNSUPPORTED` | Construct not in target | Future extensions |
-| `E_LEXICON_ALIAS_MISSING` | CNL phrase has no alias | "has headache" |
+| `E_LEXICON_ALIAS_MISSING` | CNL phrase has no mapping in lexicon `cnlPatterns` | "has headache" |
 
 ### Schema Engine Errors
 
