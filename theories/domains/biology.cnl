@@ -1,0 +1,30 @@
+# Biology Domain Theory
+# Cells, proteins, and molecular biology
+
+# === DOMAIN DECLARATIONS ===
+Cell is a Domain.
+Protein is a Domain.
+Gene is a Domain.
+
+# === RELATION PATTERNS ===
+# X expresses Y - cell expresses protein
+# X encodes Y - gene encodes protein
+# X is Active
+# X is Inactive
+
+# === CORE RULES ===
+
+# Expression leads to activity
+For any Cell c, Protein p:
+    If c expresses p then p is Active.
+
+# Gene encoding
+For any Gene g, Protein p:
+    If g encodes p and g is Active then p is Produced.
+
+# Inactive is opposite of Active
+For any Protein p:
+    If p is Active then p is not Inactive.
+
+For any Protein p:
+    If p is Inactive then p is not Active.

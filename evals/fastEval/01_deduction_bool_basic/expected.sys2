@@ -1,7 +1,7 @@
-@Bit __Atom
-@a __Atom
-@b __Atom
-@c __Atom
+@Bit:Bit __Atom
+@a:a __Atom
+@b:b __Atom
+@c:c __Atom
 
 IsA a Bit
 IsA b Bit

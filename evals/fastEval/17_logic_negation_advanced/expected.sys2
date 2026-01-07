@@ -1,0 +1,31 @@
+@Entity:Entity __Atom
+@e1:e1 __Atom
+@e2:e2 __Atom
+
+IsA e1 Entity
+IsA e2 Entity
+
+@rule1 ForAll Entity graph x
+    @c1 On $x
+    @c2 Off $x
+    @not1 Not $c2
+    @imp2 Implies $c1 $not1
+    return $imp2
+end
+@rule2 ForAll Entity graph x
+    @c3 Off $x
+    @c4 On $x
+    @not3 Not $c4
+    @imp4 Implies $c3 $not3
+    return $imp4
+end
+@rule3 ForAll Entity graph x
+    @c5 On $x
+    @not5 Not $c5
+    @c6 Off $x
+    @imp6 Implies $not5 $c6
+    return $imp6
+end
+@f1 On e1
+@c7 On e2
+@not7 Not $c7

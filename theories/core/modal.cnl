@@ -1,0 +1,147 @@
+# Modal Logic Theory
+# Possibility, necessity, temporal, and deontic operators
+# Extends core logic with modal reasoning
+
+# =============================================================================
+# DOMAIN DECLARATIONS
+# =============================================================================
+
+World is a Domain.
+Time is a Domain.
+Agent is a Domain.
+
+# =============================================================================
+# ALETHIC MODALITY (Possibility/Necessity)
+# =============================================================================
+
+# Syntax:
+#   "Possibly P"      -> Possibly P   (diamond operator)
+#   "Necessarily P"   -> Necessarily P (box operator)
+#   "P is possible"   -> Possibly P
+#   "P is necessary"  -> Necessarily P
+
+# Axioms (S5 Modal Logic):
+
+# Axiom K: Distribution
+# For any Proposition p, q:
+#     If Necessarily (p implies q) then (Necessarily p) implies (Necessarily q).
+
+# Axiom T: Necessity implies truth
+# For any Proposition p:
+#     If Necessarily p then p.
+
+# Axiom 5: Positive introspection for possibility
+# For any Proposition p:
+#     If Possibly p then Necessarily (Possibly p).
+
+# Duality: Possibly P iff not Necessarily (not P)
+
+# =============================================================================
+# TEMPORAL LOGIC (LTL-style)
+# =============================================================================
+
+# Syntax:
+#   "Eventually P"    -> Eventually P    (future diamond)
+#   "Always P"        -> Always P        (future box)
+#   "Next P"          -> Next P          (next state)
+#   "P until Q"       -> Until P Q       (strong until)
+
+# Axioms:
+
+# Eventually is reflexive
+# For any Proposition p:
+#     If p then Eventually p.
+
+# Always implies current
+# For any Proposition p:
+#     If Always p then p.
+
+# Until semantics
+# For any Proposition p, q:
+#     If p until q then Eventually q.
+
+# =============================================================================
+# EPISTEMIC LOGIC (Knowledge/Belief)
+# =============================================================================
+
+# Syntax:
+#   "Agent knows P"      -> Knows Agent P
+#   "Agent believes P"   -> Believes Agent P
+#   "It is common knowledge that P" -> CommonKnowledge P
+
+# Knowledge axioms (S5):
+
+# Truthfulness: Knowledge implies truth
+# For any Agent a, Proposition p:
+#     If a knows p then p.
+
+# Positive introspection: Knowing that you know
+# For any Agent a, Proposition p:
+#     If a knows p then a knows (a knows p).
+
+# Negative introspection: Knowing that you don't know
+# For any Agent a, Proposition p:
+#     If it is not the case that a knows p then a knows (it is not the case that a knows p).
+
+# Belief is weaker than knowledge (no truthfulness axiom)
+
+# =============================================================================
+# DEONTIC LOGIC (Obligation/Permission)
+# =============================================================================
+
+# Syntax:
+#   "Permitted P"      -> Permitted P     (may)
+#   "Obligatory P"     -> Obligatory P    (must)
+#   "Forbidden P"      -> Forbidden P     (must not)
+
+# Axioms:
+
+# Duality: Permitted P iff not Obligatory (not P)
+# For any Action a:
+#     a is Permitted iff it is not the case that (not a) is Obligatory.
+
+# Forbidden = Obligatory(not)
+# For any Action a:
+#     a is Forbidden iff (not a) is Obligatory.
+
+# Ought implies can
+# For any Action a:
+#     If a is Obligatory then a is Possible.
+
+# No conflicts
+# For any Action a:
+#     It is not the case that (a is Obligatory and a is Forbidden).
+
+# =============================================================================
+# COUNTERFACTUAL REASONING
+# =============================================================================
+
+# Syntax:
+#   "If P were the case then Q would hold" -> Counterfactual P Q
+#   "Had P been true then Q" -> Counterfactual P Q
+
+# Lewis-Stalnaker semantics:
+#   Counterfactual P Q is true iff in the closest possible world where P holds, Q also holds.
+
+# =============================================================================
+# EXAMPLE: Legal Reasoning
+# =============================================================================
+
+# Rule application with obligations:
+#   For any Person p:
+#       If p is Adult then (p pays Taxes) is Obligatory.
+#       If (p pays Taxes) is Obligatory and it is not the case that p pays Taxes then
+#           (p is Penalized) is Permitted.
+
+# =============================================================================
+# EXAMPLE: Agent Knowledge
+# =============================================================================
+
+# Information sharing:
+#   For any Agent a, b, Proposition p:
+#       If a knows p and a tells b then b knows p.
+
+# Uncertainty:
+#   For any Agent a, Proposition p:
+#       If a believes p and it is not the case that a knows p then
+#           a is Uncertain about p.

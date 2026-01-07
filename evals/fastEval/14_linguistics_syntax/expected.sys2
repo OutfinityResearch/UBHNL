@@ -1,7 +1,7 @@
-@Word __Atom
-@The __Atom
-@Cat __Atom
-@Runs __Atom
+@Word:Word __Atom
+@The:The __Atom
+@Cat:Cat __Atom
+@Runs:Runs __Atom
 
 IsA The Word
 IsA Cat Word

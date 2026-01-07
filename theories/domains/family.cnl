@@ -1,0 +1,152 @@
+# Family Relations Domain Theory
+# Comprehensive predicates for kinship and ancestry
+
+# =============================================================================
+# DOMAIN DECLARATIONS
+# =============================================================================
+
+Person is a Domain.
+Gender is a Domain.
+
+# Gender values
+Male is a Gender.
+Female is a Gender.
+
+# =============================================================================
+# PREDICATE PATTERNS
+# =============================================================================
+
+# X is Parent of Y     -> Parent X Y
+# X is Child of Y      -> Child X Y  
+# X is Ancestor of Y   -> Ancestor X Y
+# X is Descendant of Y -> Descendant X Y
+# X is Sibling of Y    -> Sibling X Y
+# X is Male            -> Male X
+# X is Female          -> Female X
+
+# =============================================================================
+# GENDERED RELATIONS
+# =============================================================================
+
+# X is Father of Y (male parent)
+# X is Mother of Y (female parent)
+# X is Son of Y (male child)
+# X is Daughter of Y (female child)
+# X is Brother of Y (male sibling)
+# X is Sister of Y (female sibling)
+
+# =============================================================================
+# EXTENDED RELATIONS
+# =============================================================================
+
+# X is Grandparent of Y
+# X is Grandchild of Y
+# X is Uncle of Y
+# X is Aunt of Y
+# X is Cousin of Y
+# X is Spouse of Y
+
+# =============================================================================
+# CORE RULES: Parent/Child
+# =============================================================================
+
+# Parent implies Ancestor (base case)
+For any Person x, y:
+    If x is Parent of y then x is Ancestor of y.
+
+# Ancestor is transitive
+For any Person x, y, z:
+    If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
+
+# Child is inverse of Parent
+For any Person x, y:
+    If x is Parent of y then y is Child of x.
+
+# Descendant is inverse of Ancestor
+For any Person x, y:
+    If x is Ancestor of y then y is Descendant of x.
+
+# =============================================================================
+# CORE RULES: Siblings
+# =============================================================================
+
+# Sibling definition (share a parent)
+For any Person x, y, p:
+    If p is Parent of x and p is Parent of y then x is Sibling of y.
+
+# Sibling is symmetric
+For any Person x, y:
+    If x is Sibling of y then y is Sibling of x.
+
+# =============================================================================
+# GENDERED PARENT/CHILD RULES
+# =============================================================================
+
+# Father = Male + Parent
+For any Person x, y:
+    If x is Parent of y and x is Male then x is Father of y.
+
+# Mother = Female + Parent
+For any Person x, y:
+    If x is Parent of y and x is Female then x is Mother of y.
+
+# Son = Male + Child
+For any Person x, y:
+    If x is Child of y and x is Male then x is Son of y.
+
+# Daughter = Female + Child
+For any Person x, y:
+    If x is Child of y and x is Female then x is Daughter of y.
+
+# Brother = Male + Sibling
+For any Person x, y:
+    If x is Sibling of y and x is Male then x is Brother of y.
+
+# Sister = Female + Sibling
+For any Person x, y:
+    If x is Sibling of y and x is Female then x is Sister of y.
+
+# =============================================================================
+# EXTENDED FAMILY RULES
+# =============================================================================
+
+# Grandparent = Parent of Parent
+For any Person x, y, z:
+    If x is Parent of z and z is Parent of y then x is Grandparent of y.
+
+# Grandchild is inverse of Grandparent
+For any Person x, y:
+    If x is Grandparent of y then y is Grandchild of x.
+
+# Uncle = Brother of Parent
+For any Person x, y, p:
+    If p is Parent of y and x is Brother of p then x is Uncle of y.
+
+# Aunt = Sister of Parent
+For any Person x, y, p:
+    If p is Parent of y and x is Sister of p then x is Aunt of y.
+
+# Cousin = Child of Uncle or Aunt
+For any Person x, y, u:
+    If u is Uncle of y and u is Parent of x then x is Cousin of y.
+For any Person x, y, a:
+    If a is Aunt of y and a is Parent of x then x is Cousin of y.
+
+# =============================================================================
+# SPOUSE RULES
+# =============================================================================
+
+# Spouse is symmetric
+For any Person x, y:
+    If x is Spouse of y then y is Spouse of x.
+
+# Spouse constraint: one spouse at a time (monogamy axiom - optional)
+# For any Person x, y, z:
+#     If x is Spouse of y and x is Spouse of z then y equals z.
+
+# In-law relations
+For any Person x, y, z:
+    If x is Spouse of y and z is Parent of y then z is ParentInLaw of x.
+
+For any Person x, y, z:
+    If x is Spouse of y and z is Sibling of y then z is SiblingInLaw of x.

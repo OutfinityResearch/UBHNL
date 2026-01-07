@@ -9,8 +9,8 @@ Use the lexicon from `docs/specs/tests/cnl-cases.md`.
 ### 1) Constant declaration + typing
 Input:
 ```
-@Cell __Atom
-@c2 __Atom
+@Cell:Cell __Atom
+@c2:c2 __Atom
 IsA c2 Cell
 ```
 Expected:
@@ -19,8 +19,8 @@ Expected:
 ### 2) Fact statement (unary predicate, named)
 Input:
 ```
-@Cell __Atom
-@c0 __Atom
+@Cell:Cell __Atom
+@c0:c0 __Atom
 IsA c0 Cell
 
 @f1 proteinP c0
@@ -33,9 +33,9 @@ Expected:
 ### 3) Multi-argument predicate (typed)
 Input:
 ```
-@Person __Atom
-@p0 __Atom
-@p1 __Atom
+@Person:Person __Atom
+@p0:p0 __Atom
+@p1:p1 __Atom
 IsA p0 Person
 IsA p1 Person
 
@@ -47,7 +47,7 @@ Expected:
 ### 4) Quantified rule (core logic, block form)
 Input:
 ```
-@Cell __Atom
+@Cell:Cell __Atom
 
 @rule1 ForAll Cell graph c
     @g geneA $c
@@ -62,7 +62,7 @@ Expected core AST shape:
 ### 5) Existential query (witness is the binder variable)
 Input:
 ```
-@Person __Atom
+@Person:Person __Atom
 
 @query1 Exists Person graph p
     @c1 has_fever $p
@@ -78,7 +78,7 @@ Expected:
 ### 1) Unknown type
 Input:
 ```
-@x __Atom
+@x:x __Atom
 IsA x UnknownType
 ```
 Expected: `ResolveError`.
@@ -109,9 +109,9 @@ Expected: `ResolveError` (unknown constant `c99`).
 Assume `proteinP(Cell)` has arity 1.
 Input:
 ```
-@Cell __Atom
-@c0 __Atom
-@c1 __Atom
+@Cell:Cell __Atom
+@c0:c0 __Atom
+@c1:c1 __Atom
 IsA c0 Cell
 IsA c1 Cell
 

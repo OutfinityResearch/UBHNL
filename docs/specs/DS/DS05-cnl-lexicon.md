@@ -145,42 +145,155 @@ For any Person x:
 
 ---
 
-# PART 2: Lexicon (Shared Vocabulary)
+# PART 1C: Natural Predicate Patterns (IMPLEMENTED)
 
-## 2.1 File Format
+The CNL translator automatically converts natural English patterns to DSL predicates.
+**NO PARENTHESES NEEDED** for most patterns!
+
+## 1C.1 Supported Patterns
+
+| CNL Pattern | Example | DSL Output |
+|-------------|---------|------------|
+| `X has Y` | `p1 has Fever` | `HasFever p1` |
+| `X is Y` | `Socrates is Mortal` | `Mortal Socrates` |
+| `X verb Y` | `Alice trusts Bob` | `Trusts Alice Bob` |
+| `X is Y of Z` | `p1 is Parent of p2` | `Parent p1 p2` |
+| `X coughs` | `p1 coughs` | `Coughs p1` |
+| `X expresses Y` | `c0 expresses p1` | `Expresses c0 p1` |
+
+## 1C.2 When to Use Explicit Pred(args) Syntax
+
+Use `Pred(arg1, arg2)` only when:
+1. **Nested functions**: `Succ(n)`, `Next(Yellow(x))`
+2. **Multi-arg predicates with values**: `Age(p1, 16)`, `Prob(X, 0.8)`
+3. **Complex terms**: `Distance(A, B, 100)`
+
+## 1C.3 Examples - Natural vs Explicit
+
+```cnl
+# NATURAL (preferred) - no parentheses
+p1 has Fever.
+Alice trusts Bob.
+Socrates is Man.
+If p has Flu then p has Fever.
+
+# EXPLICIT (only when needed)
+Succ(n) is Nat.           # Nested function
+Age(p1, 16).               # Predicate with value
+Prob(Cloudy(today), 0.8).  # Complex annotation
+```
+
+## 1C.4 Translation Examples
+
+**Medical diagnosis:**
+```cnl
+# Input (natural CNL)
+For any Patient p:
+    If p has Flu then p has Fever.
+    If p has Cold then p coughs.
+p1 has Fever.
+```
+```sys2
+# Output (DSL)
+@rule1 ForAll Patient graph p
+    @c1 HasFlu $p
+    @c2 HasFever $p
+    @imp1 Implies $c1 $c2
+    return $imp1
+end
+@rule2 ForAll Patient graph p
+    @c3 HasCold $p
+    @c4 Coughs $p
+    @imp2 Implies $c3 $c4
+    return $imp2
+end
+@f1 HasFever p1
+```
+
+**Social network:**
+```cnl
+# Input
+Alice trusts Bob.
+Bob trusts Charlie.
+For any User x, y, z:
+    If x trusts y and y trusts z then x trusts z.
+```
+```sys2
+# Output
+@f1 Trusts Alice Bob
+@f2 Trusts Bob Charlie
+@rule1 ForAll User graph x
+    @inner1 ForAll User graph y
+        @inner2 ForAll User graph z
+            @c1 Trusts $x $y
+            @c2 Trusts $y $z
+            @and1 And $c1 $c2
+            @c3 Trusts $x $z
+            @imp Implies $and1 $c3
+            return $imp
+        end
+        return $inner2
+    end
+    return $inner1
+end
+```
+
+---
+
+# PART 2: Theory Files (Preferred) vs Legacy JSON
+
+## 2.1 PREFERRED: CNL Theory Files
+
+Domain knowledge should be expressed in `.cnl` files:
+
+```cnl
+# theories/domains/medical.cnl
+Patient is a Domain.
+Symptom is a Domain.
+
+Flu is a Disease.
+Cold is a Disease.
+
+For any Patient p:
+    If p has Flu then p has Fever.
+    If p has Cold then p coughs.
+```
+
+**Location**: `/theories/domains/` for reusable theories.
+
+## 2.2 LEGACY: JSON Lexicon (Documentation Only)
+
+The JSON format below is for **documentation/tooling only**.
+Actual domain knowledge goes in CNL files.
 
 - **Extension**: `.lexicon.json`
-- **Encoding**: UTF-8
-
-## 2.2 Schema
+- **Status**: LEGACY - use CNL instead
 
 ```json
 {
   "version": "1.0",
   "domains": {
     "Person": ["Alice", "Bob", "Charlie"],
-    "Cell": ["c0", "c1", "c2"],
-    "Protein": ["p1", "p2"]
+    "Cell": ["c0", "c1", "c2"]
   },
   "predicates": {
     "HasFever": { "arity": 1, "args": ["Person"] },
-    "Trusts": { "arity": 2, "args": ["Person", "Person"] },
-    "Expresses": { "arity": 2, "args": ["Cell", "Protein"] }
-  },
-  "cnlPatterns": {
-    "has Fever": "HasFever($1)",
-    "has a Fever": "HasFever($1)",
-    "trusts": "Trusts($1, $2)",
-    "is Parent of": "Parent($1, $2)",
-    "is Ancestor of": "Ancestor($1, $2)",
-    "expresses": "Expresses($1, $2)"
-  },
-  "adjectives": {
-    "sick": "IsSick",
-    "healthy": "IsHealthy",
-    "active": "Active"
+    "Trusts": { "arity": 2, "args": ["Person", "Person"] }
   }
 }
+```
+
+## 2.3 Theory File Structure
+
+```
+theories/
+├── core/           # Core logic (built-in)
+├── domains/        # Reusable domain theories
+│   ├── medical.cnl
+│   ├── family.cnl
+│   ├── social.cnl
+│   └── biology.cnl
+└── README.md
 ```
 
 ---
@@ -197,7 +310,7 @@ c0 is a Cell.
 ```
 -> DSL:
 ```sys2
-@Alice __Atom
+@Alice:Alice __Atom
 IsA Alice Person
 ```
 
@@ -208,9 +321,9 @@ Alice, Bob, Charlie are Persons.
 ```
 -> DSL:
 ```sys2
-@Alice __Atom
-@Bob __Atom
-@Charlie __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
+@Charlie:Charlie __Atom
 IsA Alice Person
 IsA Bob Person
 IsA Charlie Person
@@ -223,7 +336,7 @@ Person is a Domain.
 ```
 -> DSL:
 ```sys2
-@Person __Atom
+@Person:Person __Atom
 ```
 
 ## 3.2 Simple Facts (Subject-Verb-Object)

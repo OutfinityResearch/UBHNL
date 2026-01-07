@@ -1,6 +1,6 @@
-@Cell __Atom
-@Protein __Atom
-@c0 __Atom
+@Cell:Cell __Atom
+@Protein:Protein __Atom
+@c0:c0 __Atom
 
 IsA c0 Cell
 

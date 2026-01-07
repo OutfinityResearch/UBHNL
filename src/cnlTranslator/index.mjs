@@ -57,6 +57,26 @@ export function translate(cnlSource) {
             return { type: 'Not', arg: parseExpr(inner) };
         }
 
+        // Biconditional: "A if and only if B" or "A iff B"
+        if (str.includes(' if and only if ')) {
+            const parts = str.split(' if and only if ');
+            if (parts.length === 2) {
+                return { type: 'Iff', left: parseExpr(parts[0]), right: parseExpr(parts[1]) };
+            }
+        }
+        if (str.includes(' iff ')) {
+            const parts = str.split(' iff ');
+            if (parts.length === 2) {
+                return { type: 'Iff', left: parseExpr(parts[0]), right: parseExpr(parts[1]) };
+            }
+        }
+
+        // Disjunction: "A or B or C"
+        if (str.includes(' or ')) {
+            const parts = str.split(' or ').map(s => parseExpr(s));
+            return { type: 'Or', args: parts };
+        }
+
         // Conjunction: "A and B and C"
         if (str.includes(' and ')) {
             const parts = str.split(' and ').map(s => parseExpr(s));
@@ -176,6 +196,19 @@ export function translate(cnlSource) {
             add(`${indent}@${id} Not ${argId}`);
             return `$${id}`;
         }
+        if (expr.type === 'Or') {
+            const argIds = expr.args.map(a => generateLogic(a, indent));
+            const id = `or${ctx.counts.logic++}`;
+            add(`${indent}@${id} Or ${argIds.join(' ')}`);
+            return `$${id}`;
+        }
+        if (expr.type === 'Iff') {
+            const leftId = generateLogic(expr.left, indent);
+            const rightId = generateLogic(expr.right, indent);
+            const id = `iff${ctx.counts.logic++}`;
+            add(`${indent}@${id} Iff ${leftId} ${rightId}`);
+            return `$${id}`;
+        }
         return '$error';
     }
 
@@ -197,10 +230,16 @@ export function translate(cnlSource) {
         if (am && am[2] !== 'Domain') { ctx.atoms.push({name: am[1], type: am[2]}); continue; }
         
         // "Let X, Y, Z be Types." (plural)
-        const multiMatch = trim.match(/^Let\s+(.+)\s+be\s+(\w+)s?\.$/);
+        const multiMatch = trim.match(/^Let\s+(.+)\s+be\s+(\w+)\.$/);
         if (multiMatch) {
             const names = multiMatch[1].split(',').map(n => n.trim());
-            const type = multiMatch[2].replace(/s$/, '');
+            let type = multiMatch[2];
+            // Singularize: Entities->Entity, Persons->Person, Users->User
+            if (type.endsWith('ies')) {
+                type = type.slice(0, -3) + 'y';  // Entities -> Entity
+            } else if (type.endsWith('s')) {
+                type = type.slice(0, -1);  // Persons -> Person
+            }
             for (const name of names) {
                 if (!ctx.atoms.find(a => a.name === name)) {
                     ctx.atoms.push({name, type});
@@ -211,11 +250,11 @@ export function translate(cnlSource) {
 
     // Generate declarations in DSL
     const allTypes = new Set(ctx.domains);
-    for (const d of ctx.domains) add(`@${d} __Atom`);
+    for (const d of ctx.domains) add(`@${d}:${d} __Atom`);
     for (const a of ctx.atoms) {
-        if (!allTypes.has(a.type)) { add(`@${a.type} __Atom`); allTypes.add(a.type); }
+        if (!allTypes.has(a.type)) { add(`@${a.type}:${a.type} __Atom`); allTypes.add(a.type); }
     }
-    for (const a of ctx.atoms) add(`@${a.name} __Atom`);
+    for (const a of ctx.atoms) add(`@${a.name}:${a.name} __Atom`);
     if (ctx.atoms.length > 0) add('');
     for (const a of ctx.atoms) add(`IsA ${a.name} ${a.type}`);
     if (ctx.atoms.length > 0) add('');
@@ -273,12 +312,31 @@ export function translate(cnlSource) {
             continue;
         }
 
-        // Fact: natural SVO or explicit Pred(args)
+        // Probabilistic weight: "Prob(Atom, w)."
+        const probMatch = line.match(/^Prob\((.+),\s*([0-9]+(?:\/[0-9]+)?|[0-9]*\.[0-9]+)\)\.?$/);
+        if (probMatch) {
+            const inner = probMatch[1].trim();
+            const weight = probMatch[2].trim();
+            const expr = parseExpr(inner);
+            if (expr.type === 'Pred') {
+                const argRefs = expr.args.map(a => generateTerm(a, ""));
+                add(`Weight { ${expr.pred} ${argRefs.join(' ')} } ${weight}`);
+            } else if (expr.type === 'Atom') {
+                add(`Weight { ${expr.name} } ${weight}`);
+            }
+            ptr++;
+            continue;
+        }
+
+        // Fact: natural SVO or explicit Pred(args) or complex expression
         const expr = parseExpr(line);
         if (expr.type === 'Pred') {
             const fid = `@f${ctx.counts.f++}`;
             const argRefs = expr.args.map(a => generateTerm(a, ""));
             add(`${fid} ${expr.pred} ${argRefs.join(' ')}`);
+        } else if (expr.type === 'Not' || expr.type === 'And' || expr.type === 'Or' || expr.type === 'Iff') {
+            // Complex expression as a fact
+            generateLogic(expr, "");
         }
         ptr++;
     }
@@ -328,11 +386,21 @@ export function translate(cnlSource) {
                 const impName = `imp${ctx.counts.logic++}`;
                 add(`${indent}@${impName} Implies ${antId} ${consId}`);
                 resultId = `$${impName}`;
+            } else if (stmt.includes(' if and only if ') || stmt.includes(' iff ')) {
+                // Biconditional inside ForAll
+                const expr = parseExpr(stmt.replace(/\.$/, ''));
+                resultId = generateLogic(expr, indent);
             } else {
                 const notMatch = stmt.match(/^It is not the case that\s+(.+)\.?$/);
                 if (notMatch || stmt.startsWith('It is not')) {
                     const expr = parseExpr(stmt.replace(/\.$/, ''));
                     resultId = generateLogic(expr, indent);
+                } else {
+                    // General expression (including Or, predicates, etc.)
+                    const expr = parseExpr(stmt.replace(/\.$/, ''));
+                    if (expr.type !== 'Error') {
+                        resultId = generateLogic(expr, indent);
+                    }
                 }
             }
             

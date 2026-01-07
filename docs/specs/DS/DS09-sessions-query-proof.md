@@ -189,9 +189,9 @@ Instead:
 Files on disk:
 - `bio.sys2`:
   ```
-  @Cell __Atom
-  @c0 __Atom
-  @c1 __Atom
+  @Cell:Cell __Atom
+  @c0:c0 __Atom
+  @c1:c1 __Atom
   IsA c0 Cell
   IsA c1 Cell
 

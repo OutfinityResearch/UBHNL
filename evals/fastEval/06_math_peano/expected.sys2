@@ -1,5 +1,5 @@
-@Nat __Atom
-@Zero __Atom
+@Nat:Nat __Atom
+@Zero:Zero __Atom
 
 IsA Zero Nat
 

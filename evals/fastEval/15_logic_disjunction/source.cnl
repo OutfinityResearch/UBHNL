@@ -1,0 +1,12 @@
+# Test 15: Disjunction (OR)
+# Testing "A or B" pattern
+
+Let Condition be a Domain.
+Let patient1 be a Condition.
+
+# Disjunction in consequent
+For any Condition p:
+    If p has Flu or p has Cold then p coughs.
+
+# Facts
+patient1 has Flu.

@@ -1,0 +1,1 @@
+[{"expected": "No, e1 is not Off.", "input": "Is e1 Off?", "kind": "query"}, {"expected": "Yes, e2 is Off.", "input": "Is e2 Off?", "kind": "query"}]

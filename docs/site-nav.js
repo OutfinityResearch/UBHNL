@@ -59,23 +59,44 @@ function injectHeaderNav() {
   const row = document.createElement("div");
   row.className = "site-header-row";
 
-  const img = document.createElement("img");
-  img.className = "header-diagram";
-  img.alt = "UBHNL pipeline diagram";
-  img.src = prefix + "assets/site-diagram.svg";
-  row.appendChild(img);
-
   row.appendChild(buildHeaderMenu(prefix));
   header.appendChild(row);
 }
 
+function injectPageDiagram() {
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  if (main.querySelector(".page-diagram-wrap")) return;
+
+  const prefix = computePrefixToDocsRoot();
+  const wrap = document.createElement("div");
+  wrap.className = "page-diagram-wrap";
+
+  const img = document.createElement("img");
+  img.className = "page-diagram";
+  img.alt = "UBHNL pipeline diagram";
+  img.src = prefix + "assets/site-diagram.svg";
+  wrap.appendChild(img);
+
+  const first = main.firstElementChild;
+  if (first) {
+    main.insertBefore(wrap, first);
+  } else {
+    main.appendChild(wrap);
+  }
+}
+
 try {
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", injectHeaderNav);
+    document.addEventListener("DOMContentLoaded", () => {
+      injectHeaderNav();
+      injectPageDiagram();
+    });
   } else {
     injectHeaderNav();
+    injectPageDiagram();
   }
 } catch {
   // ignore, site should still render without the menu
 }
-

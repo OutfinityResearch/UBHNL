@@ -1,5 +1,5 @@
-@Patient __Atom
-@p1 __Atom
+@Patient:Patient __Atom
+@p1:p1 __Atom
 
 IsA p1 Patient
 

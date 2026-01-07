@@ -1,5 +1,5 @@
-@Object __Atom
-@ball __Atom
+@Object:Object __Atom
+@ball:ball __Atom
 
 IsA ball Object
 

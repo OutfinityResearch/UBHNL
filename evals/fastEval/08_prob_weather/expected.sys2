@@ -1,5 +1,5 @@
-@Day __Atom
-@today __Atom
+@Day:Day __Atom
+@today:today __Atom
 
 IsA today Day
 
@@ -9,5 +9,4 @@ IsA today Day
     @imp1 Implies $c1 $c2
     return $imp1
 end
-@func2 Cloudy today
-@f1 Prob $func2 0.8
+Weight { Cloudy today } 0.8

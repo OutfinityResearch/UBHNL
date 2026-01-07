@@ -1,5 +1,5 @@
-@Light __Atom
-@l1 __Atom
+@Light:Light __Atom
+@l1:l1 __Atom
 
 IsA l1 Light
 

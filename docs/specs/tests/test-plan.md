@@ -70,7 +70,7 @@ Given `prove(phi)` defined as `solve(T ∧ ¬phi)`:
 
 ### 8) DSL Parsing and Typing
 - Parse a typed fact statement: `@f1 proteinP c0`.
-- Parse constant typing: `@c0 __Atom` + `IsA c0 Cell`.
+- Parse constant typing: `@c0:c0 __Atom` + `IsA c0 Cell`.
 - Parse existential witness query as an `Exists ... graph ... end` block (DS-008/DS-018).
 - Reject:
   - `IsA x UnknownType` (unknown type),

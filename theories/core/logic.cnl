@@ -1,0 +1,99 @@
+# Core Logic Theory
+# Fundamental logical constructs and natural language patterns
+# This theory is loaded automatically for all CNL/DSL files.
+
+# =============================================================================
+# DOMAIN DECLARATIONS (Type System)
+# =============================================================================
+
+# Basic type declaration patterns:
+# "X is a Domain." - declares X as a type
+# "X is a Y." - declares X as instance of type Y
+# "Let X be a Y." - alternative declaration syntax
+# "Let X, Y, Z be Ys." - plural declaration
+
+# =============================================================================
+# LOGICAL CONNECTIVES (Built-in)
+# =============================================================================
+
+# The following are primitive operations in the kernel:
+# - And: conjunction ("A and B")
+# - Or: disjunction ("A or B")  
+# - Not: negation ("not A", "it is not the case that A")
+# - Implies: implication ("if A then B", "A implies B")
+# - Iff: biconditional ("A if and only if B", "A iff B")
+
+# =============================================================================
+# QUANTIFIERS (Built-in)
+# =============================================================================
+
+# Universal: "For all X x: ..." / "For any X x: ..." / "Every X x: ..."
+# Existential: "There exists X x: ..." / "Some X x: ..."
+
+# Quantifier synonyms (all equivalent):
+# - For all, For any, For every, For each, Each, Every
+
+# =============================================================================
+# NATURAL LANGUAGE PATTERNS -> PREDICATES
+# =============================================================================
+
+# The translator automatically handles these patterns:
+
+# Pattern: "X has Y" -> HasY(X)
+# Examples:
+#   p1 has Fever.        -> HasFever p1
+#   Alice has Flu.       -> HasFlu Alice
+
+# Pattern: "X is Y" -> Y(X)  
+# Examples:
+#   Socrates is Mortal.  -> Mortal Socrates
+#   p1 is Active.        -> Active p1
+
+# Pattern: "X verb Y" -> Verb(X, Y)
+# Examples:
+#   Alice trusts Bob.    -> Trusts Alice Bob
+#   c0 expresses p1.     -> Expresses c0 p1
+
+# Pattern: "X is Y of Z" -> Y(X, Z)
+# Examples:
+#   p1 is Parent of p2.  -> Parent p1 p2
+#   Alice is Friend of Bob. -> Friend Alice Bob
+
+# Pattern: "X verb" -> Verb(X)
+# Examples:
+#   p1 coughs.           -> Coughs p1
+#   ball moves.          -> Moves ball
+
+# =============================================================================
+# EQUALITY AND IDENTITY
+# =============================================================================
+
+# Equality is reflexive
+For any Thing x:
+    x equals x.
+
+# Equality is symmetric
+For any Thing x, y:
+    If x equals y then y equals x.
+
+# Equality is transitive
+For any Thing x, y, z:
+    If x equals y and y equals z then x equals z.
+
+# =============================================================================
+# BASIC LOGICAL LAWS (Optional - for explicit reasoning)
+# =============================================================================
+
+# Law of Excluded Middle (implicit in Boolean logic)
+# For any Proposition p:
+#     p or not p.
+
+# Law of Non-Contradiction
+# For any Proposition p:
+#     It is not the case that (p and not p).
+
+# Modus Ponens (implicit in Implies)
+# If p and (p implies q) then q.
+
+# Modus Tollens
+# If (p implies q) and not q then not p.

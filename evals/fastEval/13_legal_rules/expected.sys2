@@ -1,5 +1,5 @@
-@Person __Atom
-@p1 __Atom
+@Person:Person __Atom
+@p1:p1 __Atom
 
 IsA p1 Person
 

@@ -1,7 +1,7 @@
-@Person __Atom
-@Alice __Atom
-@Bob __Atom
-@Charlie __Atom
+@Person:Person __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
+@Charlie:Charlie __Atom
 
 IsA Alice Person
 IsA Bob Person

@@ -1,0 +1,7 @@
+@Day:Day __Atom
+@today:today __Atom
+
+IsA today Day
+
+Weight { Cloudy today } 0.8
+Weight { Rain today } 0.3

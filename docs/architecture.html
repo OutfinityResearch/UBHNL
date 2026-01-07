@@ -56,31 +56,31 @@
                 <td>Trusted core</td>
                 <td>UBH DAG + constraints, certificate objects</td>
                 <td>validated <code>SAT/UNSAT</code>, checker verdicts</td>
-                <td><a href="mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>, <a href="mdview.html?file=specs/DS/014-certificate-formats-verification.md">DS-014</a></td>
+                <td><a href="mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>, <a href="mdview.html?file=specs/DS/DS14-certificate-formats-verification.md">DS-014</a></td>
               </tr>
               <tr>
                 <td>Front-ends</td>
                 <td>text (CNL/DSL) + lexicon</td>
                 <td>typed semantic IR + origins</td>
-                <td><a href="mdview.html?file=specs/DS/005-cnl-lexicon.md">DS-005</a>, <a href="mdview.html?file=specs/DS/008-dsl.md">DS-008</a>, <a href="mdview.html?file=specs/DS/006-nl-pipeline.md">DS-006</a></td>
+                <td><a href="mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005</a>, <a href="mdview.html?file=specs/DS/DS08-dsl.md">DS-008</a>, <a href="mdview.html?file=specs/DS/DS06-nl-pipeline.md">DS-006</a></td>
               </tr>
               <tr>
                 <td>Fragments</td>
                 <td>typed semantic IR</td>
                 <td>fragment id + normalized problem</td>
-                <td><a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a></td>
+                <td><a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a></td>
               </tr>
               <tr>
                 <td>Backends</td>
                 <td>fragment-specific IR</td>
                 <td>result + witness/certificate + artifacts</td>
-                <td><a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a></td>
+                <td><a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a></td>
               </tr>
               <tr>
                 <td>Orchestrator</td>
                 <td>problem + budgets + session caches</td>
                 <td>plan DAG + checked result + explanation payload</td>
-                <td><a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>, <a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a></td>
+                <td><a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>, <a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a></td>
               </tr>
             </tbody>
           </table>
@@ -152,14 +152,14 @@ query("proteinP(c2)", kind="Prove")
 # 4) explain (origins + witness/core)
 explain(lastResult)</code></pre>
         <p>
-          See <a href="session-api.html">Session API</a> and <a href="mdview.html?file=specs/DS/009-sessions-query-proof.md">DS-009</a> for the normative contract.
+          See <a href="session-api.html">Session API</a> and <a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a> for the normative contract.
         </p>
 
         <h2>Adding a new backend (engineering checklist)</h2>
         <ol>
-          <li>Choose the target <a href="wiki/concepts/fragment.html">fragment</a> and goal kinds it supports (<a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>).</li>
-          <li>Define what artifacts it returns (model/proof/invariant/strategy) and how they map to origins (<a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>).</li>
-          <li>Define a checkable certificate format and checker route (<a href="mdview.html?file=specs/DS/014-certificate-formats-verification.md">DS-014</a>).</li>
+          <li>Choose the target <a href="wiki/concepts/fragment.html">fragment</a> and goal kinds it supports (<a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a>).</li>
+          <li>Define what artifacts it returns (model/proof/invariant/strategy) and how they map to origins (<a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>).</li>
+          <li>Define a checkable certificate format and checker route (<a href="mdview.html?file=specs/DS/DS14-certificate-formats-verification.md">DS-014</a>).</li>
           <li>Integrate into the planner as a tactic or a candidate backend (budgets + fallbacks).</li>
           <li>Add spec-level tests for acceptance and rejection (certificate invalid, missing checker, etc.).</li>
         </ol>
@@ -178,10 +178,10 @@ explain(lastResult)</code></pre>
           </li>
           <li>
             Fragments/Backends/Planner:
-            <a href="mdview.html?file=specs/DS/010-fragments-goals.md">DS-010</a>,
-            <a href="mdview.html?file=specs/DS/011-backends-certificates.md">DS-011</a>,
-            <a href="mdview.html?file=specs/DS/012-orchestrator-planner.md">DS-012</a>,
-            <a href="mdview.html?file=specs/DS/014-certificate-formats-verification.md">DS-014</a>
+            <a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a>,
+            <a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a>,
+            <a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>,
+            <a href="mdview.html?file=specs/DS/DS14-certificate-formats-verification.md">DS-014</a>
           </li>
         </ul>
 

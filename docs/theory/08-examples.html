@@ -10,7 +10,7 @@
   <body>
     <header>
       <h1>Theory 08 — End-to-end examples</h1>
-      <p>What “functional” means: learn/query/explain with witnesses and certificates.</p>
+      <p>What "functional" means: learn/query/explain with witnesses and certificates.</p>
     </header>
     <main>
       <div class="card">
@@ -23,37 +23,100 @@
           <a href="../wiki/index.html">Wiki</a>
         </div>
 
-        <h2>1) Propositional (UBH/SAT)</h2>
-        <p>
-          A classic entailment example:
-          run it as <a href="../wiki/concepts/goalkind.html">GoalKind=Prove</a> and accept only if <code>T ∧ ¬φ</code> is <code>UNSAT</code> with a certificate.
-        </p>
-        <p>
-          See <a href="../examples.html">Examples</a> and the <a href="../mdview.html?file=specs/src/system-spec.md">System Spec</a>.
-        </p>
+        <h2>1) Medical Diagnosis (Abduction)</h2>
+        <p>Given symptoms, find possible diseases:</p>
+        <pre><code># theories/domains/medical.cnl rules are loaded
+Patient is a Domain.
+p1 is a Patient.
 
-        <h2>2) SMT(BV) and bit-blasting</h2>
-        <p>
-          For bitvectors (BV), the orchestrator can choose:
-          native SMT (with a proof object) or lowering to UBH/SAT (bit-blast + DRAT/LRAT).
-          Concepts: <a href="../wiki/concepts/smt.html">SMT</a> and <a href="../wiki/concepts/type-lowering.html">type lowering</a>.
-        </p>
+# Observations
+p1 has Fever.
+p1 coughs.
 
-        <h2>3) Transition systems (TS)</h2>
-        <p>
-          For TS safety, a counterexample is a checkable trace:
-          concepts: <a href="../wiki/concepts/model-checking.html">model checking</a>, <a href="../wiki/concepts/ic3-pdr.html">IC3/PDR</a>.
-        </p>
+# Query: What disease explains these symptoms?
+# -> Possible: Flu (causes both Fever and Cough)</code></pre>
 
-        <h2>4) Hole filling</h2>
+        <h2>2) Social Trust (Deduction)</h2>
+        <p>Transitive trust reasoning:</p>
+        <pre><code>Let User be a Domain.
+Let Alice, Bob, Charlie be Users.
+
+# Transitive trust rule
+For any User x, y, z:
+    If x trusts y and y trusts z then x trusts z.
+
+# Facts
+Alice trusts Bob.
+Bob trusts Charlie.
+
+# Query: Does Alice trust Charlie?
+# -> Yes (by transitivity)</code></pre>
+
+        <h2>3) Classic Syllogism</h2>
+        <p>Socrates is mortal:</p>
+        <pre><code>Entity is a Domain.
+Let Socrates be a Entity.
+
+# Universal rule
+Each Entity x:
+    If x is Man then x is Mortal.
+
+# Fact
+Socrates is Man.
+
+# Query: Is Socrates Mortal?
+# -> Yes (by modus ponens)</code></pre>
+
+        <h2>4) SAT Conflict Detection</h2>
+        <p>Detecting contradictions:</p>
+        <pre><code>Switch is a Domain.
+switch1 is a Switch.
+
+# Contradictory facts
+switch1 is On.
+switch1 is Off.
+
+# Exclusion rule
+For every Switch s:
+    It is not the case that (s is On and s is Off).
+
+# Query: Is the system consistent?
+# -> No (UNSAT - contradiction detected)</code></pre>
+
+        <h2>5) Family Relations (Recursive)</h2>
+        <p>Ancestor transitivity:</p>
+        <pre><code>Let Person be a Domain.
+Let Alice, Bob, Charlie be Persons.
+
+# Facts
+Alice is Parent of Bob.
+Bob is Parent of Charlie.
+
+# Rules
+For any Person x, y:
+    If x is Parent of y then x is Ancestor of y.
+
+For any Person x, y, z:
+    If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
+
+# Query: Is Alice Ancestor of Charlie?
+# -> Yes</code></pre>
+
+        <h2>Test Suite</h2>
         <p>
-          A query with <a href="../wiki/concepts/holes.html">holes</a> returns witnesses as <code>holeAssignments</code>.
+          See <code>evals/fastEval/</code> for 14 test suites covering:
+          boolean logic, family relations, biology, SAT conflicts, syllogisms,
+          Peano arithmetic, medical diagnosis, weather, traffic lights,
+          physics, social networks, chemistry, legal rules, and linguistics.
+        </p>
+        <p>
+          Run: <code>node evals/runFastEval.mjs</code>
         </p>
 
         <h2>Next steps</h2>
         <p>
-          This tutorial can be extended with more “realistic” scenarios (bio/social), showing:
-          schema instantiation + explain, and a session with caching and multiple backends.
+          Domain theories are in <code>/theories/domains/</code>.
+          Test-specific theories in <code>/evals/fastEval/theory/</code>.
         </p>
       </div>
     </main>

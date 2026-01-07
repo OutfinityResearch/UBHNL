@@ -1,0 +1,7 @@
+# Test 15: Probabilistic weights (new DSL syntax)
+
+Let Day be a Domain.
+Let today be a Day.
+
+Prob(Cloudy(today), 0.8).
+Prob(Rain(today), 0.3).

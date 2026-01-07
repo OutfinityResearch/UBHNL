@@ -46,8 +46,14 @@ header p {
   margin-top: 14px;
 }
 
-.header-diagram {
-  width: min(420px, 100%);
+.page-diagram-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 18px;
+}
+
+.page-diagram {
+  width: min(720px, 100%);
   height: auto;
   border: 1px solid var(--border);
   border-radius: 12px;

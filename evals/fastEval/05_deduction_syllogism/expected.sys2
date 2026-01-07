@@ -1,5 +1,5 @@
-@Entity __Atom
-@Socrates __Atom
+@Entity:Entity __Atom
+@Socrates:Socrates __Atom
 
 IsA Socrates Entity
 

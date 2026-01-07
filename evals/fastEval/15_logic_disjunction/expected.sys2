@@ -1,0 +1,14 @@
+@Condition:Condition __Atom
+@patient1:patient1 __Atom
+
+IsA patient1 Condition
+
+@rule1 ForAll Condition graph p
+    @c1 HasFlu $p
+    @c2 HasCold $p
+    @or1 Or $c1 $c2
+    @c3 Coughs $p
+    @imp2 Implies $or1 $c3
+    return $imp2
+end
+@f1 HasFlu patient1

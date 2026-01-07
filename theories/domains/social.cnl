@@ -1,0 +1,165 @@
+# Social Network Domain Theory
+# Trust, friendship, influence, and social relations
+
+# =============================================================================
+# DOMAIN DECLARATIONS
+# =============================================================================
+
+User is a Domain.
+Group is a Domain.
+Post is a Domain.
+Role is a Domain.
+
+# Standard roles
+Admin is a Role.
+Moderator is a Role.
+Member is a Role.
+
+# =============================================================================
+# PREDICATE PATTERNS
+# =============================================================================
+
+# Interpersonal relations:
+#   X trusts Y        -> Trusts X Y
+#   X knows Y         -> Knows X Y
+#   X follows Y       -> Follows X Y
+#   X blocks Y        -> Blocks X Y
+#   X is Friend of Y  -> Friend X Y
+
+# Group relations:
+#   X is Member of G  -> Member X G
+#   X is Admin of G   -> Admin X G
+#   G contains X      -> Contains G X
+
+# Content relations:
+#   X posted P        -> Posted X P
+#   X liked P         -> Liked X P
+#   X shared P        -> Shared X P
+
+# =============================================================================
+# CORE RULES: Knowledge and Trust
+# =============================================================================
+
+# Knowing is symmetric (if you know someone, they know you)
+For any User x, y:
+    If x knows y then y knows x.
+
+# Trust implies knowing
+For any User x, y:
+    If x trusts y then x knows y.
+
+# Following implies knowing (asymmetrically)
+For any User x, y:
+    If x follows y then x knows y.
+
+# =============================================================================
+# TRUST TRANSITIVITY (Optional - enable per use case)
+# =============================================================================
+
+# Weak transitivity: trust of trust yields acquaintance
+# For any User x, y, z:
+#     If x trusts y and y trusts z then x knows z.
+
+# Strong transitivity: trust chains (risky assumption)
+# For any User x, y, z:
+#     If x trusts y and y trusts z then x trusts z.
+
+# =============================================================================
+# FRIENDSHIP RULES
+# =============================================================================
+
+# Friendship is symmetric
+For any User x, y:
+    If x is Friend of y then y is Friend of x.
+
+# Friendship implies mutual knowing
+For any User x, y:
+    If x is Friend of y then x knows y.
+
+# Friendship implies mutual following (on social platforms)
+For any User x, y:
+    If x is Friend of y then x follows y.
+
+# =============================================================================
+# BLOCKING RULES
+# =============================================================================
+
+# Blocking is NOT symmetric (one-way)
+# (no reverse rule for blocking)
+
+# Blocking overrides following
+For any User x, y:
+    If x blocks y then it is not the case that x follows y.
+
+# Blocking prevents trust
+For any User x, y:
+    If x blocks y then it is not the case that x trusts y.
+
+# =============================================================================
+# GROUP MEMBERSHIP RULES
+# =============================================================================
+
+# Member containment
+For any User u, Group g:
+    If u is Member of g then g contains u.
+
+# Admin is also a Member
+For any User u, Group g:
+    If u is Admin of g then u is Member of g.
+
+# Moderator is also a Member
+For any User u, Group g:
+    If u is Moderator of g then u is Member of g.
+
+# =============================================================================
+# GROUP PERMISSIONS
+# =============================================================================
+
+# Admins can moderate
+For any User u, Group g:
+    If u is Admin of g then u can Moderate g.
+
+# Moderators can moderate
+For any User u, Group g:
+    If u is Moderator of g then u can Moderate g.
+
+# Members can post (unless restricted)
+For any User u, Group g:
+    If u is Member of g then u can PostIn g.
+
+# =============================================================================
+# CONTENT INTERACTION RULES
+# =============================================================================
+
+# Sharing implies liking (typically)
+For any User u, Post p:
+    If u shared p then u liked p.
+
+# Posting creates authorship
+For any User u, Post p:
+    If u posted p then u is Author of p.
+
+# =============================================================================
+# INFLUENCE AND REACH
+# =============================================================================
+
+# User with many followers is Influential
+# (threshold-based, would need numeric comparison)
+# For any User u:
+#     If followerCount of u > 10000 then u is Influential.
+
+# Influential users' posts have wider Reach
+# For any User u, Post p:
+#     If u is Influential and u posted p then p has WideReach.
+
+# =============================================================================
+# NETWORK DISTANCE (Degrees of Separation)
+# =============================================================================
+
+# Direct connection = 1 degree
+For any User x, y:
+    If x knows y then x is Connected to y.
+
+# Friends of friends = 2 degrees
+For any User x, y, z:
+    If x knows z and z knows y then x is TwoDegrees from y.

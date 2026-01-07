@@ -74,8 +74,8 @@ c0 has gene A.
 ↔
 ```sys2
 # Biology rules
-@Cell __Atom
-@c0 __Atom
+@Cell:Cell __Atom
+@c0:c0 __Atom
 IsA c0 Cell
 @f1 GeneA c0
 ```
@@ -84,7 +84,7 @@ IsA c0 Cell
 
 | CNL | DSL |
 |-----|-----|
-| `Let TypeName be a Domain.` | `@TypeName __Atom` |
+| `Let TypeName be a Domain.` | `@TypeName:TypeName __Atom` |
 
 **Example**:
 ```cnl
@@ -93,15 +93,17 @@ Let Cell be a Domain.
 ```
 ↔
 ```sys2
-@Person __Atom
-@Cell __Atom
+@Person:Person __Atom
+@Cell:Cell __Atom
 ```
 
 ## Rule T03: Constant Declaration
 
 | CNL | DSL |
 |-----|-----|
-| `Let name be a Type.` | `@name __Atom` + `IsA name Type` |
+| `Let name be a Type.` | `@name:name __Atom` + `IsA name Type` |
+
+Note: CNL declarations are treated as **persistent KB names** so they are favored in proofs/explanations.
 
 **Example**:
 ```cnl
@@ -110,9 +112,9 @@ Let c0 be a Cell.
 ```
 ↔
 ```sys2
-@Alice __Atom
+@Alice:Alice __Atom
 IsA Alice Person
-@c0 __Atom
+@c0:c0 __Atom
 IsA c0 Cell
 ```
 
@@ -120,7 +122,7 @@ IsA c0 Cell
 
 | CNL | DSL |
 |-----|-----|
-| `Let a, b, c be Types.` | Multiple `@x __Atom` + `IsA x Type` |
+| `Let a, b, c be Types.` | Multiple `@x:x __Atom` + `IsA x Type` |
 
 **Example**:
 ```cnl
@@ -128,9 +130,9 @@ Let Alice, Bob, Charlie be Persons.
 ```
 ↔
 ```sys2
-@Alice __Atom
-@Bob __Atom
-@Charlie __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
+@Charlie:Charlie __Atom
 IsA Alice Person
 IsA Bob Person
 IsA Charlie Person
@@ -424,6 +426,21 @@ p1 is Parent of p2.
 @f2 Parent p1 p2
 ```
 
+## Rule T19: Probabilistic Weight Annotation
+
+| CNL | DSL |
+|-----|-----|
+| `Prob(Atom, w).` | `Weight { Atom } w` |
+
+**Example**:
+```cnl
+Prob(Cloudy(today), 0.8).
+```
+↔
+```sys2
+Weight { Cloudy today } 0.8
+```
+
 ---
 
 # PART 3: Comprehensive Examples
@@ -456,8 +473,8 @@ Which Patient p has Flu?
 **DSL** (`diagnosis.sys2`):
 ```sys2
 # Domain declarations
-@Patient __Atom
-@p1 __Atom
+@Patient:Patient __Atom
+@p1:p1 __Atom
 IsA p1 Patient
 
 # Diagnostic rules
@@ -503,10 +520,10 @@ Rule TransitiveTrust:
 
 **DSL** (`trust.sys2`):
 ```sys2
-@User __Atom
-@Alice __Atom
-@Bob __Atom
-@Charlie __Atom
+@User:User __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
+@Charlie:Charlie __Atom
 IsA Alice User
 IsA Bob User
 IsA Charlie User
@@ -547,9 +564,9 @@ c0 is a Producer.
 
 **DSL** (`biology.sys2`):
 ```sys2
-@Cell __Atom
-@Protein __Atom
-@c0 __Atom
+@Cell:Cell __Atom
+@Protein:Protein __Atom
+@c0:c0 __Atom
 IsA c0 Cell
 
 @Producer:Producer graph c

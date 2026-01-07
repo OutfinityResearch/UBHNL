@@ -6,7 +6,7 @@ Specify how UBHNL supports probabilistic inference without expanding the trusted
 - use **Weighted Model Counting (WMC)** and **Knowledge Compilation (KC)** as the primary *exact and checkable* path,
 - allow approximate inference as **heuristic** only, with explicit audit metadata.
 
-This DS addresses the probabilistic under-specification noted in the spec review (`../../../review_specs.md`) for `Frag_Prob` / `Frag_WMC`.
+This DS addresses the probabilistic under-specification for `Frag_Prob` / `Frag_WMC`.
 
 ## Scope
 In scope:
@@ -93,59 +93,40 @@ In exact mode, a decimal token such as `0.125` is parsed as the rational:
 
 Reason: it is deterministic, exact, and requires no floating-point rounding.
 
-## DSL surface (probabilistic declarations and queries)
-This DS specifies the *semantic contract*; exact tokenization details belong in DS-008/DS-005.
+## Probabilistic DSL Syntax (Sys2)
+Probabilistic weights and queries are expressed directly in Sys2 DSL (DS-008).
 
 ### 1) Declaring weights (literal-weighted WMC)
-Weights are declared using a dedicated operator `Weight`.
+Use `Weight { literal } w` to attach a weight to a **ground literal**.
 
-Examples (independent Bernoulli priors):
+Example (independent Bernoulli priors, exact rationals):
 ```sys2
-@x:Bit
-@y:Bit
-
-Weight $x 3/10
-Weight (Not $x) 7/10
-
-Weight $y 1/2
-Weight (Not $y) 1/2
+Weight { x } 3/10
+Weight { Not { x } } 7/10
+Weight { y } 1/2
+Weight { Not { y } } 1/2
 ```
 
 Rules:
-- `Weight <expr> <rational>` attaches a weight to the Boolean literal represented by `<expr>`.
-- `<expr>` must lower to a Boolean literal; if it is not a literal (e.g., a compound formula), it is a load error.
-- For probabilistic semantics (`Frag_Prob`), both a literal and its negation must be assigned (directly or by defaulting).
+- each `literal` must refer to a Boolean atom (or its negation) in the lowered theory,
+- for probabilistic semantics (`Frag_Prob`), both a literal and its negation must be assigned.
 
-### 2) Evidence as constraints
-Evidence is expressed as normal Boolean constraints in the theory, with origins:
-```sys2
-@_ Assert $x
-@_ Assert (Not $y)
-```
-
-The exact operators for assertions are defined by the front-end (DS-007), but semantically they become `T ∧ E`.
+### 2) Evidence
+Evidence can be expressed as:
+- regular DSL facts (constraints in the theory), and/or
+- a `Given { expr }` clause inside a probabilistic query block.
 
 ### 3) Probabilistic queries
-Probabilistic queries are represented as goal kinds over `Frag_WMC` / `Frag_Prob`.
+Use a `ProbQuery` block:
 
-Canonical forms:
 ```sys2
-# Count with weights (WMC):
-Query CountModels
-  Target: WMC
-end
-
-# Conditional probability:
-Query Prob
-  Given: (And $x (Not $y))
-  Ask:   $x
+@q1 ProbQuery
+    Ask { Q }
+    Given { E }
 end
 ```
 
-Normative behavior:
-- the session normalizes the query into a `ProbTask` (see above),
-- the orchestrator classifies it as `Frag_WMC` or `Frag_Prob`,
-- the planner chooses an exact or approximate route based on options (below).
+`Given` is optional. The session normalizes this into a `ProbTask` and classifies it as `Frag_WMC` or `Frag_Prob`.
 
 ## Planner behavior (exact vs approximate)
 ### Options (normative)

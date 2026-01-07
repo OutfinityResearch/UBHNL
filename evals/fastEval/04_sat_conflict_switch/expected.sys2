@@ -1,5 +1,5 @@
-@Switch __Atom
-@switch1 __Atom
+@Switch:Switch __Atom
+@switch1:switch1 __Atom
 
 IsA switch1 Switch
 

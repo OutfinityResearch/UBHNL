@@ -1,7 +1,7 @@
-@User __Atom
-@Alice __Atom
-@Bob __Atom
-@Charlie __Atom
+@User:User __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
+@Charlie:Charlie __Atom
 
 IsA Alice User
 IsA Bob User

@@ -41,10 +41,11 @@ Sys2 DSL keywords are **case-sensitive**.
 - Logical connectives: `And`, `Or`, `Not`, `Implies`, `Iff`, `Xor`
 - Typing / declarations: `IsA`, `__Atom`
 - Literals: `true`, `false`
+- Probabilistic: `Weight`, `ProbQuery`, `Ask`, `Given`
 
 ### Special tokens (not identifiers)
 - `@` declaration target (start of statement only; at most one per line)
-- `$` reference to a bound variable or previously defined symbol in scope
+- `$` reference to a working-memory name (bound variable or local named expression)
 - `:` KB storage name (after `@name`) or KB naming (`@:kbName`)
 - `{` `}` anonymous grouping
 - `#` comment to end of line

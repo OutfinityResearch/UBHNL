@@ -238,8 +238,8 @@ For any Cell c:
 
 **DSL** (`biology.sys2`):
 ```sys2
-@Cell __Atom
-@c0 __Atom
+@Cell:Cell __Atom
+@c0:c0 __Atom
 IsA c0 Cell
 
 @f1 geneA c0
@@ -282,8 +282,8 @@ Which Person p has fever?
 
 **DSL** (`contradiction.sys2`):
 ```sys2
-@Cell __Atom
-@c0 __Atom
+@Cell:Cell __Atom
+@c0:c0 __Atom
 IsA c0 Cell
 
 @f1 geneA c0

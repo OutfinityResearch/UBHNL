@@ -1,0 +1,189 @@
+# Medical Domain Theory
+# Comprehensive predicates for medical diagnosis and healthcare
+
+# =============================================================================
+# DOMAIN DECLARATIONS
+# =============================================================================
+
+Patient is a Domain.
+Symptom is a Domain.
+Disease is a Domain.
+Treatment is a Domain.
+Medication is a Domain.
+BodyPart is a Domain.
+
+# =============================================================================
+# PREDICATE PATTERNS
+# =============================================================================
+
+# Patient state:
+#   X has Y           -> HasY X (symptom/condition)
+#   X is Y            -> Y X (state like Critical, Stable)
+
+# Causal relations:
+#   X causes Y        -> Causes X Y
+#   X treats Y        -> Treats X Y
+#   X prevents Y      -> Prevents X Y
+#   X contraindicates Y -> Contraindicates X Y
+
+# =============================================================================
+# COMMON SYMPTOMS
+# =============================================================================
+
+Fever is a Symptom.
+Cough is a Symptom.
+Headache is a Symptom.
+Fatigue is a Symptom.
+Nausea is a Symptom.
+Dizziness is a Symptom.
+Rash is a Symptom.
+Pain is a Symptom.
+Congestion is a Symptom.
+SoreThroat is a Symptom.
+Chills is a Symptom.
+BodyAches is a Symptom.
+LossOfTaste is a Symptom.
+LossOfSmell is a Symptom.
+ShortnessOfBreath is a Symptom.
+
+# =============================================================================
+# COMMON DISEASES
+# =============================================================================
+
+Flu is a Disease.
+Cold is a Disease.
+Covid is a Disease.
+Pneumonia is a Disease.
+Bronchitis is a Disease.
+Strep is a Disease.
+Allergies is a Disease.
+Migraine is a Disease.
+Asthma is a Disease.
+
+# =============================================================================
+# COMMON TREATMENTS
+# =============================================================================
+
+Rest is a Treatment.
+Fluids is a Treatment.
+Antibiotics is a Treatment.
+Antivirals is a Treatment.
+Painkillers is a Treatment.
+Antihistamines is a Treatment.
+Decongestants is a Treatment.
+
+# =============================================================================
+# DIAGNOSTIC RULES: FLU
+# =============================================================================
+
+For any Patient p:
+    If p has Flu then p has Fever.
+    If p has Flu then p coughs.
+    If p has Flu then p has Fatigue.
+    If p has Flu then p has BodyAches.
+    If p has Flu then p has Chills.
+
+# =============================================================================
+# DIAGNOSTIC RULES: COLD
+# =============================================================================
+
+For any Patient p:
+    If p has Cold then p coughs.
+    If p has Cold then p has Congestion.
+    If p has Cold then p has SoreThroat.
+
+# Cold typically does NOT cause high fever
+# (absence reasoning - requires closed world assumption)
+
+# =============================================================================
+# DIAGNOSTIC RULES: COVID
+# =============================================================================
+
+For any Patient p:
+    If p has Covid then p has Fever.
+    If p has Covid then p coughs.
+    If p has Covid then p has Fatigue.
+    If p has Covid then p has LossOfTaste.
+    If p has Covid then p has LossOfSmell.
+
+# Severe cases
+For any Patient p:
+    If p has Covid and p has ShortnessOfBreath then p is Severe.
+
+# =============================================================================
+# DIAGNOSTIC RULES: OTHER CONDITIONS
+# =============================================================================
+
+For any Patient p:
+    If p has Pneumonia then p has Fever.
+    If p has Pneumonia then p coughs.
+    If p has Pneumonia then p has ShortnessOfBreath.
+
+For any Patient p:
+    If p has Strep then p has SoreThroat.
+    If p has Strep then p has Fever.
+
+For any Patient p:
+    If p has Allergies then p has Congestion.
+    If p has Allergies then p has Rash.
+
+For any Patient p:
+    If p has Migraine then p has Headache.
+    If p has Migraine then p has Nausea.
+
+# =============================================================================
+# TREATMENT RULES
+# =============================================================================
+
+# Flu treatment
+For any Patient p:
+    If p has Flu then Rest treats p.
+    If p has Flu then Fluids treats p.
+    If p has Flu then Antivirals treats p.
+
+# Cold treatment
+For any Patient p:
+    If p has Cold then Rest treats p.
+    If p has Cold then Decongestants treats p.
+
+# Bacterial infections need antibiotics
+For any Patient p:
+    If p has Strep then Antibiotics treats p.
+    If p has Pneumonia then Antibiotics treats p.
+
+# Allergies
+For any Patient p:
+    If p has Allergies then Antihistamines treats p.
+
+# =============================================================================
+# CONTRAINDICATION RULES
+# =============================================================================
+
+# Example: Don't give aspirin to children with flu (Reye's syndrome risk)
+# Aspirin contraindicates ChildWithFlu.
+
+# =============================================================================
+# SEVERITY AND TRIAGE
+# =============================================================================
+
+# Critical if breathing problems
+For any Patient p:
+    If p has ShortnessOfBreath then p is Critical.
+
+# Stable if only mild symptoms
+For any Patient p:
+    If p has Cold and it is not the case that p is Critical then p is Stable.
+
+# =============================================================================
+# DIFFERENTIAL DIAGNOSIS
+# =============================================================================
+
+# Similar symptoms, different diseases:
+# Flu vs Cold: Flu has sudden onset, high fever, body aches
+# Cold vs Allergies: Cold is temporary, allergies are seasonal/environmental
+# Covid vs Flu: Covid has loss of taste/smell
+
+# Distinguishing features (for abductive reasoning):
+For any Patient p:
+    If p has LossOfTaste then p has Covid.
+    If p has LossOfSmell then p has Covid.

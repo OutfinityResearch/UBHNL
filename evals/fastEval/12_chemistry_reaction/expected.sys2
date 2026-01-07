@@ -1,6 +1,6 @@
-@Mol __Atom
-@H2 __Atom
-@O2 __Atom
+@Mol:Mol __Atom
+@H2:H2 __Atom
+@O2:O2 __Atom
 
 IsA H2 Mol
 IsA O2 Mol

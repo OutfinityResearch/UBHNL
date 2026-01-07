@@ -12,7 +12,7 @@ Define the **DSL** (Domain-Specific Language) with extension `.sys2`, the canoni
 
 1. **Deterministic**: Same input always produces same AST.
 2. **Strict vocabulary**: Unknown bare identifiers are load errors.
-3. **Explicit declaration**: Variables declared once with `@`, referenced with `$`.
+3. **Explicit declaration**: Working-memory names use `$`; persistent KB/vocabulary names are bare.
 4. **No parentheses/brackets**: `()` and `[]` are FORBIDDEN in syntax.
 5. **Composition via naming**: Complex expressions built by naming parts with `@`.
 6. **Anonymous grouping**: Use braces `{ }` for inline anonymous expressions.
@@ -45,19 +45,28 @@ ForAll  Exists  graph  end  return
 And  Or  Not  Implies  Iff  Xor
 true  false
 IsA  __Atom
+Weight  ProbQuery  Ask  Given
 ```
 
-## 1.3 Special Tokens
+## 1.3 Number Literals (for probabilistic weights)
+
+```
+NUMBER := DIGIT+ ("/" DIGIT+)? | DIGIT+ "." DIGIT+
+```
+
+Examples: `3/10`, `1/2`, `0.8`, `12.5`
+
+## 1.4 Special Tokens
 
 | Token | Meaning |
 |-------|---------|
 | `@` | Variable/expression declaration (beginning of statement only) |
-| `$` | Variable reference |
+| `$` | Reference to a working-memory name (bound variable or named expression) |
 | `:` | KB storage name / type annotation |
 | `{ }` | Anonymous expression grouping |
 | `#` | Comment to end of line |
 
-## 1.4 FORBIDDEN Tokens
+## 1.5 FORBIDDEN Tokens
 
 | Token | Reason | Error Code |
 |-------|--------|------------|
@@ -74,21 +83,45 @@ IsA  __Atom
 Every named entity must be declared **exactly once** with `@`:
 
 ```sys2
-@TypeName __Atom       # Declare a type/domain
-@constName __Atom      # Declare a constant
-@exprName Predicate... # Declare a named expression
+@TypeName:TypeName __Atom   # Declare a type/domain (KB name)
+@constName:ConstName __Atom # Declare a constant (KB name)
+@tmp __Atom                 # Declare a working-memory constant
+@exprName Predicate...      # Declare a named expression
 ```
 
 **Invariant**: Each `@name` appears exactly once in the entire theory.
 
-## Rule 2: Variable Reference with `$`
+## Rule 1B: Working Memory vs KB Names
 
-After declaration, always reference with `$`:
+Use `:` to control whether a name is **temporary** or **persistent**:
+
+- `@tmp __Atom` or `@tmp expr` defines a **working-memory name**; reference it as `$tmp`.
+- `@tmp:kbName __Atom` or `@tmp:kbName expr` defines a **KB/vocabulary name**; reference it as `kbName` (bare).
+- Prefer `:kbName` for important facts, lemmas, or theorems so proofs/explanations stay compact.
+
+## Rule 2: `$` References Only Working-Memory Names
+
+Use `$` only for:
+- **bound variables** introduced by `graph`, and
+- **working-memory names** declared with `@name expr` or `@name __Atom`.
+
+KB/vocabulary names are referenced **bare**.
 
 ```sys2
-@a __Atom
-@b __Atom
-@rule1 Implies $a $b   # $a and $b reference declared variables
+@alice __Atom
+@bob __Atom
+@f1 Trusts $alice $bob       # working-memory names use $
+
+@Alice:Alice __Atom
+@Bob:Bob __Atom
+@f2 Trusts Alice Bob          # KB names are bare
+
+@rule1 ForAll Person graph p
+    @c1 HasFever $p
+    @c2 IsSick $p
+    @imp Implies $c1 $c2
+    return $imp
+end
 ```
 
 ## Rule 3: `@` NEVER Inside Expressions
@@ -129,9 +162,9 @@ Predicate arg1 arg2 arg3
 
 Examples:
 ```sys2
-HasFever $p            # Unary predicate
-Trusts $x $y           # Binary predicate  
-Between $a $b $c       # Ternary predicate
+HasFever Alice         # Unary predicate (KB constant)
+Trusts $u $v           # Binary predicate (working-memory names)
+Between $x $y $z       # Ternary predicate (bound variables)
 ```
 
 ## Rule 6: Anonymous Grouping with `{ }`
@@ -159,8 +192,8 @@ Braces can nest:
 A statement without `@` creates an anonymous assertion:
 
 ```sys2
-HasFever $p1           # Anonymous fact
-Implies $a $b          # Anonymous rule
+HasFever Alice         # Anonymous fact (KB constant)
+Implies $c1 $c2        # Anonymous rule (named expressions)
 ```
 
 ---
@@ -170,42 +203,51 @@ Implies $a $b          # Anonymous rule
 ## 3.1 Type/Domain Declaration
 
 ```sys2
-@TypeName __Atom
+@TypeName:TypeName __Atom
 ```
 
 Declares `TypeName` as a domain/type that can contain constants.
 
+Note: `@TypeName __Atom` (without `:TypeName`) is a working-memory name and must be referenced as `$TypeName`.
+
 ## 3.2 Constant Declaration
 
 ```sys2
-@constantName __Atom
-IsA constantName TypeName
+# Working memory constant
+@tmp __Atom
+IsA $tmp TypeName
+
+# Persistent KB constant
+@Alice:Alice __Atom
+IsA Alice Person
 ```
 
 Or combined:
 ```sys2
-@Person __Atom
-@Alice __Atom
-@Bob __Atom
+@Person:Person __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
 IsA Alice Person
 IsA Bob Person
 ```
+
+Note: constants without `:kbName` are working-memory names and must be referenced as `$name`.
 
 ## 3.3 Fact Statement
 
 Named fact:
 ```sys2
-@f1 Predicate $arg1 $arg2
+@f1 Predicate arg1 arg2
 ```
 
 Named fact with KB storage:
 ```sys2
-@f1:factName Predicate $arg1 $arg2
+@f1:factName Predicate arg1 arg2
 ```
 
 Anonymous fact:
 ```sys2
-Predicate $arg1 $arg2
+Predicate arg1 arg2
 ```
 
 ## 3.4 Logical Connectives
@@ -316,8 +358,34 @@ end
 
 Usage:
 ```sys2
-@f1 Producer $c0          # Apply definition to constant c0
+@f1 Producer c0           # Apply definition to KB constant c0
 ```
+
+## 3.7 Probabilistic Weights and Queries
+
+### Weight Statements
+Attach a weight to a **ground literal**:
+
+```sys2
+Weight { Cloudy today } 0.8
+Weight { Not { Cloudy today } } 0.2
+```
+
+Rules:
+- the literal must be ground (no bound variables),
+- weights are exact rationals or decimals (parsed deterministically as rationals).
+
+### Probabilistic Queries
+Define a probabilistic query with an explicit block:
+
+```sys2
+@q1 ProbQuery
+    Ask { Rain today }
+    Given { Cloudy today }
+end
+```
+
+`Given` is optional; when omitted, the query is unconditional.
 
 ---
 
@@ -332,12 +400,14 @@ statement    := declaration
               | anonExpr
               | quantified
               | definition
+              | probWeight
+              | probQuery
               | kbNaming
               | COMMENT ;
 
-declaration  := "@" IDENT "__Atom" ;
+declaration  := "@" IDENT (":" IDENT)? "__Atom" ;
 
-typing       := "IsA" IDENT IDENT ;
+typing       := "IsA" term IDENT ;
 
 namedExpr    := "@" IDENT (":" IDENT)? expr ;
 
@@ -355,6 +425,13 @@ definition   := "@" IDENT ":" IDENT "graph" (IDENT)+
                     "return" "$" IDENT
                 "end" ;
 
+probWeight   := "Weight" "{" literal "}" NUMBER ;
+
+probQuery    := "@" IDENT (":" IDENT)? "ProbQuery"
+                    "Ask" "{" expr "}"
+                    ("Given" "{" expr "}")?
+                "end" ;
+
 quantifier   := "ForAll" | "Exists" ;
 
 expr         := connective
@@ -370,10 +447,15 @@ connective   := "And" term term (term)*
 
 predApply    := IDENT term (term)* ;
 
-term         := "$" IDENT              # variable reference
+literal      := predApply
+              | "Not" "{" predApply "}" ;
+
+term         := "$" IDENT              # bound variable or named expression reference
               | IDENT                  # constant/predicate from vocabulary
               | "true" | "false"       # boolean literals
               | "{" expr "}" ;         # anonymous grouping
+
+NUMBER       := DIGIT+ ("/" DIGIT+)? | DIGIT+ "." DIGIT+ ;
 
 IDENT        := [a-zA-Z_][a-zA-Z0-9_]* ;
 COMMENT      := "#" .* EOL ;
@@ -387,7 +469,8 @@ COMMENT      := "#" .* EOL ;
 
 | Declaration Form | Scope |
 |-----------------|-------|
-| `@name __Atom` | Global (entire theory) |
+| `@name __Atom` | Global (entire theory, working memory) |
+| `@name:kbName __Atom` | Global (entire theory, KB/vocabulary) |
 | `graph varName` in block | Local to containing block |
 | `@localExpr ...` inside block | Local to containing block |
 
@@ -395,9 +478,10 @@ Inside a `ForAll`/`Exists` block, the graph variable is in scope for all nested 
 
 ## 5.2 Reference Resolution
 
-1. `$name` looks up in current scope (innermost first)
+1. `$name` looks up **working-memory names** in scope (bound variables or local named expressions)
 2. If not found locally, looks in enclosing scopes
 3. If still not found, error `E_DSL_UNBOUND_VAR`
+4. Bare identifiers resolve **only** to KB/vocabulary names
 
 ## 5.3 Type Checking
 
@@ -438,17 +522,17 @@ If b then c.
 
 **DSL**:
 ```sys2
-@Bit __Atom
-@a __Atom
-@b __Atom
-@c __Atom
+@Bit:Bit __Atom
+@a:a __Atom
+@b:b __Atom
+@c:c __Atom
 
 IsA a Bit
 IsA b Bit
 IsA c Bit
 
-@rule1 Implies $a $b
-@rule2 Implies $b $c
+@rule1 Implies a b
+@rule2 Implies b c
 ```
 
 ## Example 2: Family Relations
@@ -470,17 +554,17 @@ For all Person x, Person y, Person z:
 
 **DSL**:
 ```sys2
-@Person __Atom
-@p1 __Atom
-@p2 __Atom
-@p3 __Atom
+@Person:Person __Atom
+@p1:p1 __Atom
+@p2:p2 __Atom
+@p3:p3 __Atom
 
 IsA p1 Person
 IsA p2 Person
 IsA p3 Person
 
-@f1 Parent $p1 $p2
-@f2 Parent $p2 $p3
+@f1 Parent p1 p2
+@f2 Parent p2 p3
 
 @rule1 ForAll Person graph x
     @inner1 ForAll Person graph y
@@ -512,8 +596,8 @@ end
 
 **DSL**:
 ```sys2
-@Patient __Atom
-@p1 __Atom
+@Patient:Patient __Atom
+@p1:p1 __Atom
 IsA p1 Patient
 
 @rule1 ForAll Patient graph p
@@ -537,8 +621,8 @@ end
     return $imp3
 end
 
-@f1 HasFever $p1
-@f2 Coughs $p1
+@f1 HasFever p1
+@f2 Coughs p1
 ```
 
 ## Example 4: Compact Form with Braces
@@ -546,9 +630,9 @@ end
 Instead of many named intermediates, use braces for inline composition:
 
 ```sys2
-@User __Atom
-@Alice __Atom
-@Bob __Atom
+@User:User __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
 
 IsA Alice User
 IsA Bob User
@@ -577,12 +661,12 @@ end
 end
 
 # Use the definition
-@Cell __Atom
-@Protein __Atom
-@c0 __Atom
+@Cell:Cell __Atom
+@Protein:Protein __Atom
+@c0:c0 __Atom
 IsA c0 Cell
 
-@f1:c0IsProducer Producer $c0
+@f1:c0IsProducer Producer c0
 ```
 
 ---
@@ -614,7 +698,7 @@ IsA c0 Cell
 | Token | Allowed | Where |
 |-------|---------|-------|
 | `@` | Yes | Beginning of line only (declaration) |
-| `$` | Yes | Inside expressions (reference) |
+| `$` | Yes | Inside expressions (working-memory names) |
 | `{ }` | Yes | Inline anonymous grouping |
 | `:` | Yes | After `@name` for KB storage |
 | `( )` | **NO** | Forbidden everywhere |
@@ -624,7 +708,8 @@ IsA c0 Cell
 
 | Pattern | Meaning |
 |---------|---------|
-| `@name __Atom` | Declare type/constant |
+| `@name __Atom` | Declare working-memory type/constant |
+| `@name:kbName __Atom` | Declare KB/vocabulary type/constant |
 | `IsA const Type` | Type membership |
 | `@name expr` | Named expression (local) |
 | `@name:kbName expr` | Named + stored in KB |
@@ -632,14 +717,16 @@ IsA c0 Cell
 | `expr` (no @) | Anonymous assertion |
 | `ForAll T graph v ... end` | Universal quantifier block |
 | `Exists T graph v ... end` | Existential quantifier block |
+| `Weight { literal } w` | Probabilistic weight annotation |
+| `@q ProbQuery ... end` | Probabilistic query block |
 
 ## Comparison with CNL
 
 | Aspect | DSL (sys2) | CNL |
 |--------|------------|-----|
-| Declaration | `@Alice __Atom` | `Let Alice be a Person.` |
+| Declaration | `@Alice:Alice __Atom` | `Let Alice be a Person.` |
 | Type assoc | `IsA Alice Person` | (included in declaration) |
-| Fact | `HasFever $alice` | `Alice has Fever.` |
+| Fact | `HasFever Alice` | `Alice has Fever.` |
 | Quantifier | `ForAll Person graph x ... end` | `For all Person x: ...` |
 | Variable ref | `$x` | `x` (bare) |
 | Implication | `Implies $a $b` | `If a then b.` |

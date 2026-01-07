@@ -17,7 +17,7 @@ It is intentionally agnostic to whether the front-end starts from:
    - `BitVector[k]` (library-level),
    - `FiniteDomain[D]` (library-level).
 3) Lower the logic to a small **core logic**:
-   - `forall, exists, and, or, not, implies` (+ optional `iff`, `eq`)
+   - `forall, exists, and, or, not, implies`, `iff`, `eq`
 4) Compile core logic to UBH gates (`xor/and/const/var`) and kernel constraints (`assert0/1/eq`).
 5) For large quantifiers, emit schemas instead of full expansion (DS-004).
 

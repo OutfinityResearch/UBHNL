@@ -1,0 +1,108 @@
+# Probability Theory
+# Probabilistic reasoning and Bayesian inference patterns
+# Extends core logic with uncertainty handling
+
+# =============================================================================
+# DOMAIN DECLARATIONS
+# =============================================================================
+
+Event is a Domain.
+Probability is a Domain.
+
+# =============================================================================
+# PROBABILITY ANNOTATIONS
+# =============================================================================
+
+# Basic probability assignment syntax:
+#   "X has probability P" -> Prob X P
+#   "Prob(X) = 0.8" -> explicit assignment
+
+# Example usage (in domain theories):
+#   Flu has probability 0.1.
+#   If p has Flu then (p has Fever) has probability 0.9.
+
+# =============================================================================
+# PROBABILITY AXIOMS (Kolmogorov)
+# =============================================================================
+
+# Axiom 1: Non-negativity
+# For any Event e:
+#     probability of e >= 0.
+
+# Axiom 2: Certainty of sample space
+# True has probability 1.
+
+# Axiom 3: Countable additivity
+# For any Event a, b:
+#     If a and b are mutually exclusive then
+#         probability of (a or b) = probability of a + probability of b.
+
+# =============================================================================
+# CONDITIONAL PROBABILITY
+# =============================================================================
+
+# Syntax: "probability of A given B" -> CondProb A B
+# P(A|B) = P(A and B) / P(B)
+
+# Example:
+#   probability of (p has Fever) given (p has Flu) is 0.9.
+
+# =============================================================================
+# INDEPENDENCE
+# =============================================================================
+
+# Syntax: "A is independent of B" -> Independent A B
+# Meaning: P(A|B) = P(A)
+
+# Example:
+#   (coin1 is Heads) is independent of (coin2 is Heads).
+
+# =============================================================================
+# BAYES THEOREM (Derived Rule)
+# =============================================================================
+
+# P(H|E) = P(E|H) * P(H) / P(E)
+#
+# In natural language:
+#   probability of Hypothesis given Evidence =
+#       (probability of Evidence given Hypothesis) *
+#       (probability of Hypothesis) /
+#       (probability of Evidence)
+
+# Example application (medical diagnosis):
+#   probability of (p has Flu) given (p has Fever) =
+#       (probability of (p has Fever) given (p has Flu)) *
+#       (probability of Flu) /
+#       (probability of Fever).
+
+# =============================================================================
+# PROBABILISTIC INFERENCE PATTERNS
+# =============================================================================
+
+# Abductive reasoning with probabilities:
+#   If observing E increases probability of H,
+#   then E is evidence for H.
+
+# Maximum likelihood:
+#   The hypothesis with highest P(H|E) is preferred.
+
+# Expected value:
+#   expected value of X = sum over outcomes of (value * probability).
+
+# =============================================================================
+# EXAMPLE: Medical Diagnosis with Probabilities
+# =============================================================================
+
+# Prior probabilities (background rates):
+#   Flu has probability 0.05.
+#   Cold has probability 0.15.
+#   Covid has probability 0.02.
+
+# Likelihood (symptoms given disease):
+#   probability of Fever given Flu is 0.9.
+#   probability of Cough given Flu is 0.8.
+#   probability of Fever given Cold is 0.3.
+#   probability of Cough given Cold is 0.9.
+
+# Posterior (diagnosis given symptoms):
+#   Use Bayes theorem to compute probability of disease given observed symptoms.

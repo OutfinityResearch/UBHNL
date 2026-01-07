@@ -1,0 +1,24 @@
+# Mathematics - Natural Numbers (Peano-style)
+# Basic arithmetic theory
+
+# === DOMAIN DECLARATIONS ===
+Nat is a Domain.
+
+# === CONSTANTS ===
+Zero is a Nat.
+
+# === FUNCTION PATTERNS ===
+# Succ(n) - successor function (explicit syntax needed)
+
+# === CORE AXIOMS ===
+
+# Zero is a natural number
+Zero is Nat.
+
+# Successor of a natural is a natural
+For all Nat n:
+    If n is Nat then Succ(n) is Nat.
+
+# Zero is not a successor of anything (implicit - no rule)
+
+# Injectivity of successor (implicit in typed system)

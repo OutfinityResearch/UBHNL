@@ -1,0 +1,14 @@
+@Status:Status __Atom
+@system1:system1 __Atom
+
+IsA system1 Status
+
+@rule1 ForAll Status graph s
+    @c1 Active $s
+    @c2 Sleeping $s
+    @not1 Not $c2
+    @iff2 Iff $c1 $not1
+    return $iff2
+end
+@c3 Sleeping system1
+@not3 Not $c3
