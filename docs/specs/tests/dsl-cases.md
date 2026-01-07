@@ -2,8 +2,8 @@
 
 These cases are normative for the DSL in `docs/specs/DS/DS08-dsl.md`.
 
-## Shared Lexicon (for examples)
-Use the lexicon from `docs/specs/tests/cnl-cases.md`.
+## Shared Vocabulary (for examples)
+Use the shared vocabulary from `docs/specs/tests/cnl-cases.md`.
 
 ## Accepted Inputs
 ### 1) Constant declaration + typing

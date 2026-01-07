@@ -1,7 +1,7 @@
 # Source File Plan
 
 ## Top Level
-- package.json: node metadata and scripts
+- package manifest: node metadata and scripts
 - src/index.mjs: CLI entrypoint (placeholder banner)
 
 ## Core Modules (planned)
@@ -15,7 +15,7 @@
 - src/frontend/fol.mjs: finite-domain FOL compiler (optional module)
 - src/frontend/cnl/lexer.mjs: CNL tokenizer
 - src/frontend/cnl/parser.mjs: CNL parser to concrete syntax tree
-- src/frontend/cnl/lexicon.mjs: lexicon loader and symbol validation
+- src/frontend/schema/vocab.mjs: vocabulary builder and symbol validation
 - src/frontend/cnl/typing.mjs: typed AST builder and type checker
 - src/frontend/cnl/lowering.mjs: desugar to core logic AST
 - src/frontend/dsl/parser.mjs: DSL parser (DS-008)

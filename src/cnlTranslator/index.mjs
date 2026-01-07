@@ -212,10 +212,33 @@ export function translate(cnlSource) {
         return '$error';
     }
 
+    // ==================== PASS 0: Load directives ====================
+    const loads = [];
+    for (const line of lines) {
+        const trim = line.trim();
+        // load "path/to/file.cnl"
+        const loadMatch = trim.match(/^load\s+"([^"]+)"$/);
+        if (loadMatch) {
+            let path = loadMatch[1];
+            // Convert .cnl to .sys2 in output
+            if (path.endsWith('.cnl')) {
+                path = path.replace(/\.cnl$/, '.sys2');
+            }
+            loads.push(path);
+        }
+    }
+    
+    // Output load directives first
+    for (const path of loads) {
+        add(`load "${path}"`);
+    }
+    if (loads.length > 0) add('');
+
     // ==================== PASS 1: Declarations ====================
     for (const line of lines) {
         const trim = line.trim();
         if (!trim || trim.startsWith('#') || trim.startsWith('//')) continue;
+        if (trim.startsWith('load ')) continue;  // Already processed
         
         // "Let X be a Domain." or "X is a Domain."
         let dm = trim.match(/^Let\s+(\w+)\s+be\s+a\s+Domain\.$/);
@@ -267,6 +290,9 @@ export function translate(cnlSource) {
         
         // Skip declarations (already processed)
         if (line.startsWith('Let ') || line.match(/^\w+\s+is\s+a\s+\w+\.$/)) { ptr++; continue; }
+        
+        // Skip load directives (already processed in PASS 0)
+        if (line.startsWith('load ')) { ptr++; continue; }
 
         // Definition block: "Definition: Name <Type var> is:"
         const defMatch = line.match(/^Definition:\s+(\w+)\s+<(\w+)\s+(\w+)>\s+is:$/);

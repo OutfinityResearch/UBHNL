@@ -72,17 +72,17 @@ Acceptance tests:
 Notes:
 - Correctness > performance. The SAT backend is pluggable so a stronger solver can replace the reference backend.
 
-## Milestone 6 — Lexicon Loader + Typed Core Logic AST
+## Milestone 6 — Vocabulary Builder + Typed Core Logic AST
 Specs:
 - `docs/specs/DS/DS05-cnl-lexicon.md`
 - `docs/specs/DS/DS06-nl-pipeline.md`
 
 Deliverables:
-- `src/frontend/cnl/lexicon.mjs` (load/validate lexicon JSON).
+- `src/frontend/schema/vocab.mjs` (build/validate vocabulary from Sys2 schemas).
 - `src/frontend/logic/ast.mjs` (typed core logic AST data types).
 
 Acceptance tests:
-- lexicon validation + type resolution tests (test plan section “6”).
+- vocabulary validation + type resolution tests (test plan section “6”).
 
 ## Milestone 7 — CNL Parser (Deterministic)
 Specs:
@@ -149,7 +149,7 @@ Acceptance tests:
 ## Milestone 12 — CLI + Docs Wiring
 Deliverables:
 - `src/cli/ubh.mjs` for:
-  - loading lexicon,
+  - loading vocabulary from Sys2 schemas,
   - reading `learn` and `query` inputs,
   - printing results + explanations.
 

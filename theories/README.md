@@ -43,8 +43,6 @@ only relevant for testing, not general use.
 3. **Rules using natural CNL**: `If x has Flu then x has Fever.`
 4. **Comments with #**: `# This is a comment`
 
-## No JSON Schemas!
+## No External Schemas
 
-Previously, domain definitions were in JSON lexicon files.
-Now everything is expressed in CNL/DSL for consistency.
-The JSON schema in DS-005 is for documentation only.
+Domain definitions are expressed in CNL/DSL for consistency.

@@ -1,0 +1,17 @@
+# Test 18: Load Directive
+# Testing theory loading from external files
+# Path is RELATIVE to the current file's directory
+
+// Load CNL theory (will be translated to DSL)
+load "../../theories/domains/medical.cnl"
+
+// Can also load DSL directly:
+// load "../../theories/core/logic.sys2"
+
+# Now we can use Patient, Flu, etc. from medical.cnl
+Let p1 be a Patient.
+
+# Fact: patient has flu
+p1 has Flu.
+
+# Rule from medical.cnl should apply: If p has Flu then p has Fever

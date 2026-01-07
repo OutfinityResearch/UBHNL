@@ -39,8 +39,8 @@ exists x in ∅: P(x)  == false</code></pre>
         <h2>Implementation strategies</h2>
         <ul>
           <li><strong>Full expansion</strong>: small domains; compile directly into a ∧/∨ of instances.</li>
-          <li><strong>Schema engine</strong>: large domains; keep the rule as a schema and instantiate on demand (<a href="schema-engine.html">DS-004</a>).</li>
-          <li><strong>Exists with a witness</strong>: for queries, prefer <a href="holes.html">holes</a> to obtain a witness without a huge disjunction.</li>
+          <li><strong>Schema engine</strong>: large domains; keep the rule as a schema and instantiate on demand (<a href="../../mdview.html?file=specs/DS/DS04-schema-engine.md">DS-004</a>).</li>
+          <li><strong>Exists with a witness</strong>: for queries, prefer <a href="holes.html">witness queries</a> to obtain a witness without a huge disjunction.</li>
         </ul>
 
         <h2>Engineering consequences</h2>

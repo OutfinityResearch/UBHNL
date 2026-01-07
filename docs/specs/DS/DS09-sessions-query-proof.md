@@ -43,14 +43,15 @@ Origins are used for:
 - debugging “why is this inconsistent?”.
 
 ### TheoryDoc
-`TheoryDoc = ⟨docId, path, format, digest, lexiconRefs, statements⟩`
+`TheoryDoc = ⟨docId, path, format, digest, vocabRefs, statements⟩`
 
 Where:
 - `digest` is a content hash used for caching and reproducibility.
 - `statements` are typed semantic IR nodes with attached origins.
+- `vocabRefs` are exported declarations from loaded CNL/DSL files.
 
 ### SessionState
-`SessionState = ⟨lexicon, loadedDocs[], deltaStatements[], caches⟩`
+`SessionState = ⟨vocab, loadedDocs[], deltaStatements[], caches⟩`
 
 Where:
 - `loadedDocs` are the long-term theories currently active,
@@ -71,7 +72,7 @@ listLoadedTheories() -> TheoryDocSummary[]
 ```
 
 Loading responsibilities:
-- parse + typecheck using the session lexicon,
+- parse + typecheck using the session vocabulary,
 - reject unknown vocabulary symbols,
 - produce typed semantic IR with origins,
 - register doc digest for caching.

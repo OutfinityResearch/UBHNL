@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Wiki: Holes (?x)</title>
+    <title>Wiki: Witness Queries</title>
     <link rel="stylesheet" href="../../site.css" />
       <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Holes (?x)</h1>
-      <p>Existential variables that are returned as witnesses (hole filling).</p>
+      <h1>Witness Queries</h1>
+      <p>Existential binders whose assignments are returned as witnesses.</p>
     </header>
     <main>
       <div class="card">
@@ -25,26 +25,28 @@
 
         <h2>Definition</h2>
         <p>
-          A <strong>hole</strong> is an existential unknown that must be instantiated so that the query becomes satisfiable
-          (i.e., a witness exists). In DSL notation: <code>?x</code>.
+          A <strong>witness query</strong> is an existential statement submitted as a query.
+          The binder variable is returned in the result when a model exists.
         </p>
 
         <h2>How it is introduced</h2>
-        <pre><code>exists ?c in Cell: proteinP(?c)</code></pre>
-        <p>
-          <code>?c</code> is existential, but (unlike a standard <code>$c</code>) it is explicitly requested as output.
-        </p>
+        <pre><code>Which Cell c has ProteinP?</code></pre>
+        <p>DSL form:</p>
+        <pre><code>@q1 Exists Cell graph c
+    @c1 ProteinP $c
+    return $c1
+end</code></pre>
 
         <h2>What is returned</h2>
         <pre><code>{
   "status": "SAT",
-  "holeAssignments": { "?c": "c0" }
+  "witnessAssignments": { "c": "c0" }
 }</code></pre>
 
         <h2>Difference from “normal” exists</h2>
         <ul>
-          <li><code>exists $x in D: ...</code> is a logical formula; it does not necessarily ask you to expose the witness.</li>
-          <li><code>exists ?x in D: ...</code> is an interface requirement: “return me a witness” (if one exists).</li>
+          <li>The syntax is the same (an <code>Exists ... graph v</code> block).</li>
+          <li>In query context, the binder variable is returned as a witness assignment.</li>
         </ul>
 
         <h2>Consequences</h2>
@@ -55,8 +57,8 @@
 
         <h2>Relevant specs</h2>
         <ul>
-          <li><a href="../../mdview.html?file=specs/DS/DS08-dsl.md">DS-008</a> (binder ?)</li>
-          <li><a href="../../mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a> (hole typing + policy)</li>
+          <li><a href="../../mdview.html?file=specs/DS/DS08-dsl.md">DS-008</a> (existential blocks)</li>
+          <li><a href="../../mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a> (witness typing + policy)</li>
         </ul>
       </div>
     </main>

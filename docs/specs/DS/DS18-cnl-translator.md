@@ -48,10 +48,12 @@ interface TranslationResult {
   errors: ErrorReport[];
 }
 
-function translateCnlToDsl(cnlSource: string, lexicon: Lexicon): TranslationResult;
-function translateDslToCnl(dslSource: string, lexicon: Lexicon): TranslationResult;
-function verifyRoundTrip(source: string, format: "cnl" | "dsl", lexicon: Lexicon): boolean;
+function translateCnlToDsl(cnlSource: string, vocab: Vocabulary): TranslationResult;
+function translateDslToCnl(dslSource: string, vocab: Vocabulary): TranslationResult;
+function verifyRoundTrip(source: string, format: "cnl" | "dsl", vocab: Vocabulary): boolean;
 ```
+
+`vocab` is built from Sys2 schema files (plus the fixed CNL surface patterns in DS-005).
 
 ---
 
@@ -402,18 +404,9 @@ end
 
 ## Rule T18: Alias Expansion
 
-| CNL | DSL |
-|-----|-----|
-| Multi-word phrase | Single predicate name |
-
-Via lexicon `cnlPatterns`:
-```json
-{
-  "has Fever": "HasFever $1",
-  "is Parent of": "Parent $1 $2",
-  "is Ancestor of": "Ancestor $1 $2"
-}
-```
+Multi-word phrases are handled by the **fixed CNL patterns** defined in DS-005.
+There is no external alias schema; if a phrase is not recognized, the user must
+use explicit predicate syntax or add a formal rule/definition in Sys2.
 
 **Example**:
 ```cnl

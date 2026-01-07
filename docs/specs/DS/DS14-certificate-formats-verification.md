@@ -30,23 +30,21 @@ See also:
 - Wiki: `../../wiki/concepts/skolem-functions.html`
 
 ## Certificate envelope (normative)
-All certificates are represented as:
-```json
-{
-  "certificateId": "cert:sha256:…",
-  "kind": "DRAT" | "LRAT" | "ALETHE" | "FARKAS" | "QRES" | "SKOLEM" | "INVARIANT" | "TRACE" | "KC_EQUIV" | "BOUND_UNSAT",
-  "format": "text" | "json" | "binary",
-  "problemDigest": "sha256:…",
-  "artifactRefs": [
-    { "artifactId": "art:sha256:…", "role": "proofLog|kc|invariant|trace|model|aux", "path": "…" }
-  ],
-  "metadata": {
-    "backendId": "…",
-    "backendVersion": "…",
-    "createdAt": "…",
-    "notes": "optional"
-  }
-}
+All certificates are represented as an envelope with these fields:
+```text
+certificateId: cert:sha256:...
+kind: DRAT | LRAT | ALETHE | FARKAS | QRES | SKOLEM | INVARIANT | TRACE | KC_EQUIV | BOUND_UNSAT
+format: text | binary
+problemDigest: sha256:...
+artifactRefs:
+  - artifactId: art:sha256:...
+    role: proofLog|kc|invariant|trace|model|aux
+    path: ...
+metadata:
+  backendId: ...
+  backendVersion: ...
+  createdAt: ...
+  notes: optional
 ```
 
 Rules:
@@ -58,7 +56,7 @@ Rules:
 - Any mismatch between `problemDigest` and the checked problem is a hard verification failure.
 
 ## Artifact store (session-level)
-To avoid embedding large objects inside JSON:
+To avoid embedding large objects inside serialized certificates:
 - artifacts are stored in a session-managed artifact store keyed by `sha256`,
 - certificates refer to artifacts by digest and role.
 
@@ -90,11 +88,11 @@ Applies to:
 - `SAT` results for `Frag_UBH` / `Frag_SAT_CNF`.
 
 Representation:
-```json
-{
-  "kind": "MODEL",
-  "assignment": { "varId": 0, "value": 0|1 }[]
-}
+```text
+kind: MODEL
+assignment:
+  - varId: 0
+    value: 0|1
 ```
 
 Checker contract:
@@ -125,16 +123,25 @@ Reference:
 Applies to:
 - `Frag_SMT_LIA` reduced to LP/MIP, and `Frag_MIP` infeasibility.
 
-Format (JSON, exact rationals):
-```json
-{
-  "kind": "FARKAS",
-  "constraints": [
-    { "lhs": [{"var":"x0","coef":"3/1"}, ...], "rel":"<=", "rhs":"10/1" }
-  ],
-  "multipliers": ["y0","y1", "..."],          // each yi is a non-negative rational
-  "derivedContradiction": { "lhs":"0/1", "rel":"<=", "rhs":"-1/1" }
-}
+Format (serialized, exact rationals):
+```text
+kind: FARKAS
+constraints:
+  - lhs:
+      - var: x0
+        coef: 3/1
+      - var: ...
+        coef: ...
+    rel: <=
+    rhs: 10/1
+multipliers:
+  - y0
+  - y1
+  - ...
+derivedContradiction:
+  lhs: 0/1
+  rel: <=
+  rhs: -1/1
 ```
 
 Checker contract:
@@ -168,13 +175,17 @@ Applies to:
 - `Frag_TS`.
 
 Trace (counterexample):
-```json
-{ "kind": "TRACE", "states": [ { "s": "…" }, ... ] }
+```text
+kind: TRACE
+states:
+  - s: ...
+  - s: ...
 ```
 
 Invariant (proof of safety):
-```json
-{ "kind": "INVARIANT", "formula": "typed-semantic-ir or lowered Bool/UBH" }
+```text
+kind: INVARIANT
+formula: typed-semantic-ir or lowered Bool/UBH
 ```
 
 Checker contract:
@@ -214,13 +225,13 @@ check(problem, backendResult) -> CheckResult
 ```
 
 Where:
-```json
-{
-  "ok": true|false,
-  "checkerId": "…",
-  "details": "optional human-readable detail",
-  "failure": { "code": "CERT_INVALID|CERT_MISSING|DIGEST_MISMATCH|UNSUPPORTED_FORMAT|INTERNAL", "data": {} }
-}
+```text
+ok: true|false
+checkerId: ...
+details: optional human-readable detail
+failure:
+  code: CERT_INVALID|CERT_MISSING|DIGEST_MISMATCH|UNSUPPORTED_FORMAT|INTERNAL
+  data: ...
 ```
 
 Failure policy:

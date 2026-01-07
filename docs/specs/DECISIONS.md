@@ -23,16 +23,15 @@ Items marked with `[CONFIRMED]` have been explicitly approved.
 |--------|-----------|-----------|
 | CNL | `.cnl` | Distinct from DSL |
 | DSL | `.sys2` | Project-specific |
-| Lexicon | ~~`.lexicon.json`~~ | **DEPRECATED** - use CNL theories |
+| Lexicon | (derived) | Built from Sys2 schema files |
 | Theory | `.cnl` or `.sys2` | Domain knowledge in `/theories/` |
 
-### 1.2.1 No JSON for Domain Knowledge [CONFIRMED 2026-01-07]
+### 1.2.1 No External Data Formats for Domain Knowledge [CONFIRMED 2026-01-07]
 
-| Decision | Domain knowledge expressed in CNL/DSL, NOT JSON |
-|----------|------------------------------------------------|
+| Decision | Domain knowledge expressed in CNL/DSL, not in external data formats |
+|----------|-------------------------------------------------------------|
 | Rationale | Single language for all declarations |
-| Old way | `{"domains": {"Person": [...]}, "predicates": {...}}` |
-| New way | `Person is a Domain.` + rules in `.cnl` files |
+| New way | `Person is a Domain.` + rules in `.cnl`/`.sys2` files |
 | Location | `/theories/domains/` for reusable theories |
 
 ### 1.3 Translation Direction [CONFIRMED]
@@ -42,6 +41,98 @@ Items marked with `[CONFIRMED]` have been explicitly approved.
 | CNL → DSL | Yes (for storage) |
 | DSL → CNL | Yes (for display/explanation) |
 | Round-trip guarantee | Yes (lossless) |
+
+### 1.4 Lexicon Source of Truth [CONFIRMED]
+
+| Decision | Sys2 schema files (`.sys2`) are the canonical source |
+|----------|------------------------------------------------------|
+| Vocabulary | Derived from DSL declarations (`@name:kbName __Atom`, `IsA`, definitions) |
+| CNL | Human-friendly authoring; translated into Sys2, but not authoritative for schema/metadata |
+
+### 1.5 CNL vs DSL Architecture Rationale [CONFIRMED 2026-01-07]
+
+This section explains **why we have two languages** and when to use each.
+
+#### 1.5.1 The Two-Language Design
+
+| Aspect | CNL (`.cnl`) | DSL (`.sys2`) |
+|--------|--------------|---------------|
+| **Purpose** | Human authoring, review by non-technical users | Machine execution, stable storage |
+| **Audience** | Domain experts, business analysts | Developers, automated tools |
+| **Syntax stability** | May evolve with user feedback | Frozen, backward-compatible |
+| **Execution** | Translated → DSL → Kernel | Direct → Kernel |
+
+#### 1.5.2 Loading and Execution Flow
+
+```
+┌─────────────┐      translate       ┌─────────────┐
+│  .cnl file  │ ──────────────────►  │  DSL (mem)  │
+└─────────────┘                      └──────┬──────┘
+                                            │
+┌─────────────┐      direct load            │
+│ .sys2 file  │ ────────────────────────────┤
+└─────────────┘                             ▼
+                                     ┌─────────────┐
+                                     │   Kernel    │
+                                     │  (UBH IR)   │
+                                     └─────────────┘
+```
+
+**Key points:**
+- Both `.cnl` and `.sys2` files can be loaded via `load "path"`
+- **Paths are RELATIVE** to the current file's directory (absolute paths forbidden)
+- `.cnl` files are **translated to DSL** before kernel execution
+- `.sys2` files are loaded **directly** (no translation step)
+- The kernel only sees DSL - it is the **executable format**
+
+**Load path examples:**
+```cnl
+// File: /project/cases/patient1.cnl
+load "../theories/domains/medical.cnl"   // OK - relative path
+load "../theories/core/logic.sys2"       // OK - can load .sys2
+// load "/absolute/path/file.cnl"        // ERROR - absolute forbidden
+```
+
+#### 1.5.3 When to Use Each Format
+
+| Use Case | Format | Rationale |
+|----------|--------|-----------|
+| **Domain theories** (medical, legal) | `.cnl` | Non-technical reviewers can validate rules |
+| **Core logic primitives** | `.sys2` | Stability critical, rarely changes |
+| **System configuration** | `.sys2` | Precise semantics, no ambiguity |
+| **User-authored rules** | `.cnl` | Natural language for ease of use |
+| **Generated output** | `.sys2` | Deterministic, tooling-friendly |
+| **Proofs/explanations** | CNL (generated) | Human-readable output |
+
+#### 1.5.4 Stability Guarantees
+
+| Language | Stability |
+|----------|-----------|
+| **DSL (.sys2)** | **Frozen syntax** - backward compatible, changes require deprecation cycle |
+| **CNL (.cnl)** | **Evolving** - new patterns can be added, user feedback drives changes |
+
+**Why DSL is more stable:**
+- No pattern matching ambiguity (`X has Y` vs `X verb Y`)
+- Explicit IDs (`@c1`, `@rule1`) - no generation needed
+- No indentation sensitivity
+- No singular/plural normalization
+
+#### 1.5.5 Extending the System
+
+| Goal | Approach |
+|------|----------|
+| **New natural pattern** | Extend CNL translator, add to DS05 |
+| **New kernel primitive** | Add to DSL (DS08), then add CNL sugar |
+| **Domain-specific vocabulary** | Create `.cnl` theory in `/theories/domains/` |
+| **Core axioms/primitives** | Create `.sys2` theory in `/theories/core/` |
+
+#### 1.5.6 Related Specifications
+
+| Spec | Content |
+|------|---------|
+| **DS05** | CNL syntax, natural patterns, `load` directive |
+| **DS08** | DSL syntax, `load` directive, all primitives |
+| **DS18** | CNL ↔ DSL translation rules |
 
 ---
 
@@ -132,6 +223,13 @@ Items marked with `[CONFIRMED]` have been explicitly approved.
 | Weight | `Weight { literal } 3/10` |
 | Query | `@q ProbQuery ... end` with `Ask { expr }` and optional `Given { expr }` |
 | Notes | Weight targets must be ground literals; decimals parse as exact rationals |
+
+### 2.10 Sys2 as Schema/Metadata Carrier [CONFIRMED]
+
+| Decision | Use Sys2 for schemas, metadata, and explanation-ready annotations |
+|----------|--------------------------------------------------------------------|
+| Rationale | CNL is for authoring; Sys2 is precise and stable for tooling |
+| Examples | `@rule1:FluCausesFever ...`, `@lemma1:LemmaX ...` |
 
 ---
 
@@ -319,6 +417,46 @@ end
 | Memory | bytes |
 | Iterations | count |
 
+### 6.4 Finite Domain Lowering (CNL/DSL) [CONFIRMED 2026-01-07]
+
+| Decision | CNL/DSL finite domains use explicit enumeration |
+|----------|-----------------------------------------------|
+| Rule | Domain elements are declared constants; quantifiers enumerate or emit schemas |
+| Note | No bitvector encoding is used for CNL/DSL finite domains |
+
+### 6.5 Vocabulary Merge Policy [CONFIRMED 2026-01-07]
+
+| Decision | No automatic namespacing; collisions are errors |
+|----------|-----------------------------------------------|
+| Policy | A KB name may be introduced only once across all loaded files |
+| Resolution | Use explicit prefixes (e.g., `Medical_Patient`) or aliases (`@local:GlobalName`) |
+
+### 6.6 Orchestrator Heuristics Defaults [CONFIRMED 2026-01-07]
+
+| Heuristic | Default |
+|-----------|---------|
+| XOR density | Prefer XOR-aware backend if XOR >= 30% |
+| Quantifiers | Use CEGAR if any domain size > 200 |
+| Bit-vectors | Bit-blast if width <= 32 and BV atoms <= 50k |
+| Probabilistic | Exact KC if var count <= 150 when `requireExact=true` |
+| Parallel race | Run two cheap checkable backends in parallel |
+
+### 6.7 Learned Constraint Exchange [CONFIRMED 2026-01-07]
+
+| Decision | Backends may exchange learned constraints through the orchestrator |
+|----------|-------------------------------------------------------------------|
+| Rule | Learned constraints must be canonical and use only existing symbols |
+| Safety | Exchange is optional; correctness cannot depend on it |
+
+### 6.8 Performance Gates (Initial Targets) [CONFIRMED 2026-01-07]
+
+| Target | Threshold |
+|--------|-----------|
+| CNL parse + typecheck | 10k lines < 1s |
+| UBH compile | 100k predicate instances < 2s |
+| Kernel memory | 1e6 wire ids without crash |
+| Simple query latency | < 200ms (1k facts, 100 rules) |
+
 ---
 
 ## Change Log
@@ -337,7 +475,9 @@ end
 | 2026-01-06 | DSL: `$` only for bound variables or named expressions; constants are bare |
 | 2026-01-06 | DSL: Added probabilistic `Weight` statements and `ProbQuery` blocks |
 | 2026-01-06 | DSL: Working-memory names use `$`; KB names are bare and preferred in explanations |
-| 2026-01-07 | **NO JSON LEXICONS**: Domain knowledge in CNL/DSL theories |
+| 2026-01-06 | Sys2 is the lexicon source of truth; no external lexicon files |
+| 2026-01-06 | Sys2 carries schemas/metadata/explanation-ready annotations |
+| 2026-01-07 | **NO EXTERNAL LEXICON FILES**: Domain knowledge in CNL/DSL theories |
 | 2026-01-07 | **HUMAN NAMES**: `@var:humanName` syntax for display names |
 | 2026-01-07 | Created `/theories/` folder with domain theories |
 | 2026-01-07 | CNL natural patterns: `X has Y`, `X trusts Y`, no parentheses |
@@ -345,6 +485,15 @@ end
 | 2026-01-07 | Added new test suites: 15_disjunction, 16_biconditional, 17_negation |
 | 2026-01-07 | Created theories/core/probability.cnl and theories/core/modal.cnl |
 | 2026-01-07 | Expanded domain theories: medical.cnl (130+ lines), family.cnl, social.cnl |
+| 2026-01-07 | Added `load` directive to CNL (DS05) and DSL (DS08) for theory loading |
+| 2026-01-07 | Documented CNL vs DSL architecture rationale (Section 1.5) |
+| 2026-01-07 | `load` paths must be RELATIVE to current file (no absolute paths) |
+| 2026-01-07 | `load` supports both `.cnl` and `.sys2` files |
+| 2026-01-07 | Finite domain lowering: explicit enumeration for CNL/DSL |
+| 2026-01-07 | Vocabulary merge policy: no automatic namespacing or shadowing |
+| 2026-01-07 | Orchestrator heuristics defaults recorded |
+| 2026-01-07 | Learned constraint exchange policy recorded |
+| 2026-01-07 | Performance gates added to spec targets |
 
 ---
 

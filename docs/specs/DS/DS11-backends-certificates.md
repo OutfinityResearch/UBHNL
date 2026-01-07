@@ -42,6 +42,55 @@ Where:
 - `problem` is normalized + fragment-tagged,
 - `budget` includes time/memory/iteration caps and “must be complete” flags.
 
+### Backend Plugin Contract (Normative)
+Backends are integrated as plugins with a minimal, deterministic contract:
+```
+BackendPlugin {
+  backendId: string
+  capabilities: BackendCapabilities
+  solve(problem: Problem, budget: Budget, io?: BackendIO): BackendResult
+  importLearned?(learned: LearnedSet): void
+  exportLearned?(request: LearnedRequest): LearnedSet
+  shutdown?(): void
+}
+```
+
+Notes:
+- `BackendCapabilities` is derived from the metadata in "Backend Capabilities".
+- `BackendIO` is a thin abstraction for logs/artifacts; it must not perform network access.
+- `importLearned`/`exportLearned` are optional and must be ignored if unsupported.
+
+### Learned Constraint Exchange (Normative)
+Backends may exchange learned constraints through the orchestrator to avoid duplicated work.
+
+Canonical structures:
+```
+LearnedConstraint {
+  fragment: FragmentId
+  kind: "CNF_CLAUSE" | "XOR_EQ" | "UBH_ASSERT"
+  payload: string | number[] | structured
+  origin?: OriginId[]
+  digest: "sha256:..."
+}
+
+LearnedSet {
+  sourceBackend: string
+  constraints: LearnedConstraint[]
+}
+
+LearnedRequest {
+  fragment: FragmentId
+  maxCount: number
+  budget: Budget
+}
+```
+
+Rules:
+- `payload` must reference **only** symbols from the normalized `Problem` (no new symbols).
+- Clauses must be canonicalized (sorted, no duplicates).
+- XOR equations must be normalized (constant on RHS, variables sorted).
+- The orchestrator may drop learned constraints that are redundant or exceed budgets.
+
 ### BackendResult (Normalized)
 The orchestrator normalizes all backend outputs into:
 ```

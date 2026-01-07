@@ -38,7 +38,7 @@ async function runTests() {
 
     for (const dirent of suites.filter(d => d.isDirectory()).sort((a,b) => a.name.localeCompare(b.name))) {
         const suiteDir = path.join(fastEvalDir, dirent.name);
-        const testDefPath = path.join(suiteDir, 'test.json');
+        const testDefPath = path.join(suiteDir, 'test.desc');
         
         if (!await fs.stat(testDefPath).catch(() => false)) continue;
 

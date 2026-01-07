@@ -11,11 +11,20 @@ This DS defines compilation from the **typed core logic AST** (DS-006) into:
 The compilation target is intentionally tiny. Everything else (sessions, schemas, proofs) is layered above.
 
 ## Decisions
-- All types are lowered to finite domains (bitvectors or enumerations) before UBH compilation (DS-003).
+- All CNL/DSL types are lowered by **explicit enumeration** before UBH compilation (DS-003).
 - Predicates become indexed Boolean wires keyed by concrete arguments.
 - Quantifiers use:
   - finite expansion for small domains, or
   - schema emission for large domains (CEGAR, DS-004).
+
+## Finite Domain Encoding (Normative)
+For the CNL/DSL pipeline, **no bitvector encoding is used** for finite domains:
+- Each domain element is a declared constant (`@c0:c0 __Atom`, `IsA c0 Cell`).
+- Quantifiers expand by **enumerating** domain elements (or emit a schema object).
+- Equality on domain elements is **syntactic** equality of constants.
+
+If a different front-end uses bitvectors, it must provide its own lowering rules and
+domain constraints; that is outside this DS.
 
 ## Compilation Rules
 ### Boolean Operators
@@ -30,6 +39,10 @@ Compilation returns a UBH wire id for the resulting Boolean expression.
 ### Predicates
 `Pred(name, args)` maps to a **VAR wire** uniquely determined by `(name, args)` where each arg is a concrete constant.
 
+Type checking is enforced before compilation:
+- predicate arity must match,
+- each argument must be a declared constant of the expected type.
+
 ### Quantifiers (Expansion Semantics)
 Let `Body(d)` denote the body with the quantified variable substituted by concrete element `d`.
 - `ForAll(x in D, body)` expands to `AND_{d∈D} compile(Body(d))`
@@ -43,10 +56,18 @@ For large domains, see “Schema Engine Hook”.
 The symbol table is responsible for stable naming/mapping.
 
 ### Predicate Instance Keying
-Recommended approach:
-- Canonical key string: `P(arg0,arg1,...,argN-1)` using canonical constant names.
+Normative approach:
+- Canonical key string: `P(arg0,arg1,...,argN-1)` using **KB names** for constants.
 - The compiler calls `kernel.var(key)` to obtain a stable wire id.
 - The session maintains a reverse map `wireId -> (P, args[])` for explanation/counterexample rendering.
+
+Additional rules:
+- The symbol table is **session-global** and deterministic: the same key always maps to the same wire id.
+- Keys are interned on first use; subsequent uses must reuse the same id.
+- Any attempt to map the same key to different metadata is a hard error.
+
+If two predicates share the same name but different arities/types, that is a vocabulary
+error and must be rejected before reaching this stage.
 
 This avoids having to pre-allocate a dense “wire grid” while still guaranteeing stability.
 
@@ -75,7 +96,7 @@ Note: schemas should appear at statement boundaries (`learn` rules/axioms), not 
 This preserves a small kernel while enabling rich logic and NL-driven input.
 
 ## Example (End-to-End Shape)
-Lexicon:
+Vocabulary:
 - `Cell = {c0,c1}`
 - predicates: `geneA(Cell)`, `proteinP(Cell)`
 

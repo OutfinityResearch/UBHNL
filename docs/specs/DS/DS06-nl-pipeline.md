@@ -12,8 +12,8 @@ The “NL pipeline” is intentionally split into:
 The compiler (DS-007) should not care whether the source was CNL or DSL.
 
 ## Pipeline Stages (CNL → Typed AST)
-1) Load lexicon (JSON) and build a symbol table (domains, predicates, CNL surface patterns).
-   - Constants are derived from `lexicon.domains` (finite domain elements).
+1) Load vocabulary from Sys2 schema files and build a symbol table (domains, predicates, surface patterns).
+   - Constants are derived from `@name:kbName __Atom` + `IsA` in `.sys2` files.
 2) Tokenize input (keywords, identifiers, punctuation).
 3) Parse tokens to a **concrete syntax tree** (CST).
 4) Normalize:
@@ -58,7 +58,7 @@ Design rule:
 - CNL remains deterministic and small; richer languages should be separate front-ends that still attach origins and types.
 
 ## Symbol Resolution Rules
-Given a lexicon `L`:
+Given a vocabulary `L` (built from Sys2 schemas):
 - A predicate call `P(t1,...,tn)` is valid iff:
   - `P` exists in `L.predicates`,
   - `arity(P)=n`,

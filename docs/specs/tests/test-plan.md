@@ -4,7 +4,7 @@
 - Validate correctness of Boolean IR and simplification.
 - Validate solver integration for XOR and CNF.
 - Validate deterministic parsing/typing for CNL and DSL.
-- Validate session-level `learn/query` behavior, including holes (`?`) and explainability.
+- Validate session-level `learn/query` behavior, including witness queries and explainability.
 
 ## Scope
 - This plan is written against the specs in `docs/specs/` and is intentionally independent of any particular SAT backend.
@@ -21,7 +21,7 @@
 - Tests are organized as:
   - kernel/IR unit tests (fast, no solver required),
   - solver integration tests (CNF + XOR),
-  - front-end tests (lexicon, CNL/DSL parse + type),
+  - front-end tests (vocabulary, CNL/DSL parse + type),
   - end-to-end scenarios (learn/query, proof/counterexample rendering).
 
 ## Developer Tests (preferred)
@@ -54,10 +54,10 @@ Given `prove(phi)` defined as `solve(T ∧ ¬phi)`:
 - Ensure `UNSAT` when CNF and XOR contradict.
   - Example: `z = and(x,y)`, `z=1`, `x=0` is `UNSAT`.
 
-### 6) Lexicon + Symbol Resolution
+### 6) Vocabulary + Symbol Resolution
 - Reject unknown domains, unknown predicates, wrong arity, wrong argument types.
 - Reject use of reserved keywords as identifiers (unless quoted).
-- Accept CNL surface patterns/aliases if declared in the lexicon (see DS-005).
+- Accept fixed CNL surface patterns defined in DS-005; reject unknown surface forms.
 
 ### 7) CNL Parsing and Typing
 - Parse a DS-005 block quantifier into a typed AST:
@@ -86,7 +86,7 @@ Given `prove(phi)` defined as `solve(T ∧ ¬phi)`:
   - `Exists` over an empty domain compiles to `CONST0` (immediately falsified).
 
 ### 10) Session `learn/query` End-to-End
-With a small finite domain and lexicon:
+With a small finite domain and vocabulary:
 - `learn` a rule schema, then `query` a concrete entailment; expect `PROVED` with an explanation referencing the instantiated rule.
 - `learn` facts that make the theory inconsistent; `query` anything; expect `UNSAT` with an unsat explanation/core.
 - `query` with an existential witness that has multiple solutions; ensure result policy is deterministic (e.g., stable witness choice, or enumeration if requested).
@@ -129,7 +129,15 @@ These tests validate DS-013 and the exact-vs-approx policy.
   - compute `P(Q|E)` as a rational ratio (when using the KC exact route).
 - Policy:
   - if `requireExact=true` and no checkable exact route is available, return `UNKNOWN`,
-  - if `allowApprox=true`, return an approximate estimate with audit metadata (seeds, parameters).
+- if `allowApprox=true`, return an approximate estimate with audit metadata (seeds, parameters).
+
+### 14) Performance and Stress Gates (Initial Targets)
+These are **minimum** targets for a reference development machine; adjust only with explicit decision.
+
+- Front-end parse + typecheck: 10k CNL lines in under 1s.
+- UBH compile: 100k predicate instances in under 2s.
+- Kernel memory: support at least 1e6 unique wire ids without crashing.
+- Simple query latency: under 200ms for a query over 1k facts and 100 rules.
 
 ## Tooling Notes
 - Keep the base suite deterministic; no randomness in the default run.

@@ -31,26 +31,16 @@
         <p>
           The vocabulary defines types and allowed symbols. The rule is simple:
           every symbol used in CNL/DSL must be declared; otherwise it is a load error.
-          Preferred source of vocabulary is CNL domain files (<code>*.cnl</code>).
-          A JSON lexicon is legacy/optional for tooling.
+          Preferred source of vocabulary is Sys2 schema files (<code>*.sys2</code>) and CNL domain files (<code>*.cnl</code>).
         </p>
 
-        <h3>Legacy JSON (optional, sketch)</h3>
-        <pre><code>{
-  "domains": {
-    "Cell": ["c0", "c1"],
-    "Person": ["p0"]
-  },
-  "predicates": {
-    "GeneA": { "arity": 1, "args": ["Cell"] },
-    "ProteinP": { "arity": 1, "args": ["Cell"] },
-    "HasFever": { "arity": 1, "args": ["Person"] }
-  },
-  "cnlPatterns": {
-    "has Fever": "HasFever $1",
-    "is Parent of": "Parent $1 $2"
-  }
-}</code></pre>
+        <h3>Schema (authoritative)</h3>
+        <pre><code>@Cell:Cell __Atom
+@Person:Person __Atom
+@c0:c0 __Atom
+@p0:p0 __Atom
+IsA c0 Cell
+IsA p0 Person</code></pre>
 
         <h2>2) CNL (Controlled Natural Language)</h2>
         <p>

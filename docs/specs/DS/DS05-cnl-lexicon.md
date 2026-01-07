@@ -7,6 +7,7 @@ Define a **Controlled Natural Language (CNL)** that:
 - Maps **deterministically** and **bijectively** to the DSL (DS-008)
 - Supports multiple styles: fully natural, semi-formal, and explicit
 - Is suitable for non-programmers and domain experts
+- Is **not** the source of truth for schemas/metadata (use Sys2 for that)
 
 ---
 
@@ -38,6 +39,7 @@ All three styles translate to the same DSL format.
 | Aspect | CNL (`.cnl`) | DSL (`.sys2`) |
 |--------|--------------|---------------|
 | **Purpose** | Human authoring | Machine storage |
+| **Schema/metadata** | Not authoritative | Canonical |
 | **Style** | Natural English | Symbolic |
 | **Variables** | Bare: `x`, `person1` | Prefixed: `$x`, `$person1` |
 | **Quantifiers** | `Every`, `For any`, `For all` | `ForAll ... graph ... end` |
@@ -61,13 +63,37 @@ load "theories/core/logic.cnl"
 ### Syntax
 
 ```
-load "<path>"
+load "<relative-path>"
 ```
 
-- Path is relative to project root or absolute
-- Supports both `.cnl` and `.sys2` files
-- `.cnl` files are translated to DSL before loading
+### Path Resolution Rules
+
+| Rule | Description |
+|------|-------------|
+| **Relative to current file** | Path is resolved relative to the directory containing the current file |
+| **No absolute paths** | Absolute paths are **FORBIDDEN** - use relative paths only |
+| **Both formats supported** | Can load `.cnl` or `.sys2` files |
+| **Extension required** | Must include `.cnl` or `.sys2` extension |
+
+### Examples
+
+```cnl
+// File: /project/cases/patient1.cnl
+
+load "../theories/domains/medical.cnl"   // OK - relative to current file
+load "../theories/core/logic.sys2"       // OK - can load .sys2 directly
+load "helpers/utils.cnl"                 // OK - subdirectory
+
+// FORBIDDEN:
+// load "/absolute/path/file.cnl"        // ERROR: absolute path not allowed
+```
+
+### Behavior
+
+- `.cnl` files are **translated to DSL** before loading
+- `.sys2` files are loaded **directly** (no translation)
 - Circular loads are detected and reported as errors
+- Duplicate loads are ignored (idempotent)
 
 ### Semantics
 
@@ -291,7 +317,7 @@ end
 
 ---
 
-# PART 2: Theory Files (Preferred) vs Legacy JSON
+# PART 2: Theory Files (Authoritative)
 
 ## 2.1 PREFERRED: CNL Theory Files
 
@@ -312,26 +338,19 @@ For any Patient p:
 
 **Location**: `/theories/domains/` for reusable theories.
 
-## 2.2 LEGACY: JSON Lexicon (Documentation Only)
+## 2.2 Sys2 Schema Files (Authoritative Vocabulary)
 
-The JSON format below is for **documentation/tooling only**.
-Actual domain knowledge goes in CNL files.
+Vocabulary is derived from Sys2 schema files (`.sys2`) using declarations and typing statements.
 
-- **Extension**: `.lexicon.json`
-- **Status**: LEGACY - use CNL instead
-
-```json
-{
-  "version": "1.0",
-  "domains": {
-    "Person": ["Alice", "Bob", "Charlie"],
-    "Cell": ["c0", "c1", "c2"]
-  },
-  "predicates": {
-    "HasFever": { "arity": 1, "args": ["Person"] },
-    "Trusts": { "arity": 2, "args": ["Person", "Person"] }
-  }
-}
+```sys2
+@Person:Person __Atom
+@Cell:Cell __Atom
+@Alice:Alice __Atom
+@Bob:Bob __Atom
+@c0:c0 __Atom
+IsA Alice Person
+IsA Bob Person
+IsA c0 Cell
 ```
 
 ## 2.3 Theory File Structure
@@ -624,7 +643,7 @@ Define Producer as a Cell c where:
 ```
 -> DSL:
 ```sys2
-@Producer graph c
+@Producer:Producer graph c
     @inner ForAll Protein graph p
         @c1 Expresses $c $p
         @c2 Active $p
@@ -656,6 +675,9 @@ Define Ancestor(Person x, Person y) as:
 
 # PART 8: Named Blocks (Rules, Theorems, Axioms)
 
+Named blocks are stored as **KB names** so they can be referenced in proofs and explanations.
+Use unlabeled forms when you do not want a persistent name.
+
 ## 8.1 Named Rules
 
 ```cnl
@@ -665,7 +687,7 @@ Rule TransitiveTrust:
 ```
 -> DSL:
 ```sys2
-@TransitiveTrust ForAll Person graph x
+@TransitiveTrust:TransitiveTrust ForAll Person graph x
     @inner1 ForAll Person graph y
         @inner2 ForAll Person graph z
             @c1 Trusts $x $y

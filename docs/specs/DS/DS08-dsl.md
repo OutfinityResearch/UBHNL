@@ -79,6 +79,64 @@ Examples: `3/10`, `1/2`, `0.8`, `12.5`
 
 # PART 2: Core Syntax Rules
 
+## Rule 0: Theory Loading with `load`
+
+DSL files can include other theory files:
+
+```sys2
+load "../theories/domains/medical.sys2"
+load "../theories/core/logic.sys2"
+load "helpers/common.cnl"
+```
+
+### Syntax
+
+```
+load "<relative-path>"
+```
+
+### Path Resolution Rules
+
+| Rule | Description |
+|------|-------------|
+| **Relative to current file** | Path is resolved relative to the directory containing the current file |
+| **No absolute paths** | Absolute paths are **FORBIDDEN** (`E_DSL_ABSOLUTE_PATH`) |
+| **Both formats supported** | Can load `.sys2` or `.cnl` files |
+| **Extension required** | Must include `.sys2` or `.cnl` extension |
+
+### Format-Specific Behavior
+
+| Format | Behavior |
+|--------|----------|
+| `.sys2` | Loaded **directly** into kernel (no translation) |
+| `.cnl` | **Translated to DSL** first, then loaded |
+
+### Examples
+
+```sys2
+# File: /project/cases/patient_case.sys2
+
+load "../theories/domains/medical.sys2"   # OK - load DSL directly
+load "../theories/domains/family.cnl"     # OK - translate CNL then load
+load "local/helpers.sys2"                 # OK - subdirectory
+
+# FORBIDDEN:
+# load "/absolute/path/file.sys2"         # ERROR: E_DSL_ABSOLUTE_PATH
+```
+
+### Semantics
+
+1. **Declarations merge**: All `@name` declarations from loaded file become available
+2. **KB names available**: Names with `:kbName` are accessible as bare identifiers
+3. **Order preserved**: Multiple loads processed in declaration order
+4. **Idempotent**: Loading same file twice has no effect (deduplication by path)
+5. **No shadowing**: A KB name may be introduced only once across all loaded files
+6. **Conflict policy**: If two files introduce the same KB name or predicate with different meaning, it is a hard error (`E_DSL_REDECLARATION`)
+7. **No automatic namespaces**: Use explicit name prefixes (e.g., `Medical_Patient`) or explicit aliases (`@local:GlobalName`) to avoid collisions
+8. **Circular detection**: Circular loads reported as `E_DSL_CIRCULAR_LOAD`
+
+---
+
 ## Rule 1: Variable Declaration with `@`
 
 Every named entity must be declared **exactly once** with `@`:
@@ -487,7 +545,7 @@ Inside a `ForAll`/`Exists` block, the graph variable is in scope for all nested 
 ## 5.3 Type Checking
 
 1. `IsA const Type` requires both `const` and `Type` declared
-2. Predicate arguments must match types from lexicon
+2. Predicate arguments must match types from the vocabulary schema
 3. Quantifier domain must be a declared type
 
 ## 5.4 KB Storage Semantics

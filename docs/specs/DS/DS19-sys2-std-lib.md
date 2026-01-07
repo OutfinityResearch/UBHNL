@@ -64,7 +64,7 @@ Sys2 DSL does **not** define a `?` token.
 | `A or B` | `Or ...` |
 | `not A` | `Not ...` |
 
-Note: concrete predicate surface forms in CNL are governed by the lexicon `cnlPatterns` (DS-005).
+Note: concrete predicate surface forms in CNL are governed by the fixed patterns in DS-005.
 
 ## Reserved-word conflicts (policy)
 

@@ -92,7 +92,7 @@ interface ErrorDetails {
 | `E_CNL_MISSING_PERIOD` | Statement not terminated | `Ion has fever` (no `.`) |
 | `E_CNL_MISSING_DOMAIN` | Quantifier without domain | `For all c: P(c).` |
 | `E_CNL_MISSING_CONNECTOR` | Adjacent atoms without connector | `geneA(c) proteinP(c)` |
-| `E_CNL_UNKNOWN_ALIAS` | Predicate phrase not mapped in lexicon `cnlPatterns` | `Ion has headache.` |
+| `E_CNL_UNKNOWN_ALIAS` | Predicate phrase not mapped by CNL patterns | `Ion has headache.` |
 | `E_CNL_AMBIGUOUS` | Multiple valid parses | Rare if grammar is correct |
 
 ### DSL Parsing Errors
@@ -122,7 +122,7 @@ interface ErrorDetails {
 |------|-----------|---------|
 | `E_TRANSLATE_AMBIGUOUS` | Multiple possible translations | Unlikely |
 | `E_TRANSLATE_UNSUPPORTED` | Construct not in target | Future extensions |
-| `E_LEXICON_ALIAS_MISSING` | CNL phrase has no mapping in lexicon `cnlPatterns` | "has headache" |
+| `E_CNL_PATTERN_MISSING` | CNL phrase has no mapping in the fixed patterns | "has headache" |
 
 ### Schema Engine Errors
 
@@ -190,76 +190,58 @@ For `SAT`/`DISPROVED` results:
 ## Example Error Reports
 
 ### Example 1: DSL Two-@ Error
-```json
-{
-  "ok": false,
-  "error": {
-    "kind": "ParseError",
-    "code": "E_DSL_TWO_AT",
-    "message": "Only one '@' token allowed per line.",
-    "blame": "UserInput",
-    "origin": {
-      "sourceId": "input-001",
-      "line": 5,
-      "column": 12,
-      "snippet": "@ion likes @maria",
-      "format": "DSL"
-    },
-    "details": {
-      "hint": "Use bare 'maria' if it's a vocabulary constant, or '$maria' if it's a variable."
-    }
-  }
-}
+```text
+ok: false
+error.kind: ParseError
+error.code: E_DSL_TWO_AT
+error.message: Only one '@' token allowed per line.
+error.blame: UserInput
+error.origin:
+  sourceId: input-001
+  line: 5
+  column: 12
+  snippet: @ion likes @maria
+  format: DSL
+error.details:
+  hint: Use bare 'maria' if it is a vocabulary constant, or '$maria' if it is a variable.
 ```
 
 ### Example 2: Unknown Symbol
-```json
-{
-  "ok": false,
-  "error": {
-    "kind": "VocabError",
-    "code": "E_UNKNOWN_SYMBOL",
-    "message": "Symbol 'unknownPred' not found in vocabulary.",
-    "blame": "TheoryFile",
-      "origin": {
-      "sourceId": "bio.sys2",
-      "path": "theories/bio.sys2",
-      "line": 15,
-      "column": 1,
-      "snippet": "unknownPred c0",
-      "format": "DSL"
-    },
-    "details": {
-      "got": "unknownPred",
-      "hint": "Add 'unknownPred' to the lexicon or check spelling."
-    }
-  }
-}
+```text
+ok: false
+error.kind: VocabError
+error.code: E_UNKNOWN_SYMBOL
+error.message: Symbol 'unknownPred' not found in vocabulary.
+error.blame: TheoryFile
+error.origin:
+  sourceId: bio.sys2
+  path: theories/bio.sys2
+  line: 15
+  column: 1
+  snippet: unknownPred c0
+  format: DSL
+error.details:
+  got: unknownPred
+  hint: Add 'unknownPred' to the schema vocabulary or check spelling.
 ```
 
 ### Example 3: Type Mismatch
-```json
-{
-  "ok": false,
-  "error": {
-    "kind": "TypeError",
-    "code": "E_TYPE_MISMATCH",
-    "message": "Argument type mismatch: expected 'Cell', got 'Person'.",
-    "blame": "UserInput",
-      "origin": {
-      "sourceId": "input-002",
-      "line": 1,
-      "column": 7,
-      "snippet": "geneA ion",
-      "format": "DSL"
-    },
-    "details": {
-      "expected": "Cell",
-      "got": "Person",
-      "hint": "Predicate 'geneA' expects a Cell argument."
-    }
-  }
-}
+```text
+ok: false
+error.kind: TypeError
+error.code: E_TYPE_MISMATCH
+error.message: Argument type mismatch: expected 'Cell', got 'Person'.
+error.blame: UserInput
+error.origin:
+  sourceId: input-002
+  line: 1
+  column: 7
+  snippet: geneA ion
+  format: DSL
+error.details:
+  expected: Cell
+  got: Person
+  hint: Predicate 'geneA' expects a Cell argument.
 ```
 
 ## Test Cases

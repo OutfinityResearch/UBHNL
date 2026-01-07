@@ -33,9 +33,10 @@ All higher-level values must ultimately become bits:
   - Operations: bit-blasted circuits (adder, comparator) built from XOR/AND.
 
 ### Enums / Finite Domains
-- `Enum[n] -> BitVector[ceil(log2(n))]` (binary encoding) **or** `BitVector[n]` (one-hot).
-  - The choice is a front-end policy; binary is compact, one-hot is often propagation-friendly.
-  - Must add *domain constraints* so the bit-pattern is a valid element (especially for binary encoding when `n` is not a power of 2).
+- **CNL/DSL policy**: finite domains are lowered by **explicit enumeration**.
+  - Each domain element is a declared constant; quantifiers are expanded (or emitted as schemas).
+  - No bitvector encoding is used for CNL/DSL finite domains.
+- **Other front-ends** (e.g., arithmetic): may use bitvector encodings with explicit domain constraints.
 
 ### Sets over a Finite Universe
 - `Set(U) -> BitVector[|U|]` (bitset encoding)

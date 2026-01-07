@@ -51,6 +51,17 @@ Common task kinds:
 5) **Budget partitioning**:
    - allocate budgets across tasks; define timeouts.
 
+### Planner Heuristics (Default Rules)
+The planner uses deterministic heuristics with explicit thresholds (configurable):
+
+- **XOR density**: if XOR constraints are >= 30% of Boolean constraints, prefer XOR-aware backends.
+- **Quantifiers**: if any quantifier domain size exceeds `N=200`, use CEGAR (schema engine); otherwise expand.
+- **Bit-vectors**: if max width <= 32 and total BV atoms <= 50k, prefer bit-blast to UBH; otherwise use SMT(BV).
+- **Probabilistic**: if `requireExact=true` and variable count <= 150, prefer KC; otherwise return `UNKNOWN` or use approximate mode with audit metadata.
+- **Parallel race**: if two backends are both checkable and cheap, run them in parallel with split budgets and accept the first checkable result.
+
+All heuristic choices must be recorded in the plan metadata for reproducibility.
+
 ## Tactics (Reusable Pipelines)
 Tactics are higher-order procedures that build plans.
 
@@ -102,11 +113,23 @@ Minimum shared objects:
 - `Interpolant`: formula `I` separating `A` and `B` (optional).
 - `Invariant`: inductive invariant for TS/CHC.
 - `Strategy`: winning strategy for games/QBF (optional).
+- `LearnedConstraintSet`: exchangeable constraints/clauses (DS-011).
 
 All objects must be:
 - serializable,
 - typed,
 - tied to origins for explainability.
+
+### Learned Constraint Exchange (Protocol)
+The orchestrator may request and distribute learned constraints at plan checkpoints:
+- after each `Solve` task finishes,
+- after each `Refine` step in CEGAR,
+- before re-running a backend with a refined theory.
+
+Rules:
+- Learned constraints are **optional** inputs; backends must remain sound without them.
+- The orchestrator must respect fragment compatibility (do not send CNF clauses to an SMT backend).
+- Imported constraints must be logged with origins for explainability.
 
 ## Incrementality, Caching, Reproducibility
 ### Incremental sessions
@@ -161,4 +184,3 @@ Plan:
 1) `Solve(IC3/PDR)`
 2) if success: `Check(invariant)` and return PROVED
 3) else: `Lower(BMC to UBH)` at increasing bounds until SAT counterexample or budget end
-

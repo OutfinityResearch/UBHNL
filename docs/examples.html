@@ -27,18 +27,12 @@
         </div>
 
         <h2>Example 1 — Propositional (UBH/SAT)</h2>
-        <p><strong>Goal:</strong> <code>Prove: (A and B) implies C</code></p>
+        <p><strong>Goal:</strong> <code>Prove: Implies { And A B } C</code></p>
 
-        <h3>Legacy lexicon (minimal, optional)</h3>
-        <pre><code>{
-  "domains": {},
-  "constants": {},
-  "predicates": {
-    "A": { "arity": 0, "args": [] },
-    "B": { "arity": 0, "args": [] },
-    "C": { "arity": 0, "args": [] }
-  }
-}</code></pre>
+        <h3>Schema (minimal)</h3>
+        <pre><code>@A:A __Atom
+@B:B __Atom
+@C:C __Atom</code></pre>
 
         <h3>Theory file: <code>t.sys2</code></h3>
         <pre><code>@imp1 Implies A C

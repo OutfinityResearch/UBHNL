@@ -1,0 +1,8 @@
+load "../../theories/domains/medical.sys2"
+
+@Patient:Patient __Atom
+@p1:p1 __Atom
+
+IsA p1 Patient
+
+@f1 HasFlu p1

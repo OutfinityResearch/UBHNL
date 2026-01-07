@@ -85,9 +85,9 @@ If a theory needs explicit DAG construction (for debugging or reuse), use named 
 
 ---
 
-## Domain Knowledge: Theories (NOT JSON)
+## Domain Knowledge: Theories (No External Schemas)
 
-**IMPORTANT**: Domain knowledge is expressed in CNL/DSL files, NOT JSON.
+**IMPORTANT**: Domain knowledge is expressed in CNL/DSL files, not external schema formats.
 
 | Location | Purpose |
 |----------|---------|

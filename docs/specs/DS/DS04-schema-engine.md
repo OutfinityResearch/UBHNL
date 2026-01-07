@@ -73,7 +73,7 @@ SchemaPolicy = {
 ```
 
 Determinism rule:
-- if `scanOrder="stable"`, violation scanning order must be stable (e.g., by domain iteration order from the lexicon).
+- if `scanOrder="stable"`, violation scanning order must be stable (e.g., by domain iteration order from the vocabulary schema).
 
 Unknown handling:
 - if `maxRounds` or `maxTotalInstances` is exceeded, return `UNKNOWN` with a diagnostic reason `SCHEMA_LIMIT` (see DS-016).
@@ -93,8 +93,8 @@ Implementation note: staged scanning is typically more memory-friendly, but both
 
 Options:
 1) **Finite expansion** (small domains): compile `∨_{d∈D} Body(d)` directly (see DS-003).
-2) **Witness search via holes (preferred for large domains)**:
-   - rephrase queries as “find `?x` such that `Body(?x)` holds” (DS-009),
+2) **Witness search via existential queries (preferred for large domains)**:
+   - rephrase queries as “find `x` such that `Body(x)` holds” (DS-009),
    - the engine/search strategy enumerates candidates until it finds a satisfying witness or exhausts the domain.
 3) **Lazy disjunction growth** (advanced):
    - start with a small subset `D0 ⊂ D`,

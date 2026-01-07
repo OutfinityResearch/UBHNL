@@ -1,39 +1,34 @@
 # CNL Test Cases (DS-005)
 
-These cases are normative for the CNL grammar and lexicon contract in `docs/specs/DS/DS05-cnl-lexicon.md`.
-They focus on determinism (one parse) and typing (lexicon-driven).
+These cases are normative for the CNL grammar and vocabulary contract in `docs/specs/DS/DS05-cnl-lexicon.md`.
+They focus on determinism (one parse) and typing (schema-driven).
 
-## Shared Lexicon (for examples)
-```json
-{
-  "version": "1.0",
-  "domains": {
-    "Cell": ["c0", "c1"],
-    "Person": ["p0", "p1"]
-  },
-  "predicates": {
-    "geneA": { "arity": 1, "args": ["Cell"] },
-    "inhibitor": { "arity": 1, "args": ["Cell"] },
-    "proteinP": { "arity": 1, "args": ["Cell"] },
-    "has_flu": { "arity": 1, "args": ["Person"] },
-    "has_fever": { "arity": 1, "args": ["Person"] },
-    "trusts": { "arity": 2, "args": ["Person", "Person"] }
-  },
-  "cnlPatterns": {
-    "has gene A": "geneA($1)",
-    "has inhibitor": "inhibitor($1)",
-    "has protein P": "proteinP($1)",
-    "protein p": "proteinP($1)",
-    "has flu": "has_flu($1)",
-    "has fever": "has_fever($1)",
-    "trusts": "trusts($1, $2)"
-  }
-}
+## Shared Vocabulary (sys2 schema excerpt)
+```sys2
+# File: tests/shared-vocab.sys2
+@Cell:Cell __Atom
+@Person:Person __Atom
+
+@c0:c0 __Atom
+IsA c0 Cell
+@c1:c1 __Atom
+IsA c1 Cell
+@p0:p0 __Atom
+IsA p0 Person
+@p1:p1 __Atom
+IsA p1 Person
+
+@geneA:geneA __Atom
+@inhibitor:inhibitor __Atom
+@proteinP:proteinP __Atom
+@has_flu:has_flu __Atom
+@has_fever:has_fever __Atom
+@trusts:trusts __Atom
 ```
 
 ## Accepted Inputs
 
-### 1) Natural fact (SVO + lexicon pattern)
+### 1) Natural fact (SVO + fixed CNL pattern)
 Input:
 ```cnl
 c0 has gene A.
@@ -67,14 +62,14 @@ Which Person p has fever?
 Expected core AST shape:
 `Exists(p:Person, Pred(has_fever,[p]))`
 
-### 5) Alias / surface phrase expansion
+### 5) Explicit predicate syntax (fallback form)
 Input:
 ```cnl
 For any Cell c:
-    If c has gene A then protein p(c).
+    If c has gene A then proteinP(c).
 ```
 Expected:
-- `protein p(c)` expands via `cnlPatterns` to `proteinP(c)`.
+- `proteinP(c)` is parsed as function-style syntax (DS-005).
 
 ### 6) Transitive verb (SVO with 2-arg predicate)
 Input:
@@ -93,7 +88,7 @@ c0 has gene A
 ```
 Expected: `ParseError` (`E_CNL_MISSING_PERIOD`).
 
-### 2) Unknown surface phrase (strict lexicon patterns)
+### 2) Unknown surface phrase (fixed CNL patterns)
 Input:
 ```cnl
 p0 has headache.

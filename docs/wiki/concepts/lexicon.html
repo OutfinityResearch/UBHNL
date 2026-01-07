@@ -26,9 +26,9 @@
 
         <h2>Definition</h2>
         <p>
-          The <strong>lexicon</strong> (in UBHNL) is a configuration file (typically JSON) that defines
+          The <strong>lexicon</strong> (in UBHNL) is the vocabulary contract that defines
           <strong>types</strong> (domains), <strong>constants</strong>, and <strong>predicates</strong>.
-          It is the basis for typing and for the “strict vocabulary” policy.
+          Vocabulary is derived from Sys2 schema files (<code>*.sys2</code>) and CNL domain files (<code>*.cnl</code>).
         </p>
 
         <h2>Why it is a “source of truth”</h2>
@@ -38,16 +38,12 @@
           <li>Safety policy: an unknown symbol is an <strong>error</strong>, not “implicit creation”.</li>
         </ul>
 
-        <h2>Minimal structure (example)</h2>
-        <pre><code>{
-  "domains": { "Cell": ["c0", "c1"] },
-  "constants": { "c0": "Cell", "c1": "Cell" },
-  "predicates": {
-    "geneA": { "arity": 1, "args": ["Cell"] },
-    "proteinP": { "arity": 1, "args": ["Cell"] }
-  },
-  "aliases": { "protein p": "proteinP" }
-}</code></pre>
+        <h2>Schema example</h2>
+        <pre><code>@Cell:Cell __Atom
+@c0:c0 __Atom
+@c1:c1 __Atom
+IsA c0 Cell
+IsA c1 Cell</code></pre>
 
         <h2>Invariants (what the loader validates)</h2>
         <ul>
@@ -59,14 +55,15 @@
 
         <h2>Reserved keywords</h2>
         <p>
-          CNL/DSL reserve keywords (e.g., <code>forall</code>, <code>exists</code>, <code>and</code>, <code>or</code>, <code>not</code>, <code>implies</code>).
-          For predictability, the lexicon should avoid using them as identifiers (or require quoting, if supported).
+          CNL/DSL reserve keywords (e.g., <code>ForAll</code>, <code>Exists</code>, <code>graph</code>,
+          <code>return</code>, <code>end</code>, <code>And</code>, <code>Or</code>, <code>Not</code>, <code>Implies</code>).
+          For predictability, the lexicon should avoid using them as identifiers.
         </p>
 
         <h2>Engineering consequences</h2>
         <ul>
           <li>Theories (CNL/DSL files) become “compilable” and auditable: every token has a typed meaning.</li>
-          <li>Explanations can be printed in the user vocabulary: “proteinP(c0)”, not “wire 123”.</li>
+          <li>Explanations can be printed in the user vocabulary: “ProteinP c0”, not “wire 123”.</li>
         </ul>
 
         <h2>Relevant specs</h2>

@@ -35,9 +35,10 @@
           Unsat cores are reported in terms of origins, not internal nodes or solver-specific ids.
         </p>
 
-        <h2>3) Holes: queries that return witnesses</h2>
+        <h2>3) Witness queries</h2>
         <p>
-          The session tracks <a href="../wiki/concepts/holes.html">holes</a> and returns <code>holeAssignments</code> as part of the result.
+          The session returns <code>witnessAssignments</code> for existential queries
+          (see <a href="../wiki/concepts/holes.html">witness queries</a>).
         </p>
 
         <h2>4) Caching and reproducibility</h2>
