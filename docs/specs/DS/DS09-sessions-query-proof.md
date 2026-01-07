@@ -76,6 +76,9 @@ Loading responsibilities:
 - reject unknown vocabulary symbols,
 - produce typed semantic IR with origins,
 - register doc digest for caching.
+- evaluate any `Check` statements (see DS-008/DS-005);
+  - if a check is `DISPROVED`, return `E_CHECK_DISPROVED`,
+  - if a check is `UNKNOWN`, return `E_CHECK_UNKNOWN`.
 
 ### Learn (session-only)
 ```
@@ -85,6 +88,7 @@ Learn responsibilities:
 - parse + typecheck like file loading,
 - add statements to `deltaStatements`,
 - invalidate/update relevant caches incrementally.
+- evaluate any `Check` statements in the learned input with the same policy as loading.
 
 ### Query
 ```

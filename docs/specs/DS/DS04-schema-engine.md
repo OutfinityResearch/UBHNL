@@ -37,18 +37,36 @@ At fixed point, the model satisfies all schemas (relative to the current finite 
 - An expanded UBH theory sufficient for current proof/query
 
 ## Detecting Violations
-Given a model `M`, a universal schema `forall x in D: Body(x)` is violated iff:
-- there exists some `d ∈ D` such that `Body(d)` evaluates to `0` under `M`.
+Given a model `M` and an evaluation hook, a universal schema `forall x in D: Body(x)` is violated iff:
+- there exists some `d ∈ D` such that `Body(d)` evaluates to `0` under `EvalHook`.
 
 Practically:
 - `Body(d)` is compiled to a UBH wire id `w`.
-- A violation is detected when `M[w] = 0`.
+- A violation is detected when `EvalHook.evalWire(w) = 0`.
 
 Model requirement:
-- The solver must provide a total assignment for all wires that appear in instantiated bodies, so violation checks are deterministic.
+- The solver may return a **partial** assignment for the current instantiated theory.
+- For schemas, the backend must also provide a deterministic **evaluation hook** that can evaluate
+  compiled expressions on demand (see below).
+
+### Evaluation Hook (Required)
+Schema checking relies on a backend-provided evaluation hook:
+```
+EvalHook = {
+  evalWire(wireId) -> 0|1|"unknown"
+  evalExpr(expr) -> 0|1|"unknown"
+}
+```
+
+Rules:
+- `evalWire/expr` must be deterministic for the same solver state.
+- The hook may extend internal state to evaluate new wires/expressions, but must not mutate
+  the logical theory (no new assertions).
+- If the hook returns `"unknown"`, the schema engine must treat the instance as **potentially violating**
+  and instantiate it (conservative expansion).
 
 For implication rules `Premise -> Conclusion`:
-- evaluate `Premise(d)` and `Conclusion(d)` under `M`;
+- evaluate `Premise(d)` and `Conclusion(d)` via the evaluation hook;
 - violation when `Premise(d)=1` and `Conclusion(d)=0`.
 
 ## Instantiation Policy

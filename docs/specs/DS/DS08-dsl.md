@@ -51,6 +51,7 @@ Vocab  Domain  Const  Pred  Func
 SubType  Alias
 Proof  Given  Assume  Apply  Derive  Observed  Hypothesis  Verify  Constraint  Contradiction  Query  Found  Therefore
 Note
+Assert  Check
 ```
 
 ## 1.3 Number Literals (for probabilistic weights)
@@ -540,6 +541,24 @@ Rules:
 - Each section contains one or more `expr` entries or `Note "..."`.
 - `Note` is intended for narrative; machine checking should rely on explicit expressions and named rules.
 
+## 3.9 Assert / Check Statements
+
+Explicit assertion and obligation forms:
+```sys2
+Assert { Implies $a $b }
+Check { Implies $a $b }
+@T1 Check { Implies { And $g1 $g2 } $c }
+```
+
+Semantics:
+- `Assert expr` is equivalent to an anonymous assertion `expr` (adds a constraint).
+- `Check expr` is an **obligation**; it is **not** added as a constraint.
+  The session must attempt to prove it at load/learn time (DS-009).
+
+Legacy behavior:
+- A top-level `expr` or `@name expr` is treated as an implicit `Assert` unless it appears inside
+  a `Definition` or `Proof` block.
+
 ---
 
 # PART 4: Complete Grammar (EBNF)
@@ -551,6 +570,8 @@ statement    := declaration
               | typing
               | namedExpr
               | anonExpr
+              | assertStmt
+              | checkStmt
               | vocabBlock
               | aliasDecl
               | subtypeDecl
@@ -610,6 +631,9 @@ proofSection := ("Given"|"Assume"|"Apply"|"Derive"|"Observed"|"Hypothesis"|
 
 proofStmt    := expr
               | "Note" STRING ;
+
+assertStmt   := "Assert" expr ;
+checkStmt    := "Check" expr ;
 
 quantifier   := "ForAll" | "Exists" ;
 
@@ -908,6 +932,8 @@ IsA c0 Cell
 | `Weight { literal } w` | Probabilistic weight annotation |
 | `@q ProbQuery ... end` | Probabilistic query block |
 | `@p Proof ... end` | Proof block |
+| `Assert expr` | Explicit assertion (constraint) |
+| `Check expr` | Explicit obligation (prove at load/learn) |
 
 ## Comparison with CNL
 

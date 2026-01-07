@@ -737,6 +737,13 @@ Define Ancestor(Person x, Person y) as:
 Named blocks are stored as **KB names** so they can be referenced in proofs and explanations.
 Use unlabeled forms when you do not want a persistent name.
 
+Semantics:
+- `Rule` and `Axiom` are **assertions** (constraints).
+- `Theorem` is a **check** (obligation) and is not asserted; it is proved at load/learn time (DS-009).
+Translation note:
+- Rules/Axioms are emitted as named expressions plus `Assert Name`.
+- Theorems are emitted as named expressions plus `Check Name`.
+
 ## 8.1 Named Rules
 
 ```cnl
@@ -760,6 +767,7 @@ Rule TransitiveTrust:
     end
     return $inner1
 end
+Assert TransitiveTrust
 ```
 
 ## 8.2 Theorems (with Given/Conclude)
@@ -772,6 +780,11 @@ Theorem SocratesIsMortal:
     Conclude:
         Socrates is Mortal.
 ```
+
+Semantics:
+- Translate `Given` statements into a conjunction `G`.
+- Translate `Conclude` statements into a conjunction `C`.
+- Emit a `Check` obligation for `Implies(G, C)`.
 
 ## 8.3 Axioms
 
@@ -891,7 +904,15 @@ statement    := declaration "."
               | simpleRule "."
               | conditional "."
               | query "?"
-              | proofBlock ;
+              | proofBlock
+              | namedBlock ;
+
+namedBlock   := ruleBlock | axiomBlock | theoremBlock | definitionBlock ;
+ruleBlock    := "Rule" IDENT ":" INDENT statement+ DEDENT ;
+axiomBlock   := "Axiom" IDENT ":" INDENT statement+ DEDENT ;
+theoremBlock := "Theorem" IDENT ":" INDENT theoremSections DEDENT ;
+theoremSections := "Given:" INDENT statement+ DEDENT "Conclude:" INDENT statement+ DEDENT ;
+definitionBlock := "Definition" IDENT "(" paramList ")" ":" INDENT statement+ DEDENT ;
 
 // Declarations
 declaration  := "Let" IDENT "be" "a" TYPE
@@ -913,6 +934,7 @@ quantRule    := quantHead ":" INDENT (statement)+ DEDENT ;
 quantHead    := ("For" ("any"|"all"|"every"|"each") | "Each" | "Every")
                 binder ("," binder)* ;
 binder       := TYPE (VAR | IDENT) ("," (VAR | IDENT))* ;
+paramList    := TYPE (VAR | IDENT) ("," TYPE (VAR | IDENT))* ;
 
 // Facts
 fact         := subject predPhrase

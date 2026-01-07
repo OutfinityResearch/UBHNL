@@ -3,63 +3,83 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 03: UBH IR</title>
+    <title>Theory 03: The UBH Kernel</title>
     <link rel="stylesheet" href="../site.css" />
-      <script src="../site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 03 — UBH: IR, hash-consing, semantics</h1>
-      <p>What the minimal kernel looks like, and why structural compression is “by construction”.</p>
+      <h1>Theory 03 — UBH: The Architecture of Compression</h1>
+      <p>How we store millions of thoughts in a handful of nodes.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: tutorial chapter.</div>
+        <div class="draft">DRAFT: narrative tutorial on UBH IR and hash-consing.</div>
 
         <div class="nav">
-          <a href="02-boolean-gf2.html">Prev</a>
-          <a href="index.html">Theory</a>
-          <a href="../wiki/index.html">Wiki</a>
-          <a href="04-solving.html">Next</a>
+          <a href="02-boolean-gf2.html">Prev: Foundations</a>
+          <a href="index.html">Theory Index</a>
+          <a href="04-solving.html">Next: Solving</a>
         </div>
 
-        <h2>1) UBH as a DAG of gates</h2>
-        <p>
-          <a href="../wiki/concepts/ubh.html">UBH</a> represents expressions as a DAG of nodes
-          (<a href="../wiki/concepts/wire-nodeid.html">wire/nodeId</a>) with XOR/AND gates and constants.
-        </p>
+        <section>
+          <h2>The Use Case: The LEGO Castle</h2>
+          <p>
+            Imagine you are building a massive LEGO castle with 10,000 blue bricks. If you had to describe every single brick's position and color individually, your manual would be thousands of pages long. But if you realize that every brick is identical, you can just say: "Here is a blue 2x4 brick. Now, put it in these 10,000 places."
+          </p>
+          <p>
+            In UBHNL, logic works the same way. If a rule like "Patients have Fever" appears 1,000 times in different contexts, we only store it <strong>once</strong>.
+          </p>
+        </section>
 
-        <h2>2) Hash-consing = structural compression</h2>
-        <ul>
-          <li>Each node is created once and then reused (<a href="../wiki/concepts/hash-consing.html">hash-consing</a>).</li>
-          <li>XOR/AND commutativity is canonicalized (input ordering) before hashing.</li>
-          <li><a href="../wiki/concepts/simplification.html">Local simplifications</a> run before hashing to increase deduplication.</li>
-        </ul>
+        <section>
+          <h2>Hash-Consing: Logical Deduplication</h2>
+          <p>
+            Our kernel, <strong>UBH</strong> (Universal Boolean Hypergraph), uses a technique called <strong>Hash-Consing</strong>. Whenever a new logical gate (XOR or AND) is created, the system first checks a global "dictionary" to see if that exact gate already exists.
+          </p>
+          <p>
+            If you try to create <code>AND(Alice, Bob)</code> twice, the system will give you back the <em>exact same ID</em> both times. This "Structural Compression" happens automatically and ensures that our memory footprint stays as small as possible.
+          </p>
+        </section>
 
-        <h2>3) Semantics: evaluation under a model</h2>
-        <p>
-          Given a <a href="../wiki/concepts/model-witness.html">model</a> (assignments for variables), each wire is evaluated recursively.
-          The trusted core can validate a <code>SAT</code> claim by deterministic evaluation.
-        </p>
+        <section>
+          <h2>Wires and Nodes: The Nervous System</h2>
+          <p>
+            In UBH, we talk about <strong>Wires</strong> (or Node IDs). A wire represents a Boolean value. It could be:
+            <ul>
+              <li>A <strong>Constant</strong> (Always 0 or Always 1).</li>
+              <li>A <strong>Variable</strong> (A named input, like "Is it raining?").</li>
+              <li>A <strong>Gate</strong> (The result of an XOR or AND operation).</li>
+            </ul>
+            This graph of wires is immutable. Once a wire is created, its "meaning" (how it was computed) never changes.
+          </p>
+        </section>
 
-        <h2>4) Constraints are separate from structure</h2>
-        <p>
-          UBH IR describes “how a wire is computed”.
-          <a href="../wiki/concepts/constraints.html">Constraints</a> describe “what must be true”.
-          This separation keeps the kernel small and makes composition predictable.
-        </p>
+        <section>
+          <h2>Separating "How" from "Must"</h2>
+          <p>
+            There is a crucial distinction in UBHNL:
+            <ol>
+              <li><strong>The DAG:</strong> Defines <em>how</em> values are computed (The logic circuit).</li>
+              <li><strong>Assertions:</strong> Define <em>what</em> must be true (The constraints).</li>
+            </ol>
+            You can build a huge, complex circuit of logic, and then separately say: "I assert that the output wire of this circuit must be 1." This separation makes the system incredibly flexible and easy to debug.
+          </p>
+        </section>
 
-        <h2>Relevant specs</h2>
-        <ul>
-          <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS01-ir-hashcons.md">DS-001</a></li>
-        </ul>
+        <section>
+          <h2>What's missing and what's next</h2>
+          <p>
+            <strong>Current State:</strong> Our IR is solid and provides massive compression for repetitive logic.
+          </p>
+          <p>
+            <strong>The Challenge:</strong> We are refining our <strong>Local Simplifiers</strong>. Sometimes, two different-looking formulas mean the same thing (e.g., <code>A AND (A OR B)</code> is just <code>A</code>). We want our kernel to recognize these identities automatically before they even hit the solver.
+          </p>
+        </section>
 
-        <h2>External references</h2>
-        <ul>
-          <li><a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph" target="_blank" rel="noreferrer">Directed acyclic graph (Wikipedia)</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Structural_sharing" target="_blank" rel="noreferrer">Structural sharing (Wikipedia)</a></li>
-        </ul>
+        <div class="footer-links">
+          <p>Technical Spec: <a href="../mdview.html?file=specs/DS/DS01-ir-hashcons.md">DS-001: IR and Hash-Consing</a>.</p>
+        </div>
       </div>
     </main>
   </body>

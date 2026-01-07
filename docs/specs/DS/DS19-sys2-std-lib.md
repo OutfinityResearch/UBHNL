@@ -50,6 +50,7 @@ Sys2 DSL keywords are **case-sensitive**.
 - Vocabulary: `Vocab`, `Domain`, `Const`, `Pred`, `Func`
 - Schema relations: `SubType`, `Alias`
 - Proof: `Proof`, `Given`, `Assume`, `Apply`, `Derive`, `Observed`, `Hypothesis`, `Verify`, `Constraint`, `Contradiction`, `Query`, `Found`, `Therefore`, `Note`
+- Assertions/Checks: `Assert`, `Check`
 
 ### Special tokens (not identifiers)
 - `@` declaration target (start of statement only; at most one per line)

@@ -30,6 +30,7 @@ Make UBHNL errors and diagnostics:
 | `LoweringError` | Cannot lower fragment/operator to UBH |
 | `BackendError` | Backend failed to execute |
 | `CertificateError` | Missing/invalid/unsupported certificate |
+| `CheckError` | Theorem/check obligation failed or was unknown |
 | `InternalError` | Bug; invariant violation |
 
 ### Blame (Who Must Fix It)
@@ -158,6 +159,13 @@ interface ErrorDetails {
 | `E_CERT_UNSUPPORTED_FORMAT` | No checker for format | Alethe without checker |
 | `E_CERT_DIGEST_MISMATCH` | Certificate for different problem | Wrong problemDigest |
 
+### Check Errors
+
+| Code | Condition | Example |
+|------|-----------|---------|
+| `E_CHECK_DISPROVED` | A `Check` obligation is false | Theorem does not follow |
+| `E_CHECK_UNKNOWN` | A `Check` obligation could not be proved | Backend returned `UNKNOWN` |
+
 ## Diagnostics for UNKNOWN
 
 When returning `UNKNOWN`, include structured diagnostics:
@@ -170,7 +178,8 @@ interface UnknownDiagnostic {
     | "CERT_MISSING" 
     | "UNSUPPORTED_ROUTE"
     | "APPROX_NOT_ALLOWED"
-    | "SCHEMA_LIMIT";
+    | "SCHEMA_LIMIT"
+    | "SCHEMA_EVAL_UNSUPPORTED";
   planSummary?: string;
   backendAttempts?: BackendAttempt[];
 }

@@ -3,69 +3,79 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 07: Fragments &amp; orchestrator</title>
+    <title>Theory 07: The Orchestra Conductor</title>
     <link rel="stylesheet" href="../site.css" />
-      <script src="../site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 07 — Fragments, backends, orchestrator</h1>
-      <p>The universal module: how you choose a method and keep results checkable.</p>
+      <h1>Theory 07 — The Orchestrator: Master of Fragments</h1>
+      <p>Why universality is a team effort, not a solo performance.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: tutorial chapter.</div>
+        <div class="draft">DRAFT: narrative tutorial on fragment detection and orchestration.</div>
 
         <div class="nav">
-          <a href="06-sessions.html">Prev</a>
-          <a href="index.html">Theory</a>
-          <a href="../wiki/index.html">Wiki</a>
-          <a href="08-examples.html">Next</a>
+          <a href="06-sessions.html">Prev: Sessions</a>
+          <a href="index.html">Theory Index</a>
+          <a href="08-examples.html">Next: Examples</a>
         </div>
 
-        <h2>1) Fragment + GoalKind = a normalized problem</h2>
-        <p>
-          The orchestrator receives a <a href="../wiki/concepts/fragment.html">Fragment</a> (which constraint class is involved) and a
-          <a href="../wiki/concepts/goalkind.html">GoalKind</a> (what you want), then chooses tactics/backends.
-        </p>
+        <section>
+          <h2>The Use Case: The Logistics Manager</h2>
+          <p>
+            Marco is a logistics manager for a global shipping company. His day is a mix of different problems:
+            <ul>
+              <li><strong>Logical Rules:</strong> "If a truck is refrigerated, it can carry medicine."</li>
+              <li><strong>Optimization:</strong> "Find the cheapest route that meets all delivery times."</li>
+              <li><strong>Probability:</strong> "What is the chance of a delay due to the storm?"</li>
+            </ul>
+            No single solver is good at all of these. Marco needs a <strong>Conductor</strong> who can delegate each part of the problem to the right specialist.
+          </p>
+        </section>
 
-        <h2>1.1) What “fragment” means (and where the term comes from)</h2>
-        <p>
-          In logic, a <strong>fragment</strong> is a restricted subset of a language with fixed operators and signatures,
-          chosen so that a specific decision procedure applies (e.g., Horn, 2-SAT, QBF, SMT(BV)).
-          UBHNL borrows the term to name the <em>constraint class</em> that a query belongs to.
-        </p>
-        <p>
-          In practice, a fragment tag tells the planner what is allowed in the formula (operators, quantifiers, theories)
-          and which backends can solve it. It is not a file/module; it is a semantic classification of the normalized problem.
-        </p>
+        <section>
+          <h2>The Orchestrator: The Brain behind the Plan</h2>
+          <p>
+            In UBHNL, the <strong>Orchestrator</strong> is the brain that manages complexity. It doesn't just throw everything at a SAT solver. Instead, it follows a sophisticated process:
+            <ol>
+              <li><strong>Fragment Detection:</strong> It looks at the problem and says: "This part is linear math, this part is simple logic, and this part is a search for a witness."</li>
+              <li><strong>The Plan:</strong> It builds a <em>Plan DAG</em>—a step-by-step strategy for how to solve the puzzle.</li>
+              <li><strong>Delegation:</strong> It sends the fragments to specialized <strong>Backends</strong>.</li>
+            </ol>
+          </p>
+        </section>
 
-        <h2>2) Backends are pluggable</h2>
-        <p>
-          SAT/SMT/QBF/IC3/PDR/MIP/… are interchangeable “engines”. UBHNL does not take them on faith:
-          acceptance is filtered via <a href="../wiki/concepts/certificates.html">checkable certificates</a>.
-        </p>
+        <section>
+          <h2>Fragments: The Building Blocks of Complexity</h2>
+          <p>
+            We call these specialized parts <strong>Fragments</strong>. 
+            By breaking a "Universal" problem into smaller, well-defined fragments, we can use the most efficient tools for each job. A simple logic puzzle doesn't need a supercomputer, but a complex optimization might. The Orchestrator knows the difference.
+          </p>
+        </section>
 
-        <h2>3) Plan DAG and tactics</h2>
-        <ul>
-          <li><strong>Lower-to-UBH</strong>: for bitvectors and finite constraints.</li>
-          <li><strong>CEGAR</strong>: for schemas/abstractions (<a href="../wiki/concepts/cegar.html">CEGAR</a>).</li>
-          <li><strong>IC3/PDR</strong>: for TS safety (<a href="../wiki/concepts/ic3-pdr.html">IC3/PDR</a>).</li>
-          <li><strong>KC</strong>: compile once, query many (<a href="../wiki/concepts/kc.html">knowledge compilation</a>).</li>
-        </ul>
+        <section>
+          <h2>Type Lowering: The Universal Translation</h2>
+          <p>
+            How does the Orchestrator communicate with all these different specialists? Through <strong>Type Lowering</strong>. 
+            It takes high-level concepts (like "Trucks" and "Routes") and translates them into the minimal language of the UBH Kernel: <strong>Bits and Wires</strong>. This ensures that even though many specialists are involved, they all agree on the final "Ground Truth."
+          </p>
+        </section>
 
-        <h2>4) UNKNOWN is part of the contract</h2>
-        <p>
-          If you do not obtain a witness/certificate within budget, return <a href="../wiki/concepts/unknown.html">UNKNOWN</a>.
-          This is preferable to any unverifiable claim (<a href="../wiki/decisions/unknown-policy.html">decision</a>).
-        </p>
+        <section>
+          <h2>Current Limits & Future Plans</h2>
+          <p>
+            <strong>What we have:</strong> A flexible orchestrator that can route problems to SAT solvers and check their results.
+          </p>
+          <p>
+            <strong>What we're building:</strong> <em>Smarter Planning.</em> We are teaching the Orchestrator to estimate the "Difficulty" of a problem before it starts. This will allow it to choose better strategies and give Marco faster results for his logistics routes.
+          </p>
+        </section>
 
-        <h2>Relevant specs</h2>
-        <ul>
-          <li><a href="../mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a></li>
-        </ul>
+        <div class="footer-links">
+          <p>Deep dive into planning: <a href="../mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012: Orchestrator Planner</a>.</p>
+        </div>
       </div>
     </main>
   </body>

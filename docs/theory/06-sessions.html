@@ -3,55 +3,77 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 06: Sessions</title>
+    <title>Theory 06: The Scientist's Notebook</title>
     <link rel="stylesheet" href="../site.css" />
-      <script src="../site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 06 — Session: memory, origins, explain</h1>
-      <p>Why sessions exist, and how long-term files connect to short-term solving.</p>
+      <h1>Theory 06 — Sessions: The Ephemeral Lab</h1>
+      <p>How we balance stable knowledge with rapid experimentation.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: tutorial chapter.</div>
+        <div class="draft">DRAFT: narrative tutorial on sessions and origins.</div>
 
         <div class="nav">
-          <a href="05-languages.html">Prev</a>
-          <a href="index.html">Theory</a>
-          <a href="../wiki/index.html">Wiki</a>
-          <a href="07-fragments-orchestrator.html">Next</a>
+          <a href="05-languages.html">Prev: Languages</a>
+          <a href="index.html">Theory Index</a>
+          <a href="07-fragments-orchestrator.html">Next: Orchestrator</a>
         </div>
 
-        <h2>1) Long-term vs short-term</h2>
-        <ul>
-          <li><strong>Theory files</strong>: on disk, reproducible, loaded deterministically.</li>
-          <li><strong>Session</strong>: an ephemeral workspace that can accept transient <code>learn</code> deltas and cache artifacts.</li>
-        </ul>
+        <section>
+          <h2>The Use Case: The Lab Notebook</h2>
+          <p>
+            Meet David, a research scientist. He has a <strong>Textbook</strong> of established biological facts (Theory files). But today, he's in the lab, and he wants to try something new: <em>"What if this specific protein is inhibited? How does the cell react?"</em>
+          </p>
+          <p>
+            David doesn't want to rewrite the textbook. He just wants a <strong>Lab Notebook</strong> (a Session) where he can add temporary notes, run a simulation, and then decide whether to keep the results or throw them away.
+          </p>
+        </section>
 
-        <h2>2) Origins: “where did this come from?”</h2>
-        <p>
-          For explainability and audit, each statement produces an <a href="../wiki/concepts/origin.html">Origin</a>.
-          Unsat cores are reported in terms of origins, not internal nodes or solver-specific ids.
-        </p>
+        <section>
+          <h2>The Ephemeral Workspace</h2>
+          <p>
+            In UBHNL, a <strong>Session</strong> is your personal, temporary workspace. 
+            <ul>
+              <li><strong>Theory Files</strong> are your "Ground Truth"—stable, reproducible, and stored on disk.</li>
+              <li><strong>Sessions</strong> are where you <em>learn</em> new, transient facts or ask "What-if" questions.</li>
+            </ul>
+            When the session ends, the temporary facts disappear, but the stable Theory remains untouched.
+          </p>
+        </section>
 
-        <h2>3) Witness queries</h2>
-        <p>
-          The session returns <code>witnessAssignments</code> for existential queries
-          (see <a href="../wiki/concepts/holes.html">witness queries</a>).
-        </p>
+        <section>
+          <h2>Origins: No Fact Left Behind</h2>
+          <p>
+            Every time David adds a note to his notebook, the system attaches an <strong>Origin</strong> to it. An origin is like a digital fingerprint that says exactly where a piece of logic came from (e.g., "File A, Line 42" or "Interactive Input #5").
+          </p>
+          <p>
+            Why does this matter? Because if the system finds a contradiction, it can tell David: <em>"Your experiment failed because the fact you just added in the notebook contradicts the textbook at Page 200."</em> This makes debugging complex rules a breeze.
+          </p>
+        </section>
 
-        <h2>4) Caching and reproducibility</h2>
-        <ul>
-          <li>File digests are used as cache keys.</li>
-          <li>Reproducibility: the same files + deltas + seeds ⇒ the same plan and result (within backend determinism limits).</li>
-        </ul>
+        <section>
+          <h2>Caching: Standing on the Shoulders of Giants</h2>
+          <p>
+            Reasoning is hard work for a computer. To keep things fast, UBHNL uses <strong>Intelligent Caching</strong>. If David asks the same question twice, or if he only changes one tiny variable, the system recognizes that the rest of the "Textbook" hasn't changed. It reuses its previous calculations, giving David results in milliseconds instead of minutes.
+          </p>
+        </section>
 
-        <h2>Relevant specs</h2>
-        <ul>
-          <li><a href="../mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a></li>
-        </ul>
+        <section>
+          <h2>What's next</h2>
+          <p>
+            <strong>What we have:</strong> A robust session system that tracks origins and ensures reproducibility.
+          </p>
+          <p>
+            <strong>What we're building:</strong> <em>Collaboration Features.</em> We want to make it easy for David to "Export" his successful lab notes and merge them back into the main Theory files, complete with all their proofs and origins intact.
+          </p>
+        </section>
+
+        <div class="footer-links">
+          <p>Technical Details: <a href="../mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009: Sessions and Proofs</a>.</p>
+        </div>
       </div>
     </main>
   </body>

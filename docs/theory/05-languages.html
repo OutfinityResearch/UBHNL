@@ -3,90 +3,93 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 05: Lexicon/CNL/DSL</title>
+    <title>Theory 05: The Human-Machine Bridge</title>
     <link rel="stylesheet" href="../site.css" />
-      <script src="../site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 05 — Lexicon, CNL, DSL</h1>
-      <p>Why input must be deterministic and typed, and how we achieve that.</p>
+      <h1>Theory 05 — The Human-Machine Bridge</h1>
+      <p>How we speak to machines in a language both can understand.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: tutorial chapter.</div>
+        <div class="draft">DRAFT: narrative tutorial on CNL and DSL.</div>
 
         <div class="nav">
-          <a href="04-solving.html">Prev</a>
-          <a href="index.html">Theory</a>
-          <a href="../wiki/index.html">Wiki</a>
-          <a href="06-sessions.html">Next</a>
+          <a href="04-solving.html">Prev: Solving</a>
+          <a href="index.html">Theory Index</a>
+          <a href="06-sessions.html">Next: Sessions</a>
         </div>
 
-        <h2>1) Natural CNL — English without ambiguity</h2>
-        <p>
-          <a href="../wiki/concepts/cnl.html">CNL</a> looks like natural English but parses deterministically.
-          <strong>No parentheses needed</strong> for most statements:
-        </p>
-        <pre><code># Facts (natural SVO)
-Alice trusts Bob.
-p1 has Fever.
-Socrates is Mortal.
+        <section>
+          <h2>The Use Case: The Compliance Officer</h2>
+          <p>
+            Sarah is a compliance officer at a large bank. She needs to ensure that thousands of transactions follow the law: 
+            <em>"If a transaction is over $10,000 and the sender is from a high-risk region, then it must be flagged for review."</em>
+          </p>
+          <p>
+            Sarah isn't a coder, but she is a logic expert. UBHNL gives her a <strong>Controlled Natural Language (CNL)</strong> that looks like English but acts like code.
+          </p>
+        </section>
 
-# Rules (natural If-then)
-For any Patient p:
-    If p has Flu then p has Fever.
-    If p has Cold then p coughs.</code></pre>
+        <section>
+          <h2>CNL: English without the "Oops"</h2>
+          <p>
+            Human language is messy. "I saw the man with the telescope" (Did I use the telescope, or did he have it?). 
+            UBHNL uses <strong>Controlled Natural Language</strong> to remove this ambiguity. It uses strict patterns like:
+            <ul>
+              <li><code>X has Y</code> (e.g., <em>Transaction has HighRiskSender.</em>)</li>
+              <li><code>X is Y</code> (e.g., <em>Alice is a Manager.</em>)</li>
+              <li><code>If P then Q</code> (e.g., <em>If amount > 10000 then Flag(transaction).</em>)</li>
+            </ul>
+            By following these patterns, Sarah can write rules that the computer understands <em>exactly</em> as she intended.
+          </p>
+        </section>
 
-        <h2>2) Supported natural patterns</h2>
-        <table>
-          <tr><th>CNL Pattern</th><th>Example</th><th>DSL Output</th></tr>
-          <tr><td><code>X has Y</code></td><td>p1 has Fever</td><td>HasFever p1</td></tr>
-          <tr><td><code>X is Y</code></td><td>Socrates is Mortal</td><td>Mortal Socrates</td></tr>
-          <tr><td><code>X verb Y</code></td><td>Alice trusts Bob</td><td>Trusts Alice Bob</td></tr>
-          <tr><td><code>X is Y of Z</code></td><td>p1 is Parent of p2</td><td>Parent p1 p2</td></tr>
-        </table>
+        <section>
+          <h2>Two Skins, One Soul: CNL vs. DSL</h2>
+          <p>
+            While Sarah loves the CNL, developers might prefer something more structured. UBHNL provides an <strong>isomorphism</strong>: 
+            Every sentence in Sarah's English-like CNL has a 1-to-1 equivalent in our <strong>DSL (sys2)</strong>.
+          </p>
+          <div class="side-by-side">
+            <div class="cnl-side">
+              <strong>CNL (Human)</strong><br/>
+              <code>Every Patient with Flu has Fever.</code>
+            </div>
+            <div class="arrow">↔</div>
+            <div class="dsl-side">
+              <strong>DSL (Machine)</strong><br/>
+              <code>@rule1 ForAll Patient graph p<br/>&nbsp;&nbsp;Implies { HasFlu $p } { HasFever $p }<br/>end</code>
+            </div>
+          </div>
+          <p>
+            You can swap between them at any time. The system doesn't care which one you use—the underlying logic remains identical.
+          </p>
+        </section>
 
-        <h2>3) DSL — the machine-readable format</h2>
-        <ul>
-          <li><a href="../wiki/concepts/dsl.html">DSL</a> is the storage format for theory files.</li>
-          <li>Uses <code>@name</code> for declarations, <code>$name</code> for references.</li>
-          <li>Example: <code>@rule1 ForAll Person graph x ... end</code></li>
-        </ul>
+        <section>
+          <h2>The Lexicon: The Common Dictionary</h2>
+          <p>
+            How does the system know what a "Patient" or "Flu" is? Through the <strong>Lexicon</strong>. 
+            Before you start writing rules, you define your "vocabulary". This ensures that the system is <strong>Strictly Typed</strong>. If Sarah mentions a "Symptom" that isn't in her lexicon, the system will politely stop her and ask for a definition.
+          </p>
+        </section>
 
-        <h2>4) Theory files are authoritative</h2>
-        <p>
-          Domain knowledge is expressed in <code>.cnl</code> or <code>.sys2</code> files:
-        </p>
-        <pre><code># theories/domains/medical.cnl
-Patient is a Domain.
-For any Patient p:
-    If p has Flu then p has Fever.</code></pre>
-        <p>
-          See <code>/theories/</code> for reusable domain theories.
-        </p>
+        <section>
+          <h2>Where we are going</h2>
+          <p>
+            <strong>What we have:</strong> A deterministic translator that handles SVO (Subject-Verb-Object) patterns and complex quantifiers.
+          </p>
+          <p>
+            <strong>What we need:</strong> We are working on <strong>Grammar Extensions</strong>. We want to support more natural ways of expressing time ("After a transaction is flagged...") and uncertainty ("It is 80% likely that...").
+          </p>
+        </section>
 
-        <h2>5) Python-style indentation</h2>
-        <p>
-          Blocks are defined by indentation (4 spaces), not braces:
-        </p>
-        <pre><code>For any Person x:
-    x has Fever.      # Inside block
-    x is sick.        # Also inside
-x is healthy.         # Outside (dedented)</code></pre>
-
-        <h2>Relevant specs</h2>
-        <ul>
-          <li><a href="../mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS08-dsl.md">DS-008</a></li>
-          <li><a href="../mdview.html?file=specs/tests/cnl-cases.md">CNL cases</a></li>
-          <li><a href="../mdview.html?file=specs/tests/dsl-cases.md">DSL cases</a></li>
-        </ul>
-
-        <h2>External references</h2>
-        <ul>
-          <li><a href="https://en.wikipedia.org/wiki/Controlled_natural_language" target="_blank" rel="noreferrer">Controlled natural language (Wikipedia)</a></li>
-        </ul>
+        <div class="footer-links">
+          <p>Explore the grammar: <a href="../mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005: CNL and Lexicon</a>.</p>
+        </div>
       </div>
     </main>
   </body>

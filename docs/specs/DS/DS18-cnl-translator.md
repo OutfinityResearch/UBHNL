@@ -327,7 +327,7 @@ end
 
 | CNL | DSL |
 |-----|-----|
-| `Rule Name: body` | `@Name:Name ...` |
+| `Rule Name: body` | `@Name:Name <expr>` then `Assert Name` |
 
 **Example**:
 ```cnl
@@ -351,7 +351,25 @@ Rule TransitiveTrust:
     end
     return $inner1
 end
+Assert TransitiveTrust
 ```
+
+## Rule T14B: Axiom Block
+
+| CNL | DSL |
+|-----|-----|
+| `Axiom Name: body` | `@Name:Name <expr>` then `Assert Name` |
+
+## Rule T14C: Theorem Block
+
+| CNL | DSL |
+|-----|-----|
+| `Theorem Name: Given: ... Conclude: ...` | `@Name:Name <expr>` then `Check Name` |
+
+Where:
+- `Given` statements are combined into `G = And { ... }` (or a single expr).
+- `Conclude` statements are combined into `C = And { ... }`.
+- `<expr>` is `Implies { G } { C }`.
 
 ## Rule T15: Definition Block
 
@@ -525,6 +543,7 @@ end
     @imp1 Implies $c1 $c2
     return $imp1
 end
+Assert FluCausesFever
 
 @FluCausesCough:FluCausesCough ForAll Patient graph p
     @c3 HasFlu $p
@@ -532,6 +551,7 @@ end
     @imp2 Implies $c3 $c4
     return $imp2
 end
+Assert FluCausesCough
 
 # Observations
 @f1 HasFever p1
@@ -585,6 +605,7 @@ end
     end
     return $inner1
 end
+Assert TransitiveTrust
 ```
 
 ## Example 3: Biology Definition

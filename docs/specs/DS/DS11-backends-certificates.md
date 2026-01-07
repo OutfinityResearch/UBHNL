@@ -32,6 +32,7 @@ Each backend declares:
 - `supportedGoalKinds: GoalKind[]`
 - `certificateTypes: CertificateType[]` it can emit
 - `trustLevel: "checkable" | "heuristic"` (heuristic results must be confirmed)
+- `supportsEvalHook: boolean` (required for schema engine use)
 
 ### Solve API (Pseudo)
 ```
@@ -49,6 +50,7 @@ BackendPlugin {
   backendId: string
   capabilities: BackendCapabilities
   solve(problem: Problem, budget: Budget, io?: BackendIO): BackendResult
+  evalHook?: EvalHook             // required when schema engine is used
   importLearned?(learned: LearnedSet): void
   exportLearned?(request: LearnedRequest): LearnedSet
   shutdown?(): void
@@ -104,6 +106,19 @@ The orchestrator normalizes all backend outputs into:
   logs?: string[]
 }
 ```
+
+### Evaluation Hook (Schema Engine Support)
+When the schema engine is active (DS-004), backends must provide an evaluation hook:
+```
+EvalHook = {
+  evalWire(wireId: number): 0|1|"unknown"
+  evalExpr(expr: any): 0|1|"unknown"  // expr is a lowered or backend-native form
+}
+```
+
+The hook must be deterministic for a fixed solver state. `"unknown"` indicates that the backend
+cannot evaluate the expression without extending the theory; the schema engine must treat this
+case as a potential violation and instantiate conservatively.
 
 ## Certificates (Types and Checking)
 A certificate is data that allows an independent checker to validate the backend claim.

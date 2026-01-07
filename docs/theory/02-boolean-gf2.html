@@ -3,73 +3,82 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 02: Bit, GF(2), ANF</title>
+    <title>Theory 02: The Mathematical Soul</title>
     <link rel="stylesheet" href="../site.css" />
-      <script src="../site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 02 — Bit, GF(2), ANF</h1>
-      <p>Why XOR/AND are sufficient, and how GF(2) polynomials show up in practice.</p>
+      <h1>Theory 02 — The Mathematical Soul</h1>
+      <p>How the simple beauty of GF(2) powers universal reasoning.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: tutorial chapter.</div>
+        <div class="draft">DRAFT: narrative tutorial on Boolean foundations.</div>
 
         <div class="nav">
-          <a href="01-orientation.html">Prev</a>
-          <a href="index.html">Theory</a>
-          <a href="../wiki/index.html">Wiki</a>
-          <a href="03-ubh-ir.html">Next</a>
+          <a href="01-orientation.html">Prev: Orientation</a>
+          <a href="index.html">Theory Index</a>
+          <a href="03-ubh-ir.html">Next: The UBH Kernel</a>
         </div>
 
-        <h2>1) Everything starts with a bit</h2>
-        <p>
-          In UBHNL, everything ultimately lowers to a <a href="../wiki/concepts/bit.html">bit</a>: <code>{0,1}</code>.
-          “Truth” is just a value in <code>{0,1}</code> under a chosen interpretation (a model).
-        </p>
+        <section>
+          <h2>The Use Case: The Hallway Light</h2>
+          <p>
+            Think of a hallway with two switches, one at each end. If you flip <em>either</em> switch, the light's state changes. This is the classic <strong>XOR</strong> (Exclusive OR) logic. 
+          </p>
+          <p>
+            In traditional logic systems, representing this "flip-to-change" behavior can get surprisingly messy. In UBHNL, we treat XOR as a first-class citizen because it is the most natural way to describe how changes propagate through a system.
+          </p>
+        </section>
 
-        <h2>2) GF(2): the algebraic interpretation</h2>
-        <p>
-          Over <a href="../wiki/concepts/gf2.html">GF(2)</a> (the field with two elements):
-          XOR is addition modulo 2, and AND is multiplication.
-        </p>
-        <pre><code>a ⊕ b  ↔  a + b (mod 2)
-a ∧ b  ↔  a · b</code></pre>
+        <section>
+          <h2>Why GF(2)? The Minimal Language of Truth</h2>
+          <p>
+            At its heart, everything in UBHNL is a <strong>Bit</strong>: 0 or 1. But how do we combine these bits? 
+            Instead of just using traditional "AND", "OR", and "NOT", we use the mathematics of <strong>GF(2)</strong> (Galois Field of 2 elements). 
+          </p>
+          <p>
+            In this world:
+            <ul>
+              <li><strong>XOR</strong> is Addition (modulo 2).</li>
+              <li><strong>AND</strong> is Multiplication.</li>
+            </ul>
+            This might seem like a small detail, but it's a superpower. It allows us to treat logical rules as <em>Algebraic Polynomials</em>.
+          </p>
+        </section>
 
-        <h2>3) Why {XOR, AND, 1} is a complete basis</h2>
-        <p>
-          Negation is “free”: <code>¬x = 1 ⊕ x</code>. OR can also be derived:
-        </p>
-        <pre><code>x ∨ y = x ⊕ y ⊕ (x ∧ y)</code></pre>
-        <p>
-          Engineering consequence: the kernel can remain tiny (<a href="../wiki/concepts/ubh.html">UBH</a>), while “rich operators”
-          (OR, implication, arithmetic, comparisons) can live in libraries as macros compiled down to XOR/AND/CONST.
-        </p>
+        <section>
+          <h2>The ANF: Flattening Complexity</h2>
+          <p>
+            There is a beautiful theorem called <strong>Algebraic Normal Form (ANF)</strong>. It states that <em>any</em> logical function—no matter how complex—can be written as a unique polynomial using only XOR and AND.
+          </p>
+          <p>
+            This is the "Secret Sauce" of our kernel. By reducing everything to polynomials, we can use 300 years of mathematical breakthroughs (like Gaussian Elimination) to solve logic puzzles that would choke a traditional "brute-force" solver.
+          </p>
+        </section>
 
-        <h2>4) ANF: every Boolean function as a polynomial</h2>
-        <p>
-          <a href="../wiki/concepts/anf.html">ANF</a> says: every Boolean function has a unique representation as a GF(2) polynomial
-          (a multilinear polynomial under the Boolean identities). This is why UBH is naturally “polynomial-friendly”.
-        </p>
+        <section>
+          <h2>Native XOR: Why It Matters</h2>
+          <p>
+            Most modern SAT solvers try to turn everything into "OR" clauses (CNF). But "OR" is terrible at representing "XOR". 
+            UBHNL is a <strong>Hybrid</strong>. We have a dedicated engine for the linear math (XOR) and another for the constraints (AND). They talk to each other, sharing their discoveries in real-time.
+          </p>
+        </section>
 
-        <h2>5) Why XOR deserves native treatment</h2>
-        <ul>
-          <li>XOR constraints form a linear fragment that can be solved efficiently with <a href="../wiki/concepts/xor-linear.html">Gaussian elimination</a>.</li>
-          <li>Encoding XOR into pure CNF can be expensive; hence the <a href="../wiki/decisions/sat-xor-hybrid.html">SAT+native-XOR decision</a>.</li>
-        </ul>
+        <section>
+          <h2>Status & The Road Ahead</h2>
+          <p>
+            <strong>What works:</strong> Our kernel handles native XOR/AND with structural compression. It's fast, lean, and mathematically sound.
+          </p>
+          <p>
+            <strong>What we're building:</strong> We are currently expanding our "Bit-Blasting" library. We want to make it easier to talk about <em>Numbers</em> (integers, floats) by automatically translating them into these elegant GF(2) polynomials.
+          </p>
+        </section>
 
-        <h2>Relevant specs</h2>
-        <ul>
-          <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS02-solver-xor.md">DS-002</a></li>
-        </ul>
-
-        <h2>External references</h2>
-        <ul>
-          <li><a href="https://en.wikipedia.org/wiki/GF(2)" target="_blank" rel="noreferrer">GF(2) (Wikipedia)</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Algebraic_normal_form" target="_blank" rel="noreferrer">Algebraic normal form (Wikipedia)</a></li>
-        </ul>
+        <div class="footer-links">
+          <p>Deep dive into the math: <a href="../mdview.html?file=specs/DS/DS02-solver-xor.md">DS-002: Solver Interface</a>.</p>
+        </div>
       </div>
     </main>
   </body>

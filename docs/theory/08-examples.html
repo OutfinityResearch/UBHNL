@@ -3,121 +3,82 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 08: Examples</title>
+    <title>Theory 08: Stories of Logic</title>
     <link rel="stylesheet" href="../site.css" />
-      <script src="../site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 08 — End-to-end examples</h1>
-      <p>What "functional" means: learn/query/explain with witnesses and certificates.</p>
+      <h1>Theory 08 — Stories of Logic</h1>
+      <p>How UBHNL solves real-world puzzles through clear reasoning.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: tutorial chapter.</div>
+        <div class="draft">DRAFT: narrative examples of UBHNL in action.</div>
 
         <div class="nav">
-          <a href="07-fragments-orchestrator.html">Prev</a>
-          <a href="index.html">Theory</a>
+          <a href="07-fragments-orchestrator.html">Prev: Orchestrator</a>
+          <a href="index.html">Theory Index</a>
           <a href="../examples.html">Docs: Examples</a>
-          <a href="../wiki/index.html">Wiki</a>
         </div>
 
-        <h2>1) Medical Diagnosis (Abduction)</h2>
-        <p>Given symptoms, find possible diseases:</p>
-        <pre><code># theories/domains/medical.cnl rules are loaded
-Patient is a Domain.
-p1 is a Patient.
+        <section>
+          <h2>The Medical Detective</h2>
+          <p>
+            A patient walks into a clinic with a fever and a cough. The system doesn't just guess. It looks at its <strong>Medical Theory</strong>: <em>"Flu causes fever and cough. A common cold causes a cough but rarely a high fever."</em>
+          </p>
+          <p>
+            The system performs <strong>Abduction</strong>. It asks: "What disease, if present, would explain these observations?" 
+            <strong>The Result:</strong> The system suggests "Flu" as a likely witness, providing the logical chain that connects the disease to the symptoms.
+          </p>
+        </section>
 
-# Observations
-p1 has Fever.
-p1 coughs.
+        <section>
+          <h2>The Chain of Trust</h2>
+          <p>
+            In a digital social network, Alice trusts Bob, and Bob trusts Charlie. Does Alice trust Charlie? 
+            The system applies a <strong>Transitivity Rule</strong>: <em>"If X trusts Y, and Y trusts Z, then X trusts Z."</em>
+          </p>
+          <p>
+            This is <strong>Deduction</strong>. The system follows the links, building a bridge of trust from Alice to Charlie. It doesn't just say "Yes"—it shows the path it took through the network.
+          </p>
+        </section>
 
-# Query: What disease explains these symptoms?
-# -> Possible: Flu (causes both Fever and Cough)</code></pre>
+        <section>
+          <h2>The Ethical Switch</h2>
+          <p>
+            Imagine a safety system for a power plant. A switch cannot be both ON and OFF at the same time. This is a <strong>Consistency Constraint</strong>. 
+          </p>
+          <p>
+            If a faulty sensor reports that the switch is both ON and OFF, the system detects a <strong>Conflict</strong>. It returns <strong>UNSAT</strong> and points exactly to the sensor data and the safety rule that are clashing. It prevents the system from making a dangerous decision based on contradictory data.
+          </p>
+        </section>
 
-        <h2>2) Social Trust (Deduction)</h2>
-        <p>Transitive trust reasoning:</p>
-        <pre><code>Let User be a Domain.
-Let Alice, Bob, Charlie be Users.
+        <section>
+          <h2>The Ancestor's Legacy</h2>
+          <p>
+            In a genealogical database, we know who everyone's parents are. But how do we find an ancestor from five generations ago? 
+            We use a <strong>Recursive Rule</strong>: <em>"Your parent is your ancestor. Your parent's ancestor is also your ancestor."</em>
+          </p>
+          <p>
+            The system uses <strong>Fixed-Point Reasoning</strong> to climb the family tree, connecting long-lost relatives through a rock-solid chain of "Parent-of" facts.
+          </p>
+        </section>
 
-# Transitive trust rule
-For any User x, y, z:
-    If x trusts y and y trusts z then x trusts z.
+        <section>
+          <h2>Try It Yourself</h2>
+          <p>
+            These aren't just stories—they are <strong>Verified Test Suites</strong>. You can run them yourself to see the system in action:
+          </p>
+          <pre><code>node evals/runFastEval.mjs</code></pre>
+          <p>
+            This command runs 14 different scenarios, from physics to linguistics, proving that UBHNL's narrative approach works across every domain.
+          </p>
+        </section>
 
-# Facts
-Alice trusts Bob.
-Bob trusts Charlie.
-
-# Query: Does Alice trust Charlie?
-# -> Yes (by transitivity)</code></pre>
-
-        <h2>3) Classic Syllogism</h2>
-        <p>Socrates is mortal:</p>
-        <pre><code>Entity is a Domain.
-Let Socrates be a Entity.
-
-# Universal rule
-Each Entity x:
-    If x is Man then x is Mortal.
-
-# Fact
-Socrates is Man.
-
-# Query: Is Socrates Mortal?
-# -> Yes (by modus ponens)</code></pre>
-
-        <h2>4) SAT Conflict Detection</h2>
-        <p>Detecting contradictions:</p>
-        <pre><code>Switch is a Domain.
-switch1 is a Switch.
-
-# Contradictory facts
-switch1 is On.
-switch1 is Off.
-
-# Exclusion rule
-For every Switch s:
-    It is not the case that (s is On and s is Off).
-
-# Query: Is the system consistent?
-# -> No (UNSAT - contradiction detected)</code></pre>
-
-        <h2>5) Family Relations (Recursive)</h2>
-        <p>Ancestor transitivity:</p>
-        <pre><code>Let Person be a Domain.
-Let Alice, Bob, Charlie be Persons.
-
-# Facts
-Alice is Parent of Bob.
-Bob is Parent of Charlie.
-
-# Rules
-For any Person x, y:
-    If x is Parent of y then x is Ancestor of y.
-
-For any Person x, y, z:
-    If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
-
-# Query: Is Alice Ancestor of Charlie?
-# -> Yes</code></pre>
-
-        <h2>Test Suite</h2>
-        <p>
-          See <code>evals/fastEval/</code> for 14 test suites covering:
-          boolean logic, family relations, biology, SAT conflicts, syllogisms,
-          Peano arithmetic, medical diagnosis, weather, traffic lights,
-          physics, social networks, chemistry, legal rules, and linguistics.
-        </p>
-        <p>
-          Run: <code>node evals/runFastEval.mjs</code>
-        </p>
-
-        <h2>Next steps</h2>
-        <p>
-          Domain theories are in <code>/theories/domains/</code>.
-          Test-specific theories in <code>/evals/fastEval/theory/</code>.
-        </p>
+        <div class="footer-links">
+          <p>Explore more examples in the <a href="../examples.html">Examples Gallery</a>.</p>
+        </div>
       </div>
     </main>
   </body>

@@ -3,70 +3,80 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 04: Solving</title>
+    <title>Theory 04: The Act of Solving</title>
     <link rel="stylesheet" href="../site.css" />
-      <script src="../site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 04 — Solving: SAT + XOR, certificate, UNKNOWN</h1>
-      <p>How solve/prove works, and why certificates are part of the public contract.</p>
+      <h1>Theory 04 — Solving: The Quest for Evidence</h1>
+      <p>Why we never accept an answer without a proof.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: tutorial chapter.</div>
+        <div class="draft">DRAFT: narrative tutorial on solving and certificates.</div>
 
         <div class="nav">
-          <a href="03-ubh-ir.html">Prev</a>
-          <a href="index.html">Theory</a>
-          <a href="../wiki/index.html">Wiki</a>
-          <a href="05-languages.html">Next</a>
+          <a href="03-ubh-ir.html">Prev: UBH Kernel</a>
+          <a href="index.html">Theory Index</a>
+          <a href="05-languages.html">Next: Languages</a>
         </div>
 
-        <h2>1) solve()</h2>
-        <p>
-          <code>solve()</code> answers: “does there exist a model that satisfies the constraints?”.
-          The only statuses are <code>SAT</code>, <code>UNSAT</code>, and <code>UNKNOWN</code>.
-        </p>
-        <ul>
-          <li><strong>SAT</strong>: includes a checkable witness (<a href="../wiki/concepts/model-witness.html">model</a>).</li>
-          <li><strong>UNSAT</strong>: includes a checkable <a href="../wiki/concepts/certificates.html">certificate</a>.</li>
-          <li><strong>UNKNOWN</strong>: budget exceeded, missing certificate, or an approximation method that cannot satisfy an “exact” goal.</li>
-        </ul>
+        <section>
+          <h2>The Use Case: The Courtroom</h2>
+          <p>
+            Imagine a courtroom. A prosecutor stands up and says: "The defendant is guilty." The judge doesn't just say "Okay" and close the case. The judge demands <strong>Evidence</strong> and a <strong>Logical Argument</strong> that connects that evidence to the crime.
+          </p>
+          <p>
+            In UBHNL, our Solver is the Judge. When it claims that a set of rules is impossible (UNSAT), it must provide a <strong>Certificate</strong>—a step-by-step proof that anyone can verify to ensure no mistakes were made.
+          </p>
+        </section>
 
-        <h2>2) prove(phi)</h2>
-        <p>
-          <code>prove(phi)</code> reduces to <code>solve(T ∧ ¬phi)</code>.
-          If the result is <code>UNSAT</code> (with a certificate), then <code>phi</code> is PROVED.
-        </p>
+        <section>
+          <h2>The Three Answers: SAT, UNSAT, and UNKNOWN</h2>
+          <p>
+            Most software gives you "True" or "False". UBHNL is more honest. It has three possible responses:
+            <ul>
+              <li><strong>SAT (Satisfiable):</strong> "I found a way to make this work. Here is the <em>Witness</em> (a model) to prove it."</li>
+              <li><strong>UNSAT (Unsatisfiable):</strong> "This is mathematically impossible. Here is the <em>Certificate</em> (the proof) that shows the contradiction."</li>
+              <li><strong>UNKNOWN:</strong> "I don't know yet. Maybe the problem is too hard, or I ran out of time, or I'm using a method that isn't precise enough."</li>
+            </ul>
+          </p>
+        </section>
 
-        <h2>3) Why a SAT + XOR hybrid</h2>
-        <p>
-          AND gates are encoded into <a href="../wiki/concepts/cnf.html">CNF</a> using a linear-size <a href="../wiki/concepts/tseitin.html">Tseitin</a>-style transformation,
-          while XOR constraints form linear equations over <a href="../wiki/concepts/xor-linear.html">GF(2)</a>.
-          This motivates the <a href="../wiki/decisions/sat-xor-hybrid.html">SAT + native XOR decision</a>.
-        </p>
+        <section>
+          <h2>The Hybrid Engine: SAT + XOR</h2>
+          <p>
+            How does the "Judge" reach a verdict so quickly? By using two specialized specialists:
+            <ol>
+              <li><strong>The SAT Specialist:</strong> Great at handling "If-Then" rules and complex dependencies using a method called CDCL.</li>
+              <li><strong>The XOR Specialist:</strong> A math whiz who handles linear equations over bits (GF(2)) using Gaussian Elimination.</li>
+            </ol>
+            By letting these two specialists talk to each other, UBHNL can solve problems that would be hundreds of times larger if we only used one method.
+          </p>
+        </section>
 
-        <h2>4) Explain: unsat cores and origins</h2>
-        <ul>
-          <li>An <a href="../wiki/concepts/unsat-core.html">unsat core</a> (in terms of <a href="../wiki/concepts/origin.html">origins</a>) helps explain and debug failures.</li>
-          <li><code>UNSAT</code> is accepted only with a certificate; a core does not replace the certificate.</li>
-        </ul>
+        <section>
+          <h2>Explainability: Why did this happen?</h2>
+          <p>
+            If the system finds a contradiction, it can pinpoint exactly which rules caused the problem. This is called an <strong>Unsat Core</strong>. 
+            For our doctor, Elena, this means the system can say: "Your rules are contradictory because Rule A says 'Fever is required' but Rule B says 'Fever is impossible' for this specific patient."
+          </p>
+        </section>
 
-        <h2>Relevant specs</h2>
-        <ul>
-          <li><a href="../mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS02-solver-xor.md">DS-002</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a></li>
-        </ul>
+        <section>
+          <h2>Limits & Future: The Quest for Better Proofs</h2>
+          <p>
+            <strong>What we have:</strong> A system that returns certificates for its claims, ensuring that we never have to "blindly trust" the solver.
+          </p>
+          <p>
+            <strong>What we're building:</strong> <em>Human-Readable Proofs.</em> Currently, our certificates are in machine-readable formats like DRAT or LRAT. They are great for computers, but hard for humans. We are working on a <strong>Proof Translator</strong> that turns these mathematical traces back into Natural Language stories.
+          </p>
+        </section>
 
-        <h2>External references</h2>
-        <ul>
-          <li><a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem" target="_blank" rel="noreferrer">Boolean satisfiability problem (Wikipedia)</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Conjunctive_normal_form" target="_blank" rel="noreferrer">Conjunctive normal form (Wikipedia)</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Tseytin_transformation" target="_blank" rel="noreferrer">Tseytin transformation (Wikipedia)</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Gaussian_elimination" target="_blank" rel="noreferrer">Gaussian elimination (Wikipedia)</a></li>
-        </ul>
+        <div class="footer-links">
+          <p>Read about certificates: <a href="../mdview.html?file=specs/DS/DS14-certificate-formats-verification.md">DS-014: Certificate Formats</a>.</p>
+        </div>
       </div>
     </main>
   </body>

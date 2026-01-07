@@ -86,6 +86,10 @@ Artifacts exchanged:
 - new lemmas,
 - candidate invariants.
 
+Requirement:
+- Backends used in schema-based CEGAR must provide an evaluation hook (DS-011).
+- If no backend supports evaluation hooks for the fragment, return `UNKNOWN` with reason `SCHEMA_EVAL_UNSUPPORTED` (DS-016).
+
 ### Tactic: IC3/PDR for Safety
 Applicable for `Frag_TS` safety properties.
 Pipeline:
