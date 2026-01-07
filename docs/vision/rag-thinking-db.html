@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vision: RAG and Thinking Database</title>
+    <link rel="stylesheet" href="../site.css" />
+    <script src="../site-nav.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>RAG and the Thinking Database</h1>
+      <p>Beyond semantic retrieval: a database that can reason, explain, and detect contradictions.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="nav">
+          <a href="index.html">Vision Home</a>
+          <a href="regulated.html">Regulated Industry</a>
+          <a href="literature.html">Literary Analysis</a>
+          <a href="system2.html">System 2 + LLM</a>
+          <a href="rag-thinking-db.html">RAG + Thinking DB</a>
+          <a href="science.html">Scientific Review</a>
+          <a href="synthetic-data.html">Synthetic Data</a>
+          <a href="agents.html">Agents + Tools</a>
+          <a href="trustworthy-ai.html">Trustworthy AI</a>
+          <a href="integration.html">Integration Map</a>
+        </div>
+
+        <h2>RAG with reasoning, not just retrieval</h2>
+        <p>
+          Traditional RAG retrieves chunks by embedding similarity. UBHNL adds a formal layer: retrieved content is mapped
+          into CNL/DSL and validated by a reasoning engine. The output is not just “similar text”, but checked facts,
+          derived implications, and explicit contradictions.
+        </p>
+
+        <h2>Thinking Database (concept)</h2>
+        <ul>
+          <li><strong>Active memory</strong>: data is stored as statements with formal meaning.</li>
+          <li><strong>Reasoning queries</strong>: answers come from proofs, witnesses, and derived consequences.</li>
+          <li><strong>Provenance</strong>: every answer is linked to origins and certificates.</li>
+          <li><strong>Consistency management</strong>: contradictions are first-class outputs, not silent failures.</li>
+        </ul>
+
+        <h2>Reference workflow</h2>
+        <ol>
+          <li>Ingest documents and metadata.</li>
+          <li>Extract candidate facts/rules (LLM-assisted, then validated).</li>
+          <li>Store validated statements in CNL/DSL with strict vocabulary.</li>
+          <li>Build a hybrid index: semantic retrieval + formal theory store.</li>
+          <li>Answer queries by retrieving relevant sources, then reasoning over the formal layer.</li>
+        </ol>
+
+        <h2>Pipeline diagram</h2>
+        <svg viewBox="0 0 980 220" width="100%" height="auto" role="img" aria-label="RAG plus reasoning pipeline">
+          <rect x="20" y="30" width="140" height="56" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="90" y="58" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Ingest</text>
+          <text x="90" y="74" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="11.5" fill="#5a534b">docs + metadata</text>
+
+          <rect x="190" y="30" width="190" height="56" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="285" y="52" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Extract + validate</text>
+          <text x="285" y="70" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="11.5" fill="#5a534b">CNL/DSL gate</text>
+
+          <rect x="410" y="30" width="170" height="56" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="495" y="52" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Thinking DB</text>
+          <text x="495" y="70" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="11.5" fill="#5a534b">formal store</text>
+
+          <rect x="610" y="30" width="170" height="56" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="695" y="52" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Hybrid retrieval</text>
+          <text x="695" y="70" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="11.5" fill="#5a534b">semantic + symbolic</text>
+
+          <rect x="810" y="30" width="150" height="56" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="885" y="52" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Reason</text>
+          <text x="885" y="70" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="11.5" fill="#5a534b">proof / witness</text>
+
+          <rect x="365" y="120" width="250" height="56" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="490" y="146" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Answer + provenance</text>
+          <text x="490" y="164" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="11.5" fill="#5a534b">origins + certificates</text>
+
+          <path d="M160 58 L190 58" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="190,58 182,52 182,64" fill="#2f5d50" />
+          <path d="M380 58 L410 58" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="410,58 402,52 402,64" fill="#2f5d50" />
+          <path d="M580 58 L610 58" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="610,58 602,52 602,64" fill="#2f5d50" />
+          <path d="M780 58 L810 58" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="810,58 802,52 802,64" fill="#2f5d50" />
+
+          <path d="M885 86 L885 120 L615 120" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="615,120 623,114 623,126" fill="#2f5d50" />
+          <path d="M365 120 L285 120 L285 86" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="285,86 279,94 291,94" fill="#2f5d50" />
+        </svg>
+
+        <h2>Why this matters for assistants</h2>
+        <ul>
+          <li><strong>Research assistants</strong>: resolve conflicts across sources, track assumptions, and explain conclusions.</li>
+          <li><strong>Development assistants</strong>: reason over project facts, constraints, and design rules.</li>
+          <li><strong>Planning assistants</strong>: use formal preconditions and policies to avoid unsafe actions.</li>
+        </ul>
+
+        <h2>Limits and constraints</h2>
+        <ul>
+          <li>Reasoning requires explicit structure; free text must be normalized into CNL/DSL.</li>
+          <li>Large-scale knowledge requires schema tactics and careful budgeting.</li>
+          <li>Certificates are required for strong claims; otherwise results are <code>UNKNOWN</code>.</li>
+        </ul>
+
+        <h2>What we still need</h2>
+        <ul>
+          <li>Extraction pipelines with verification gates.</li>
+          <li>Hybrid retrieval policies (similarity + symbolic relevance).</li>
+          <li>Incremental reasoning and cache management for large corpora.</li>
+          <li>Agent memory interfaces that store facts as formal statements.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vision: System 2 Companion</title>
+    <link rel="stylesheet" href="../site.css" />
+    <script src="../site-nav.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>System 2 Companion for LLMs</h1>
+      <p>Make language-model outputs checkable, explicit, and auditable.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="nav">
+          <a href="index.html">Vision Home</a>
+          <a href="regulated.html">Regulated Industry</a>
+          <a href="literature.html">Literary Analysis</a>
+          <a href="system2.html">System 2 + LLM</a>
+          <a href="rag-thinking-db.html">RAG + Thinking DB</a>
+          <a href="science.html">Scientific Review</a>
+          <a href="synthetic-data.html">Synthetic Data</a>
+          <a href="agents.html">Agents + Tools</a>
+          <a href="trustworthy-ai.html">Trustworthy AI</a>
+          <a href="integration.html">Integration Map</a>
+        </div>
+
+        <h2>What this enables</h2>
+        <ul>
+          <li><strong>Explicit semantics</strong>: LLM proposals become CNL/DSL statements with a strict vocabulary.</li>
+          <li><strong>Consistency checks</strong>: contradictions are detected, with proofs or counterexamples.</li>
+          <li><strong>Explainability</strong>: outputs include origins and checkable evidence.</li>
+          <li><strong>Safe tool usage</strong>: plans are validated against constraints before execution.</li>
+        </ul>
+
+        <h2>Typical flow with an LLM</h2>
+        <ol>
+          <li>LLM drafts candidate rules or facts.</li>
+          <li>UBHNL validates and normalizes them into CNL/DSL.</li>
+          <li>Conflicts are reported (unsat cores), or accepted with proof/witness.</li>
+          <li>LLM receives structured feedback and revises inputs.</li>
+        </ol>
+
+        <h2>Limits and constraints</h2>
+        <ul>
+          <li>LLM outputs must be translated into deterministic CNL; no ambiguity allowed.</li>
+          <li>Formal meaning is limited to the vocabulary and constraints defined by users.</li>
+          <li>Approximate results are labeled; strong claims require certificates.</li>
+        </ul>
+
+        <h2>What we still need</h2>
+        <ul>
+          <li>Interactive editors for CNL authoring and validation.</li>
+          <li>Feedback loops for LLM alignment with the vocabulary.</li>
+          <li>Metric suites for contradiction detection accuracy and coverage.</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
