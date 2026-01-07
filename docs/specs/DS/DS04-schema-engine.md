@@ -131,7 +131,7 @@ The orchestrator may choose (1), (2), or (3) depending on domain size and goal k
 
 ## Example (Biology Rule)
 Schema:
-`forall c in Cell: (geneA(c) and not inhibitor(c)) -> proteinP(c)`
+`forall c in Cell: (geneA($c) and not inhibitor($c)) -> proteinP($c)`
 
 Assume `Cell = {c0, c1}` and a model sets:
 - `geneA(c0)=1`, `inhibitor(c0)=0`, `proteinP(c0)=0`

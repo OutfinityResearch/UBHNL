@@ -6,7 +6,7 @@ Let Zero be a Nat.
 
 # Rule with function composition - explicit Succ(n) needed here
 For all Nat n:
-    If n is Nat then Succ(n) is Nat.
+    If $n is Nat then Succ($n) is Nat.
 
 # Base case
 Zero is Nat.

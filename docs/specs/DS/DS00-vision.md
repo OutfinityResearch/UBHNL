@@ -271,7 +271,7 @@ User writes:  "For all Cell c: if geneA($c) then proteinP($c)."
 
                     ▼ DS-005 (CNL Parser)
                     
-CNL AST:      ForAll(c:Cell, Implies(geneA(c), proteinP(c)))
+CNL AST:      ForAll(c:Cell, Implies(geneA($c), proteinP($c)))
               Pred(geneA, [c0])
               Query: Pred(proteinP, [c0])
 
@@ -295,7 +295,7 @@ Result:       PROVED (proteinP(c0) must be true)
                     
 Explanation:  "c0 has proteinP because:
                - c0 has geneA (fact)
-               - for all Cell c: geneA(c) implies proteinP(c) (rule)"
+               - for all Cell c: geneA($c) implies proteinP($c) (rule)"
 ```
 
 ### 10.2 Specification Dependency Graph

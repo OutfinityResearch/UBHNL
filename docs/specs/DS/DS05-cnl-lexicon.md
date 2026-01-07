@@ -59,8 +59,8 @@ Note: CNL is a strict, human-friendly subset. DSL may contain constructs with no
 CNL files can load other theory files using the `load` directive:
 
 ```cnl
-load "theories/domains/medical.cnl"
-load "theories/core/logic.cnl"
+load "theories/domains/medical.sys2"
+load "theories/core/logic.sys2"
 ```
 
 ### Syntax
@@ -83,7 +83,7 @@ load "<relative-path>"
 ```cnl
 // File: /project/cases/patient1.cnl
 
-load "../theories/domains/medical.cnl"   // OK - relative to current file
+load "../theories/domains/medical.sys2"  // OK - relative to current file
 load "../theories/core/logic.sys2"       // OK - can load .sys2 directly
 load "helpers/utils.cnl"                 // OK - subdirectory
 
@@ -109,12 +109,12 @@ load "helpers/utils.cnl"                 // OK - subdirectory
 
 ```cnl
 // File: patient_diagnosis.cnl
-load "theories/domains/medical.cnl"
+load "theories/domains/medical.sys2"
 
-// Now we can use Patient, Disease, Symptom from medical.cnl
+// Now we can use Patient, Disease, Symptom from medical.sys2
 Let p1 be a Patient.
 p1 has Flu.
-// Rule from medical.cnl applies: If $p has Flu then $p has Fever.
+// Rule from medical.sys2 applies: If $p has Flu then $p has Fever.
 ```
 
 ### DSL Equivalent

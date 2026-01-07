@@ -1,7 +1,7 @@
 Proof ProducerDefinition:
     Given:
         c0 is a Cell.
-        Definition Producer(Cell c): For all Protein p: If c expresses p then p is active.
+        Definition Producer(Cell c): For all Protein p: If $c expresses $p then $p is active.
     Query:
         Find a Cell that is a Producer.
     Found:

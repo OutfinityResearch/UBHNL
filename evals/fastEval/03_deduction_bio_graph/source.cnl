@@ -8,4 +8,4 @@ Let c0 be a Cell.
 # Definition using explicit syntax (needed for graph variable)
 Definition: Producer <Cell c> is:
     For all Protein p:
-        If c expresses p then p is Active.
+        If $c expresses $p then $p is Active.

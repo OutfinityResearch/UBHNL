@@ -663,6 +663,7 @@ end
 - Questions end with `?`
 - Indentation: 4 spaces inside blocks
 - Natural spacing for readability
+- Variable references use `$` (e.g., `$x`)
 
 ---
 

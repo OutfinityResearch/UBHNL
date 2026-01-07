@@ -100,7 +100,7 @@ For any Cell c:
 ```
 
 Normalized core form:
-`forall c in Cell: implies(and(geneA(c), not(inhibitor(c))), proteinP(c))`
+`forall c in Cell: implies(and(geneA($c), not(inhibitor($c))), proteinP($c))`
 
 Typed AST (shape only):
 `ForAll(c:Cell,

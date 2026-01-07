@@ -88,7 +88,7 @@ This section explains **why we have two languages** and when to use each.
 **Load path examples:**
 ```cnl
 // File: /project/cases/patient1.cnl
-load "../theories/domains/medical.cnl"   // OK - relative path
+load "../theories/domains/medical.sys2"  // OK - relative path
 load "../theories/core/logic.sys2"       // OK - can load .sys2
 // load "/absolute/path/file.cnl"        // ERROR - absolute forbidden
 ```
@@ -378,7 +378,7 @@ end
 | `Alice has Fever.` | `@fN HasFever Alice` |
 | `For all Person p: ...` | `ForAll Person graph p ... end` |
 | `If A then B.` | `Implies { A } { B }` |
-| Variables: bare `p` | Variables: prefixed `$p` |
+| Variables: `$p` | Variables: prefixed `$p` |
 | Grouping: `(A and B)` | Grouping: `{ And A B }` |
 
 ### 5.2 Predicate Syntax
@@ -484,7 +484,7 @@ end
 | 2026-01-07 | Translator support for `Or`, `Iff`, and complex negation patterns |
 | 2026-01-07 | Added new test suites: 15_disjunction, 16_biconditional, 17_negation |
 | 2026-01-07 | Created theories/core/probability.cnl and theories/core/modal.cnl |
-| 2026-01-07 | Expanded domain theories: medical.cnl (130+ lines), family.cnl, social.cnl |
+| 2026-01-07 | Expanded domain theories: medical.sys2 (130+ lines), family.sys2, social.sys2 |
 | 2026-01-07 | Added `load` directive to CNL (DS05) and DSL (DS08) for theory loading |
 | 2026-01-07 | Documented CNL vs DSL architecture rationale (Section 1.5) |
 | 2026-01-07 | `load` paths must be RELATIVE to current file (no absolute paths) |
