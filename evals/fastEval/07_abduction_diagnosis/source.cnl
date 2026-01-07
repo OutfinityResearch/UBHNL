@@ -6,9 +6,9 @@ p1 is a Patient.
 
 # Diagnostic rules - natural "has" pattern
 For any Patient p:
-    If p has Flu then p has Fever.
-    If p has Flu then p coughs.
-    If p has Cold then p coughs.
+    If $p has Flu then $p has Fever.
+    If $p has Flu then $p coughs.
+    If $p has Cold then $p coughs.
 
 # Observations - natural predicates
 p1 has Fever.

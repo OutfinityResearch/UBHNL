@@ -2,7 +2,7 @@ Proof PeanoSuccessor:
     Given:
         Zero is a Nat.
         IsNat(Zero).
-        For all Nat n: If IsNat(n) then IsNat(Succ(n)).
+        For all Nat n: If IsNat($n) then IsNat(Succ($n)).
     Apply:
         Base case: IsNat(Zero).
     Derive:
