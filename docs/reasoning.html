@@ -74,11 +74,44 @@
         <p>
           The orchestrator builds a plan DAG out of tasks: <code>Lower</code>, <code>Solve</code>, <code>Check</code>, <code>Refine</code>, <code>Explain</code>.
         </p>
-        <pre><code>Task DAG (sketch)
+        <p class="muted">Task DAG (sketch)</p>
+        <svg viewBox="0 0 860 210" width="100%" height="auto" role="img" aria-label="Task DAG sketch">
+          <rect x="40" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="125" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Lower(to UBH)</text>
 
-Lower(to UBH) ──► Solve(SAT) ──► Check(DRAT) ──► Explain
-       │
-       └──► (fallback) Solve(SMT) ──► Check(proof/model) ──► Explain</code></pre>
+          <rect x="240" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="325" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Solve(SAT)</text>
+
+          <rect x="440" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="525" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Check(DRAT)</text>
+
+          <rect x="640" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="725" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Explain</text>
+
+          <rect x="40" y="130" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="125" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Solve(SMT)</text>
+
+          <rect x="240" y="130" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="325" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Check(proof/model)</text>
+
+          <rect x="440" y="130" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="525" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Explain</text>
+
+          <path d="M210 52 L240 52" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="240,52 232,46 232,58" fill="#2f5d50" />
+          <path d="M410 52 L440 52" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="440,52 432,46 432,58" fill="#2f5d50" />
+          <path d="M610 52 L640 52" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="640,52 632,46 632,58" fill="#2f5d50" />
+
+          <path d="M125 74 L125 130" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="125,130 119,122 131,122" fill="#2f5d50" />
+
+          <path d="M210 152 L240 152" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="240,152 232,146 232,158" fill="#2f5d50" />
+          <path d="M410 152 L440 152" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="440,152 432,146 432,158" fill="#2f5d50" />
+        </svg>
 
         <h2>The golden rule: accept only with verification</h2>
         <ul>

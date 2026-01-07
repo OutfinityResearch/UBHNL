@@ -68,30 +68,54 @@
         </div>
 
         <h2>System diagram</h2>
-        <pre><code>          (long-term)                (short-term)
-        theory files ───────┐        session delta (learn)
-         (*.sys2/*.cnl)      │                 │
-                 │          │                 ▼
-                 └──── parse/type (strict vocab + origins)
-                              │
-                              ▼
-                      typed semantic IR
-                              │
-                              ▼
-          fragment detection + goal kind normalization
-                              │
-                              ▼
-                     orchestrator builds plan DAG
-                              │
-          ┌───────────────────┼────────────────────┐
-          ▼                   ▼                    ▼
-      SAT/UBH backend      SMT backend          MC/IC3/…
-     (DRAT/LRAT)         (proof/model)      (invariant/trace)
-          │                   │                    │
-          └─────────────── certificate checkers ───┘
-                              │
-                              ▼
-                    result + explain (origins)</code></pre>
+        <svg viewBox="0 0 900 450" width="100%" height="auto" role="img" aria-label="System diagram">
+          <rect x="60" y="10" width="300" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="210" y="30" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Theory files (long-term)</text>
+          <text x="210" y="45" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">*.sys2 / *.cnl</text>
+
+          <rect x="540" y="10" width="300" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="690" y="30" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Session delta (short-term)</text>
+          <text x="690" y="45" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">learn(...) inputs</text>
+
+          <rect x="160" y="70" width="580" height="48" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="450" y="90" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Parse/type (strict vocab + origins)</text>
+          <text x="450" y="106" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">deterministic typing and symbol checks</text>
+
+          <rect x="260" y="130" width="380" height="40" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="450" y="155" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Typed semantic IR</text>
+
+          <rect x="210" y="180" width="480" height="40" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="450" y="205" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Fragment detection + GoalKind normalization</text>
+
+          <rect x="210" y="230" width="480" height="40" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="450" y="255" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Orchestrator builds plan DAG</text>
+
+          <rect x="190" y="285" width="520" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="450" y="305" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Backends (SAT/UBH, SMT, MC/IC3, ...)</text>
+          <text x="450" y="321" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">return witness or certificate</text>
+
+          <rect x="210" y="340" width="480" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="450" y="366" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Certificate checkers (trusted core)</text>
+
+          <rect x="210" y="395" width="480" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="450" y="421" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Result + explanation (origins)</text>
+
+          <path d="M210 54 L450 70" stroke="#2f5d50" stroke-width="2.5" />
+          <path d="M690 54 L450 70" stroke="#2f5d50" stroke-width="2.5" />
+
+          <path d="M450 118 L450 130" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="450,130 444,122 456,122" fill="#2f5d50" />
+          <path d="M450 170 L450 180" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="450,180 444,172 456,172" fill="#2f5d50" />
+          <path d="M450 220 L450 230" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="450,230 444,222 456,222" fill="#2f5d50" />
+          <path d="M450 270 L450 285" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="450,285 444,277 456,277" fill="#2f5d50" />
+          <path d="M450 329 L450 340" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="450,340 444,332 456,332" fill="#2f5d50" />
+          <path d="M450 384 L450 395" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="450,395 444,387 456,387" fill="#2f5d50" />
+        </svg>
 
         <h2>Why UBH (in one sentence)</h2>
         <p>

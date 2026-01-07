@@ -31,9 +31,43 @@
         </p>
 
         <h2>Plan DAG (model)</h2>
-        <pre><code>Lower(to UBH) ──► Solve(SAT+XOR) ──► Check(certificate/model) ──► Explain
-      │
-      └──► (fallback) Solve(SMT/QBF/...) ──► Check(...) ──► Explain</code></pre>
+        <svg viewBox="0 0 920 210" width="100%" height="auto" role="img" aria-label="Plan DAG model">
+          <rect x="20" y="30" width="200" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="120" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Lower(to UBH)</text>
+
+          <rect x="240" y="30" width="200" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="340" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Solve(SAT+XOR)</text>
+
+          <rect x="460" y="30" width="200" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="560" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Check(certificate/model)</text>
+
+          <rect x="680" y="30" width="200" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="780" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Explain</text>
+
+          <rect x="20" y="130" width="200" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="120" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Solve(SMT/QBF/...)</text>
+
+          <rect x="240" y="130" width="200" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="340" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Check(...)</text>
+
+          <rect x="460" y="130" width="200" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
+          <text x="560" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12.5">Explain</text>
+
+          <path d="M220 52 L240 52" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="240,52 232,46 232,58" fill="#2f5d50" />
+          <path d="M440 52 L460 52" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="460,52 452,46 452,58" fill="#2f5d50" />
+          <path d="M660 52 L680 52" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="680,52 672,46 672,58" fill="#2f5d50" />
+
+          <path d="M120 74 L120 130" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="120,130 114,122 126,122" fill="#2f5d50" />
+
+          <path d="M220 152 L240 152" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="240,152 232,146 232,158" fill="#2f5d50" />
+          <path d="M440 152 L460 152" stroke="#2f5d50" stroke-width="2.5" />
+          <polygon points="460,152 452,146 452,158" fill="#2f5d50" />
+        </svg>
 
         <h2>Budgets and UNKNOWN</h2>
         <ul>
