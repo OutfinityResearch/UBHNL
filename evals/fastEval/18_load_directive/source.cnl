@@ -14,4 +14,4 @@ Let p1 be a Patient.
 # Fact: patient has flu
 p1 has Flu.
 
-# Rule from medical.cnl should apply: If p has Flu then p has Fever
+# Rule from medical.cnl should apply: If $p has Flu then $p has Fever

@@ -3,8 +3,8 @@ Proof SentenceParsing:
         Det(The).
         Noun(Cat).
         Verb(Runs).
-        For all Word w1, w2: If Det(w1) and Noun(w2) then IsNP(w1, w2).
-        For all Word w1, w2, w3: If IsNP(w1, w2) and Verb(w3) then IsSentence(w1, w2, w3).
+        For all Word w1, w2: If Det($w1) and Noun($w2) then IsNP($w1, $w2).
+        For all Word w1, w2, w3: If IsNP($w1, $w2) and Verb($w3) then IsSentence($w1, $w2, $w3).
     Apply:
         NP Rule on The, Cat.
     Derive:

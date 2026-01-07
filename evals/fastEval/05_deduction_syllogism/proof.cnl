@@ -3,7 +3,7 @@ Proof SocratesMortality:
         Socrates is a Man.
         For all Entity x: If $x is Man then $x is Mortal.
     Apply:
-        Universal Instantiation with x = Socrates.
+        Universal Instantiation with $x = Socrates.
     Derive:
         If Socrates is Man then Socrates is Mortal.
     Apply:

@@ -1,5 +1,5 @@
 # Test 11: Social Network - Transitive Trust
-# STYLE: Natural SVO "x trusts y"
+# STYLE: Natural SVO "$x trusts $y"
 
 Let User be a Domain.
 Let Alice, Bob, Charlie be Users.

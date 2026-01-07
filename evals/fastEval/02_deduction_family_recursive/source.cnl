@@ -10,5 +10,5 @@ Bob is Parent of Charlie.
 
 # Rules with natural language in conditions
 For any Person x, y, z:
-    If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
-    If x is Parent of y then x is Ancestor of y.
+    If $x is Parent of $y and $y is Ancestor of $z then $x is Ancestor of $z.
+    If $x is Parent of $y then $x is Ancestor of $y.

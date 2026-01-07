@@ -6,7 +6,7 @@ Let system1 be a Status.
 
 # Biconditional: Active iff not Sleeping
 For any Status s:
-    s is Active if and only if it is not the case that s is Sleeping.
+    $s is Active if and only if it is not the case that $s is Sleeping.
 
 # Fact: system1 is not sleeping
 It is not the case that system1 is Sleeping.

@@ -6,12 +6,12 @@ Let e1, e2 be Entities.
 
 # Mutual exclusion via negation
 For any Entity x:
-    If x is On then it is not the case that x is Off.
-    If x is Off then it is not the case that x is On.
+    If $x is On then it is not the case that $x is Off.
+    If $x is Off then it is not the case that $x is On.
 
 # Default closed-world: If not on, then off
 For any Entity x:
-    If it is not the case that x is On then x is Off.
+    If it is not the case that $x is On then $x is Off.
 
 # Facts
 e1 is On.

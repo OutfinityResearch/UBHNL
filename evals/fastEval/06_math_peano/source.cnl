@@ -1,10 +1,10 @@
 # Test 06: Peano Arithmetic
-# STYLE: Nested function Succ(n) - explicit syntax needed
+# STYLE: Nested function Succ($n) - explicit syntax needed
 
 Let Nat be a Domain.
 Let Zero be a Nat.
 
-# Rule with function composition - explicit Succ(n) needed here
+# Rule with function composition - explicit Succ($n) needed here
 For all Nat n:
     If $n is Nat then Succ($n) is Nat.
 

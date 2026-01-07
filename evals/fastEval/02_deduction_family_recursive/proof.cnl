@@ -2,8 +2,8 @@ Proof AncestorTransitivity:
     Given:
         p1 is Parent of p2.
         p2 is Parent of p3.
-        For all Person x, y: If x is Parent of y then x is Ancestor of y.
-        For all Person x, y, z: If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
+        For all Person x, y: If $x is Parent of $y then $x is Ancestor of $y.
+        For all Person x, y, z: If $x is Parent of $y and $y is Ancestor of $z then $x is Ancestor of $z.
     Apply:
         Base Rule on p1, p2.
     Derive:
