@@ -21,13 +21,19 @@ export function translate(cnlSource) {
         counts: { rule: 1, f: 1, c: 1, inner: 1, logic: 1 }
     };
 
+    const VAR_TOKEN = '\\$?[A-Za-z_]\\w*';
+    const WORD_TOKEN = '[A-Za-z_]\\w*';
+
     function getVar(name) {
+        const explicit = name.startsWith('$');
+        const rawName = explicit ? name.slice(1) : name;
         for (let i = ctx.boundVars.length - 1; i >= 0; i--) {
             const scope = ctx.boundVars[i];
-            const v = scope.find(v => v.name === name);
-            if (v) return `$${name}`;
+            const v = scope.find(v => v.name === rawName);
+            if (v) return `$${rawName}`;
         }
-        return name;
+        if (explicit) return '$error';
+        return rawName;
     }
 
     function add(str) { ctx.output.push(str); }
@@ -95,40 +101,40 @@ export function translate(cnlSource) {
         // Natural patterns (no parentheses):
         
         // "x is Parent of y" / "x is Ancestor of y"
-        const relMatch = str.match(/^(\w+)\s+is\s+(\w+)\s+of\s+(\w+)$/);
+        const relMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+is\\s+(${WORD_TOKEN})\\s+of\\s+(${VAR_TOKEN})$`));
         if (relMatch) {
             return { type: 'Pred', pred: relMatch[2], args: [getVar(relMatch[1]), getVar(relMatch[3])] };
         }
         
         // "x is Mortal" / "x is Man" / "x is On" (adjective/state)
-        const adjMatch = str.match(/^(\w+)\s+is\s+(\w+)$/);
+        const adjMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+is\\s+(${WORD_TOKEN})$`));
         if (adjMatch) {
             return { type: 'Pred', pred: adjMatch[2], args: [getVar(adjMatch[1])] };
         }
         
         // "x has Fever" / "x has Flu" / "x has Cold"
-        const hasMatch = str.match(/^(\w+)\s+has\s+(\w+)$/);
+        const hasMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+has\\s+(${WORD_TOKEN})$`));
         if (hasMatch) {
             const pred = 'Has' + capitalize(hasMatch[2]);
             return { type: 'Pred', pred, args: [getVar(hasMatch[1])] };
         }
         
         // "x trusts y" / "x knows y" / "x expresses y" (transitive verb)
-        const svoMatch = str.match(/^(\w+)\s+(\w+)\s+(\w+)$/);
+        const svoMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+(${WORD_TOKEN})\\s+(${VAR_TOKEN})$`));
         if (svoMatch) {
             const pred = capitalize(svoMatch[2]);
             return { type: 'Pred', pred, args: [getVar(svoMatch[1]), getVar(svoMatch[3])] };
         }
         
         // "x coughs" / "x moves" / "x accelerates" (intransitive verb)
-        const svMatch = str.match(/^(\w+)\s+(\w+)$/);
+        const svMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+(${WORD_TOKEN})$`));
         if (svMatch) {
             const pred = capitalize(svMatch[2]);
             return { type: 'Pred', pred, args: [getVar(svMatch[1])] };
         }
 
         // Single atom (variable or constant)
-        if (str.match(/^\w+$/)) {
+        if (str.match(new RegExp(`^${VAR_TOKEN}$`))) {
             return { type: 'Atom', name: getVar(str) };
         }
         

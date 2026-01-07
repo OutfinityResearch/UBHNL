@@ -494,6 +494,7 @@ end
 | 2026-01-07 | Orchestrator heuristics defaults recorded |
 | 2026-01-07 | Learned constraint exchange policy recorded |
 | 2026-01-07 | Performance gates added to spec targets |
+| 2026-01-07 | **DS21**: Holographic Reasoning Engine (VSA/HDC/HRR) specification created |
 
 ---
 
@@ -519,7 +520,7 @@ end
 | DS00-DS09 | Core infrastructure | Vision, IR, Solver, Schema |
 | DS10-DS14 | Orchestrator & backends | Fragments, Backends, Certs |
 | DS15-DS19 | Languages & translation | CNL, DSL, Keywords |
-| DS20+ | Extensions | Proofs, future features |
+| DS20-DS29 | Extensions | Proofs (DS20), Holographic (DS21) |
 
 ### A.3 Key Folders
 
