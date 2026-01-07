@@ -29,6 +29,17 @@
           <a href="../wiki/concepts/goalkind.html">GoalKind</a> (what you want), then chooses tactics/backends.
         </p>
 
+        <h2>1.1) What “fragment” means (and where the term comes from)</h2>
+        <p>
+          In logic, a <strong>fragment</strong> is a restricted subset of a language with fixed operators and signatures,
+          chosen so that a specific decision procedure applies (e.g., Horn, 2-SAT, QBF, SMT(BV)).
+          UBHNL borrows the term to name the <em>constraint class</em> that a query belongs to.
+        </p>
+        <p>
+          In practice, a fragment tag tells the planner what is allowed in the formula (operators, quantifiers, theories)
+          and which backends can solve it. It is not a file/module; it is a semantic classification of the normalized problem.
+        </p>
+
         <h2>2) Backends are pluggable</h2>
         <p>
           SAT/SMT/QBF/IC3/PDR/MIP/… are interchangeable “engines”. UBHNL does not take them on faith:
