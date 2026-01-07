@@ -194,18 +194,19 @@ Instead:
 Files on disk:
 - `bio.sys2`:
   ```
-  @Cell:Cell __Atom
-  @c0:c0 __Atom
-  @c1:c1 __Atom
-  IsA c0 Cell
-  IsA c1 Cell
+  Vocab
+      Domain Cell
+      Const c0 Cell
+      Const c1 Cell
+  end
 
-  @rule1 ForAll Cell graph c
+  @rule1:GeneAImpliesProteinP ForAll Cell graph c
       @g geneA $c
       @p proteinP $c
       @imp Implies $g $p
       return $imp
   end
+  Assert GeneAImpliesProteinP
 
   @f1 geneA c0
   ```

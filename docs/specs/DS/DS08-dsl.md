@@ -731,14 +731,12 @@ If b then c.
 
 **DSL**:
 ```sys2
-@Bit:Bit __Atom
-@a:a __Atom
-@b:b __Atom
-@c:c __Atom
-
-IsA a Bit
-IsA b Bit
-IsA c Bit
+Vocab
+    Domain Bit
+    Const a Bit
+    Const b Bit
+    Const c Bit
+end
 
 @rule1 Implies a b
 @rule2 Implies b c
@@ -757,20 +755,18 @@ p1 is Parent of p2.
 p2 is Parent of p3.
 
 For all Person x, Person y, Person z:
-    If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
-    If x is Parent of y then x is Ancestor of y.
+    If $x is Parent of $y and $y is Ancestor of $z then $x is Ancestor of $z.
+    If $x is Parent of $y then $x is Ancestor of $y.
 ```
 
 **DSL**:
 ```sys2
-@Person:Person __Atom
-@p1:p1 __Atom
-@p2:p2 __Atom
-@p3:p3 __Atom
-
-IsA p1 Person
-IsA p2 Person
-IsA p3 Person
+Vocab
+    Domain Person
+    Const p1 Person
+    Const p2 Person
+    Const p3 Person
+end
 
 @f1 Parent p1 p2
 @f2 Parent p2 p3
@@ -805,9 +801,10 @@ end
 
 **DSL**:
 ```sys2
-@Patient:Patient __Atom
-@p1:p1 __Atom
-IsA p1 Patient
+Vocab
+    Domain Patient
+    Const p1 Patient
+end
 
 @rule1 ForAll Patient graph p
     @c1 HasFlu $p
@@ -839,12 +836,11 @@ end
 Instead of many named intermediates, use braces for inline composition:
 
 ```sys2
-@User:User __Atom
-@Alice:Alice __Atom
-@Bob:Bob __Atom
-
-IsA Alice User
-IsA Bob User
+Vocab
+    Domain User
+    Const Alice User
+    Const Bob User
+end
 
 @rule1 ForAll User graph x
     @inner ForAll User graph y
@@ -870,10 +866,11 @@ end
 end
 
 # Use the definition
-@Cell:Cell __Atom
-@Protein:Protein __Atom
-@c0:c0 __Atom
-IsA c0 Cell
+Vocab
+    Domain Cell
+    Domain Protein
+    Const c0 Cell
+end
 
 @f1:c0IsProducer Producer c0
 ```
@@ -939,11 +936,11 @@ IsA c0 Cell
 
 | Aspect | DSL (sys2) | CNL |
 |--------|------------|-----|
-| Declaration | `@Alice:Alice __Atom` | `Let Alice be a Person.` |
-| Type assoc | `IsA Alice Person` | (included in declaration) |
+| Declaration | `Const Alice Person` (inside `Vocab`) | `Let Alice be a Person.` |
+| Type assoc | (included in `Const`) | (included in declaration) |
 | Fact | `HasFever Alice` | `Alice has Fever.` |
 | Quantifier | `ForAll Person graph x ... end` | `For all Person x: ...` |
-| Variable ref | `$x` | `x` (bare) |
+| Variable ref | `$x` | `$x` |
 | Implication | `Implies $a $b` | `If a then b.` |
 | Grouping | `{ And $a $b }` | `a and b` |
 | Comments | `# comment` | `// comment` |

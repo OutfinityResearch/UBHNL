@@ -92,7 +92,7 @@ Compile to UBH:
 
 ## Concrete Example 2 (Finite FOL)
 Domain: `Cell = {c0,c1}`
-Rule: `forall c in Cell: geneA(c) -> proteinP(c)`
+Rule: `forall c in Cell: geneA($c) -> proteinP($c)`
 
 Expansion (small domain):
 - `(geneA(c0) -> proteinP(c0)) ∧ (geneA(c1) -> proteinP(c1))`

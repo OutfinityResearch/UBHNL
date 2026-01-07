@@ -359,17 +359,39 @@ end
 Domain knowledge should be stored canonically in `.sys2` files. CNL is suitable for authoring,
 but persisted theory files in `/theories/` should be Sys2.
 
-```cnl
-// theories/domains/medical.sys2
-Patient is a Domain.
-Symptom is a Domain.
+```sys2
+# theories/domains/medical.sys2
+Vocab
+    Domain Patient
+    Pred HasFlu Patient
+    Pred HasFever Patient
+    Pred HasCold Patient
+    Pred Coughs Patient
+end
 
-Flu is a Disease.
-Cold is a Disease.
+@FluCausesFever:FluCausesFever ForAll Patient graph p
+    @c1 HasFlu $p
+    @c2 HasFever $p
+    @imp Implies $c1 $c2
+    return $imp
+end
+Assert FluCausesFever
 
-For any Patient p:
-    If $p has Flu then $p has Fever.
-    If $p has Cold then $p coughs.
+@FluCausesCough:FluCausesCough ForAll Patient graph p
+    @c3 HasFlu $p
+    @c4 Coughs $p
+    @imp Implies $c3 $c4
+    return $imp
+end
+Assert FluCausesCough
+
+@ColdCausesCough:ColdCausesCough ForAll Patient graph p
+    @c5 HasCold $p
+    @c6 Coughs $p
+    @imp Implies $c5 $c6
+    return $imp
+end
+Assert ColdCausesCough
 ```
 
 **Location**: `/theories/domains/` for reusable theories.
@@ -995,7 +1017,7 @@ Every Patient with Flu coughs.
 p1 has Flu.
 
 // Query
-Which Patient has Fever?
+Which Patient $p has Fever?
 ```
 
 ## Example 2: Social Trust (Semi-Formal)
@@ -1024,7 +1046,7 @@ Let p1 be a Protein.
 // Definition
 Definition: Producer <Cell c> is:
     For all Protein p:
-        If Expresses(c, p) then Active(p).
+        If Expresses($c, $p) then Active($p).
 
 // Facts
 Expresses(c0, p1).
@@ -1046,8 +1068,8 @@ Parent(p2, p3).
 
 // Recursive definition
 Define Ancestor(Person x, Person y) as:
-    x is Parent of y
-    or (there exists Person z: x is Parent of z and z is Ancestor of y).
+    $x is Parent of $y
+    or (there exists Person z: $x is Parent of $z and $z is Ancestor of $y).
 
 // Query
 Is p1 Ancestor of p3?

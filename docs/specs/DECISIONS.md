@@ -46,7 +46,7 @@ Items marked with `[CONFIRMED]` have been explicitly approved.
 
 | Decision | Sys2 schema files (`.sys2`) are the canonical source |
 |----------|------------------------------------------------------|
-| Vocabulary | Derived from DSL declarations (`@name:kbName __Atom`, `IsA`, definitions) |
+| Vocabulary | Derived from DSL `Vocab` blocks (legacy `@... __Atom` + `IsA` supported) |
 | CNL | Human-friendly authoring; translated into Sys2, but not authoritative for schema/metadata |
 
 ### 1.5 CNL vs DSL Architecture Rationale [CONFIRMED 2026-01-07]
@@ -374,7 +374,7 @@ end
 
 | CNL | DSL |
 |-----|-----|
-| `Let Alice be a Person.` | `@Alice __Atom` + `IsA Alice Person` |
+| `Let Alice be a Person.` | `Const Alice Person` (inside `Vocab`) |
 | `Alice has Fever.` | `@fN HasFever Alice` |
 | `For all Person p: ...` | `ForAll Person graph p ... end` |
 | `If A then B.` | `Implies { A } { B }` |

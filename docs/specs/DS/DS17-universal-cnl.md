@@ -61,7 +61,7 @@ Lowering target:
 A domain template is a syntactic macro that expands into DS-005 core CNL or into typed semantic IR directly.
 
 Example template:
-`For all <Type> x: If <A(x)> then <B(x)>.`
+`For all <Type> x: If <A($x)> then <B($x)>.`
 
 Lowering:
 - emits a DS-005 core CNL structure:
@@ -82,5 +82,4 @@ In all cases:
 - DS-006 (typed AST)
 - DS-010/011/012 (fragments, certificates, planner)
 - DS-016 (errors)
-
 

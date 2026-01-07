@@ -67,7 +67,7 @@ Sys2 DSL does **not** define a `?` token.
 |---|---|
 | `For any Type x:` (block) | `@ruleN ForAll Type graph x ... return $expr end` |
 | `There exists Type x:` (block) | `@exN Exists Type graph x ... return $expr end` |
-| `Which Type x ... ?` | `@queryN Exists Type graph x ... return $expr end` |
+| `Which Type $x ... ?` | `@queryN Exists Type graph x ... return $expr end` |
 | `If A then B.` | `@impN Implies { A } { B }` (after lowering) |
 | `A and B` | `And ...` |
 | `A or B` | `Or ...` |

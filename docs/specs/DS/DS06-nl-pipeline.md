@@ -96,7 +96,7 @@ Error payloads must follow DS-016. The NL pipeline must at minimum distinguish:
 Input:
 ```cnl
 For any Cell c:
-    If geneA(c) and not inhibitor(c) then proteinP(c).
+    If geneA($c) and not inhibitor($c) then proteinP($c).
 ```
 
 Normalized core form:

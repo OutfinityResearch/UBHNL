@@ -91,8 +91,8 @@ interface ErrorDetails {
 |------|-----------|---------|
 | `E_CNL_SYNTAX` | General CNL syntax error | `For all c` (missing colon) |
 | `E_CNL_MISSING_PERIOD` | Statement not terminated | `Ion has fever` (no `.`) |
-| `E_CNL_MISSING_DOMAIN` | Quantifier without domain | `For all c: P(c).` |
-| `E_CNL_MISSING_CONNECTOR` | Adjacent atoms without connector | `geneA(c) proteinP(c)` |
+| `E_CNL_MISSING_DOMAIN` | Quantifier without domain | `For all c: P($c).` |
+| `E_CNL_MISSING_CONNECTOR` | Adjacent atoms without connector | `geneA($c) proteinP($c)` |
 | `E_CNL_UNKNOWN_ALIAS` | Predicate phrase not mapped by CNL patterns | `Ion has headache.` |
 | `E_CNL_AMBIGUOUS` | Multiple valid parses | Rare if grammar is correct |
 
@@ -271,7 +271,7 @@ The test suite must verify:
 | `unknownPred c0` | `E_UNKNOWN_SYMBOL` | `TheoryFile` |
 | `geneA c0 c1` | `E_ARITY_MISMATCH` | `UserInput` |
 | `geneA ion` | `E_TYPE_MISMATCH` | `UserInput` |
-| `For all c: P(c).` (CNL) | `E_CNL_MISSING_DOMAIN` | `UserInput` |
+| `For all c: P($c).` (CNL) | `E_CNL_MISSING_DOMAIN` | `UserInput` |
 | UNSAT without DRAT | `E_CERT_MISSING` | `Backend` |
 | Wrong problemDigest | `E_CERT_DIGEST_MISMATCH` | `System` |
 

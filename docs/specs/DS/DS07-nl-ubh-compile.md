@@ -22,7 +22,7 @@ this DS only covers boolean predicate instances over finite-domain constants.
 
 ## Finite Domain Encoding (Normative)
 For the CNL/DSL pipeline, **no bitvector encoding is used** for finite domains:
-- Each domain element is a declared constant (`@c0:c0 __Atom`, `IsA c0 Cell`).
+- Each domain element is a declared constant (`Const c0 Cell` in a `Vocab` block).
 - Quantifiers expand by **enumerating** domain elements (or emit a schema object).
 - Equality on domain elements is **syntactic** equality of constants.
  - Subtypes: if `SubType A B`, then elements of `A` are included when enumerating `B`.
@@ -106,7 +106,7 @@ Vocabulary:
 - predicates: `geneA(Cell)`, `proteinP(Cell)`
 
 Statement:
-`forall c in Cell: geneA(c) implies proteinP(c)`
+`forall c in Cell: geneA($c) implies proteinP($c)`
 
 Expansion:
 1) `geneA(c0) -> proteinP(c0)` compiled to `assert1(phi0)`

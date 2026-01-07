@@ -159,8 +159,8 @@ Proof AncestorTransitivity:
     Given:
         p1 is Parent of p2.
         p2 is Parent of p3.
-        For all Person x, y: If x is Parent of y then x is Ancestor of y.
-        For all Person x, y, z: If x is Parent of y and y is Ancestor of z then x is Ancestor of z.
+        For all Person x, y: If $x is Parent of $y then $x is Ancestor of $y.
+        For all Person x, y, z: If $x is Parent of $y and $y is Ancestor of $z then $x is Ancestor of $z.
     Apply:
         Rule 2 on p1, p2.
     Derive:
@@ -185,7 +185,7 @@ Proof SwitchContradiction:
         switch1 is On.
         switch1 is Off.
     Constraint:
-        For all Switch s: It is not the case that (s is On and s is Off).
+        For all Switch s: It is not the case that ($s is On and $s is Off).
     Contradiction:
         switch1 violates the exclusion constraint.
     Therefore:
@@ -198,7 +198,7 @@ Proof SwitchContradiction:
 Proof SocratesMortality:
     Given:
         Socrates is a Man.
-        For all Entity x: If x is Man then x is Mortal.
+        For all Entity x: If $x is Man then $x is Mortal.
     Apply:
         Universal Instantiation with x = Socrates.
     Derive:
@@ -232,7 +232,7 @@ Proof TransitiveTrust:
     Given:
         Alice trusts Bob.
         Bob trusts Charlie.
-        For all User x, y, z: If x trusts y and y trusts z then x trusts z.
+        For all User x, y, z: If $x trusts $y and $y trusts $z then $x trusts $z.
     Apply:
         Transitivity Rule with x=Alice, y=Bob, z=Charlie.
     Derive:
