@@ -3,54 +3,66 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBH Design Choices</title>
+    <title>Design Choices: The Philosophy of Rigorous Logic</title>
     <link rel="stylesheet" href="site.css" />
-      <script src="site-nav.js" defer></script>
+    <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Design Choices</h1>
-      <p>Why the architecture looks like this: minimal kernel + backends/tactics + certificates.</p>
+      <h1>Architectural Design Choices: The Philosophy of Logic</h1>
+      <p>A rigorous examination of the foundational principles that govern the UBHNL ecosystem.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: a summary of key decisions; normative references live in the specs (MD).</div>
-
         <div class="nav">
           <a href="index.html">Docs Index</a>
-          <a href="vision/index.html">Vision</a>
-          <a href="architecture.html">Architecture</a>
-          <a href="reasoning.html">Reasoning</a>
-          <a href="wiki/index.html">Wiki</a>
-          <a href="theory/index.html">Theory</a>
+          <a href="vision/index.html">Vision Home</a>
+          <a href="architecture.html">Architecture Overview</a>
+          <a href="reasoning.html">Reasoning Strategy</a>
+          <a href="languages.html">Languages</a>
         </div>
 
-        <h2>Kernel IR (UBH)</h2>
-        <p>
-          XOR/AND/CONST over GF(2) provide a minimal Boolean basis, with a direct polynomial interpretation and efficient hash-consing
-          (structural compression).
-        </p>
+        <section>
+          <h2>The Imperative of Minimalism</h2>
+          <p>
+            A core architectural axiom of UBHNL is <strong>Radical Minimalism</strong>. Conventional reasoning systems often suffer from "architectural bloat" by incorporating complex domain logic directly into the trusted core. In contrast, UBHNL restricts its <strong>Trusted Kernel (UBH)</strong> to the most fundamental Boolean basis: XOR, AND, and Constants over GF(2). By minimizing the complexity of the kernel, we ensure that the most critical part of the system is small enough for formal audit and mathematical verification. This strategy pushes domain complexity into replaceable, untrusted backends, where it can be managed without compromising the system's overall integrity.
+          </p>
+        </section>
 
-        <h2>Solving strategy</h2>
-        <p>
-          SAT + native XOR (linear GF(2) equations) avoids “blow-up” when encoding XOR into CNF and matches the structure of typical UBH circuits.
-        </p>
+        <section>
+          <h2>The Evidence-Based Reasoning Mandate</h2>
+          <p>
+            In high-stakes environments, the validity of a result is inseparable from the checkability of its evidence. We have implemented a strict policy where <strong>no claim is accepted without verification</strong>. Every conclusion returned by a backend—whether it is a model representing a satisfying state (a witness) or a mathematical trace demonstrating a contradiction (a certificate)—must be validated by the trusted core. This "Trust, but Verify" approach ensures that even if a complex backend contains latent errors, the system's final output remains mathematically sound. Any result that cannot be independently verified is categorized as <code>UNKNOWN</code>.
+          </p>
+        </section>
 
-        <h2>Schema engine / CEGAR</h2>
-        <p>
-          Quantifiers and generative rules are handled via lazy instantiation (CEGAR) to keep theories compact and avoid full grounding.
-        </p>
+        <section>
+          <h2>Semantic Isomorphism and Determinism</h2>
+          <p>
+            To bridge the gap between human expertise and machine precision, we utilize <strong>Semantic Isomorphism</strong>. Our two front-end languages—CNL for human-centric authoring and DSL for machine-efficient processing—are mathematically identical in their underlying logical structure. This ensures that no semantic drift occurs during the translation process. 
+          </p>
+          <p>
+            Furthermore, the system is <strong>Deterministic by Design</strong>. By requiring every symbol to be declared in a strict <strong>Lexicon</strong> and enforcing a deterministic grammar, we eliminate the ambiguity and guesswork common in probabilistic models. If a concept cannot be formally defined within the lexicon, the system refuses to reason over it, thereby ensuring that every conclusion is grounded in an explicit and auditable ontological framework.
+          </p>
+        </section>
 
-        <h2>Deterministic front-end (CNL/DSL)</h2>
-        <p>
-          CNL/DSL are controlled: typing is mandatory and the vocabulary is strict (unknown symbol = error). Ambiguity is rejected, not guessed.
-        </p>
+        <section>
+          <h2>Fragmented Orchestration</h2>
+          <p>
+            The system achieves universality through <strong>Logical Fragmentation</strong>. Rather than employing a single, monolithic solver, UBHNL decomposes complex theories into distinct mathematical fragments. This allows the <strong>Orchestrator</strong> to strategically delegate tasks to specialized solvers (SAT, SMT, QBF, etc.) that are optimized for each specific fragment. This tactical planning ensures that the system can scale across diverse logical domains—including arithmetic, probability, and time—while maintaining the same rigorous verification standard for every result.
+          </p>
+        </section>
 
-        <h2>Fragments + certificates</h2>
-        <p>
-          The system separates “what problem do we have?” (Fragment) from “how do we solve it?” (Backend/Tactic). Any accepted result must be
-          checkable (witness/certificate), and the “trusted” part remains small.
-        </p>
+        <section>
+          <h2>Architectural Sustainability</h2>
+          <p>
+            These design choices establish a foundation for <strong>Sustainable Scaling</strong>. As the system evolves to support more complex reasoning tasks, the trusted core remains lean and verifiable. By prioritizing formal proof and explicit meaning over heuristic convenience, UBHNL provides a robust architecture for the next generation of trustworthy and auditable artificial intelligence.
+          </p>
+        </section>
+
+        <div class="footer-links">
+          <p>See these choices in action: <a href="theory/index.html">The Theory Course</a>.</p>
+        </div>
       </div>
     </main>
   </body>

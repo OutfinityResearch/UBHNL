@@ -3,82 +3,63 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBH Usage</title>
+    <title>Usage: The Reasoning Workflow</title>
     <link rel="stylesheet" href="site.css" />
-      <script src="site-nav.js" defer></script>
+    <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Usage Notes</h1>
-      <p>How the system is meant to be used (target UX). Specs are authoritative.</p>
+      <h1>Operational Workflow: The Lifecycle of a Reasoner</h1>
+      <p>A systematic guide to defining theories, managing sessions, and generating formal proofs.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: CLI/API examples are targets. In this repo, the code is still a scaffold.</div>
-
         <div class="nav">
           <a href="index.html">Docs Index</a>
-          <a href="vision/index.html">Vision</a>
-          <a href="languages.html">Lexicon/CNL/DSL</a>
+          <a href="vision/index.html">Vision Home</a>
+          <a href="architecture.html">Architecture</a>
           <a href="session-api.html">Session API</a>
-          <a href="examples.html">Examples</a>
-          <a href="wiki/index.html">Wiki</a>
-          <a href="theory/index.html">Theory</a>
+          <a href="languages.html">Languages</a>
         </div>
 
-        <h2>Quick Start (conceptual)</h2>
-        <ol>
-          <li>Define vocabulary in Sys2 schema files (<code>*.sys2</code>) and/or CNL domain files (<code>*.cnl</code>).</li>
-          <li>Write a theory in <code>*.sys2</code> (or <code>*.cnl</code>).</li>
-          <li>Start a session, load theory files, then run <code>query</code>.</li>
-          <li>Get a result + witness/certificate + explanation (via origins).</li>
-        </ol>
+        <section>
+          <h2>Ontological Grounding: Defining the Lexicon</h2>
+          <p>
+            The reasoning lifecycle begins with <strong>Ontological Grounding</strong>. Before rules can be authored, the domain's vocabulary must be established within a <strong>Lexicon</strong>. This involves creating a formal theory file (typically in <code>.sys2</code> or <code>.cnl</code>) to declare the essential types, domains, and constants. By establishing this foundational dictionary, the system ensures that every subsequent statement is strictly typed and semantically consistent. This initial stage is critical for preventing lexical ambiguity and ensuring that both the human expert and the machine solver share a unified understanding of the problem space.
+          </p>
+        </section>
 
-        <h2>Target CLI (sketch)</h2>
-        <pre><code># load theories (long-term memory)
-ubh learn --file bio.sys2
-ubh learn --file rules.cnl
+        <section>
+          <h2>Interactive Experimentation: The Session Workspace</h2>
+          <p>
+            Once the foundation is established, the user initiates a <strong>Reasoning Session</strong>. This ephemeral workspace acts as an interactive laboratory. The user first loads the persistent theory files, which constitute the established "ground truth" of the domain. Within this environment, the <strong>Learn</strong> operation is used to inject transient observations or hypothetical rules. These interactive additions are local to the session, allowing for rapid "what-if" experimentation without risk to the authoritative knowledge base. Every addition is tagged with an origin ID, ensuring that any resulting reasoning can be traced back to its specific source.
+          </p>
+        </section>
 
-# query: prove/refute/satisfy/count/optimize
-ubh query --prove "proteinP c0"
-ubh query --satisfy "Which Cell c has ProteinP?"
-ubh query --explain last</code></pre>
+        <section>
+          <h2>Formal Inquiry: Querying the Engine</h2>
+          <p>
+            The core of the workflow is the <strong>Formal Query</strong>. The user submits a question—expressed in CNL or DSL—specifying the desired goal kind, such as proving a hypothesis (<code>Prove</code>), searching for a counterexample (<code>Refute</code>), or finding a satisfying assignment (<code>Satisfy</code>). The Orchestrator then analyzes the query, identifies the relevant logical fragments, and constructs an execution plan. If a conclusion is reached, the system returns a result status accompanied by a checkable witness or certificate, fulfilling the system's mandate for evidence-based reasoning.
+          </p>
+        </section>
 
-        <h2>Target JS API (sketch)</h2>
-        <pre><code>import { createSession } from "ubh";
+        <section>
+          <h2>Rational Attribution: Explaining the Result</h2>
+          <p>
+            The final stage of the lifecycle is <strong>Rational Attribution</strong>. After a query is completed, the user utilizes the <strong>Explain</strong> function to understand the derivation. By synthesizing the origin metadata of the statements involved in the proof or contradiction, the system generates a coherent explanation. This attribution allows the user to see exactly which rules from the persistent library and which observations from the interactive session contributed to the result, transforming a raw mathematical outcome into a transparent and actionable insight.
+          </p>
+        </section>
 
-await session.loadTheoryFile("bio.sys2");
+        <section>
+          <h2>Future Tooling and Environment</h2>
+          <p>
+            While the current interface is focused on the command line and the API, the development of <strong>Integrated Authoring Environments</strong> is ongoing. These future tools will include real-time logical visualizers and guided editors that assist users in staying within the deterministic grammar of the CNL. This evolution aims to make the formal reasoning workflow even more accessible to domain experts while maintaining the absolute rigors of the underlying mathematical kernel.
+          </p>
+        </section>
 
-const result = await session.query({
-  kind: "Prove",
-  input: "proteinP c0"
-});
-
-console.log(result.status);
-console.log(await session.explain(result, { style: "CNL" }));</code></pre>
-
-        <h2>Specs</h2>
-        <ul>
-          <li>
-            System Spec:
-            <a href="specs/src/system-spec.md">MD</a> |
-            <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a>
-          </li>
-          <li>
-            DSL:
-            <a href="mdview.html?file=specs/DS/DS08-dsl.md">DS-008</a>
-          </li>
-          <li>
-            Sessions:
-            <a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a>
-          </li>
-          <li>
-            Fragments/Backends/Planner:
-            <a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a>,
-            <a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a>,
-            <a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>
-          </li>
-        </ul>
+        <div class="footer-links">
+          <p>Ready to try? Check out the <a href="examples.html">Examples Gallery</a>.</p>
+        </div>
       </div>
     </main>
   </body>

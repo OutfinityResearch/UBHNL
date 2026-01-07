@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 07: The Orchestra Conductor</title>
+    <title>Theory 07: The Orchestration Layer</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 07 — The Orchestrator: Master of Fragments</h1>
-      <p>Why universality is a team effort, not a solo performance.</p>
+      <h1>Theory 07 — The Orchestrator: Management of Logical Fragments</h1>
+      <p>Achieving universality through strategic task decomposition and specialized backends.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: narrative tutorial on fragment detection and orchestration.</div>
+        <div class="draft">DRAFT: academic tutorial on fragment detection and orchestration.</div>
 
         <div class="nav">
           <a href="06-sessions.html">Prev: Sessions</a>
@@ -23,53 +23,40 @@
         </div>
 
         <section>
-          <h2>The Use Case: The Logistics Manager</h2>
+          <h2>The Orchestration Challenge: Multi-Fragment Reasoning</h2>
           <p>
-            Marco is a logistics manager for a global shipping company. His day is a mix of different problems:
-            <ul>
-              <li><strong>Logical Rules:</strong> "If a truck is refrigerated, it can carry medicine."</li>
-              <li><strong>Optimization:</strong> "Find the cheapest route that meets all delivery times."</li>
-              <li><strong>Probability:</strong> "What is the chance of a delay due to the storm?"</li>
-            </ul>
-            No single solver is good at all of these. Marco needs a <strong>Conductor</strong> who can delegate each part of the problem to the right specialist.
+            Real-world problems rarely fit into a single logical category. A typical complex query—such as a logistics optimization subject to safety regulations—may contain hard Boolean constraints, linear arithmetic, and probabilistic estimations. To handle this diversity without building a massive, monolithic solver, UBHNL utilizes an <strong>Orchestration Layer</strong>. This layer acts as a centralized planner that coordinates a specialized fleet of backends, each optimized for a specific mathematical domain.
           </p>
         </section>
 
         <section>
-          <h2>The Orchestrator: The Brain behind the Plan</h2>
+          <h2>Fragment Classification and Tactical Planning</h2>
           <p>
-            In UBHNL, the <strong>Orchestrator</strong> is the brain that manages complexity. It doesn't just throw everything at a SAT solver. Instead, it follows a sophisticated process:
-            <ol>
-              <li><strong>Fragment Detection:</strong> It looks at the problem and says: "This part is linear math, this part is simple logic, and this part is a search for a witness."</li>
-              <li><strong>The Plan:</strong> It builds a <em>Plan DAG</em>—a step-by-step strategy for how to solve the puzzle.</li>
-              <li><strong>Delegation:</strong> It sends the fragments to specialized <strong>Backends</strong>.</li>
-            </ol>
+            The core of the orchestration process is <strong>Fragment Detection</strong>. When a query is submitted, the Orchestrator analyzes the semantic IR to identify its constituent logical fragments. A fragment is a restricted subset of logic (e.g., XOR-linear, Horn-clause, or Bit-Vector arithmetic) for which efficient decision procedures are known. 
+          </p>
+          <p>
+            Based on this classification, the Orchestrator constructs a <strong>Plan DAG</strong>—a directed acyclic graph of tasks that describes the sequence of lowering, solving, and verification steps required to reach a conclusion. This tactical approach ensures that the most appropriate tool is used for each component of the problem.
           </p>
         </section>
 
         <section>
-          <h2>Fragments: The Building Blocks of Complexity</h2>
+          <h2>Pluggable Backends and the Verification Contract</h2>
           <p>
-            We call these specialized parts <strong>Fragments</strong>. 
-            By breaking a "Universal" problem into smaller, well-defined fragments, we can use the most efficient tools for each job. A simple logic puzzle doesn't need a supercomputer, but a complex optimization might. The Orchestrator knows the difference.
+            Universality is achieved through <strong>Backend Specialization</strong>. UBHNL does not rely on a single algorithm; instead, it delegates work to a variety of specialized engines, including SAT solvers, SMT solvers, and model checkers. To maintain system integrity, these backends are treated as untrusted. Every result must be accompanied by checkable evidence (a witness or a certificate), which is validated by the <strong>Trusted Core</strong>. This separation allows the system to incorporate state-of-the-art solvers while maintaining a rigorous, proof-based verification contract.
           </p>
         </section>
 
         <section>
-          <h2>Type Lowering: The Universal Translation</h2>
+          <h2>Type Lowering: The Unified Boolean Substrate</h2>
           <p>
-            How does the Orchestrator communicate with all these different specialists? Through <strong>Type Lowering</strong>. 
-            It takes high-level concepts (like "Trucks" and "Routes") and translates them into the minimal language of the UBH Kernel: <strong>Bits and Wires</strong>. This ensures that even though many specialists are involved, they all agree on the final "Ground Truth."
+            The communication between high-level theory and low-level backends is facilitated through <strong>Type Lowering</strong>. This process translates sophisticated domain concepts into the minimal, universal language of the UBH Kernel: bits and gates. This ensures that regardless of the original fragment, all reasoning is ultimately grounded in the same Boolean substrate, providing a unified foundation for consistency checking across all backends.
           </p>
         </section>
 
         <section>
-          <h2>Current Limits & Future Plans</h2>
+          <h2>Research Frontiers: Heuristic-Guided Planning</h2>
           <p>
-            <strong>What we have:</strong> A flexible orchestrator that can route problems to SAT solvers and check their results.
-          </p>
-          <p>
-            <strong>What we're building:</strong> <em>Smarter Planning.</em> We are teaching the Orchestrator to estimate the "Difficulty" of a problem before it starts. This will allow it to choose better strategies and give Marco faster results for his logistics routes.
+            Current research is directed toward <strong>Adaptive Planning</strong>. We are developing heuristic models that allow the Orchestrator to estimate the computational complexity of a problem fragment before execution. This will enable the system to dynamically adjust budgets, choose between competing backend tactics, and optimize the overall reasoning time for large-scale industrial applications.
           </p>
         </section>
 

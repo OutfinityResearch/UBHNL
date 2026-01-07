@@ -3,64 +3,64 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vision: Agents and Tool Usage</title>
+    <title>Vision: Formal Verification of Autonomous Agents</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Agents and Tool Usage</h1>
-      <p>Plan actions with explicit preconditions, policies, and safety constraints.</p>
+      <h1>Formal Safety: Verified Planning for Autonomous Agents</h1>
+      <p>Enforcing policy constraints and verifying action sequences through symbolic reasoning.</p>
     </header>
     <main>
       <div class="card">
         <div class="nav">
           <a href="index.html">Vision Home</a>
-          <a href="regulated.html">Regulated Industry</a>
-          <a href="literature.html">Literary Analysis</a>
-          <a href="system2.html">System 2 + LLM</a>
-          <a href="rag-thinking-db.html">RAG + Thinking DB</a>
-          <a href="science.html">Scientific Review</a>
           <a href="synthetic-data.html">Synthetic Data</a>
-          <a href="agents.html">Agents + Tools</a>
           <a href="trustworthy-ai.html">Trustworthy AI</a>
           <a href="integration.html">Integration Map</a>
         </div>
 
-        <h2>What this enables</h2>
-        <ul>
-          <li><strong>Explicit plans</strong>: preconditions and postconditions as formal rules.</li>
-          <li><strong>Policy enforcement</strong>: agents only execute actions that satisfy constraints.</li>
-          <li><strong>Traceable decisions</strong>: every action has a rationale and origin.</li>
-        </ul>
+        <section>
+          <h2>The Problem: The Stochastic Nature of Autonomous Decision-Making</h2>
+          <p>
+            Autonomous agents using LLM-based planners frequently produce action sequences that are semantically plausible but operationally invalid or unsafe. These planners lack a mechanism to verify if a proposed tool call satisfies all preconditions or if its cumulative effects violate high-level safety policies. In production environments, this "planning hallucination" can lead to data corruption, security breaches, or system failures.
+          </p>
+        </section>
 
-        <h2>Workflow (practical)</h2>
-        <ol>
-          <li>Define action schemas (preconditions, effects, costs).</li>
-          <li>Represent environment state and constraints in CNL/DSL.</li>
-          <li>Query for feasible plans or validate LLM-generated plans.</li>
-          <li>Use explanations and cores when plans fail.</li>
-        </ol>
+        <section>
+          <h2>The Solution: Formal Policy and Safety Envelopes</h2>
+          <p>
+            UBHNL serves as a <strong>System 2 Safety Layer</strong> for autonomous systems. It operates by surrounding the stochastic planner with a <strong>Verified Safety Envelope</strong>. This architecture ensures that every action taken by an agent is logically sound through three primary mechanisms:
+          </p>
+          <p>
+            <strong>Formal Precondition Validation:</strong> Before an agent executes a tool call, the Orchestrator verifies that the current environment state satisfies the tool's logical preconditions. If the check fails, the action is blocked, and the agent is provided with an explicit explanation of the missing dependency.
+          </p>
+          <p>
+            <strong>Invariant Policy Enforcement:</strong> High-level safety rules (e.g., "Never delete data without a confirmed backup") are encoded as formal constraints. The system exhaustively checks the agent's proposed plan against these invariants. Any step that could lead to a prohibited state is flagged, ensuring the agent remains within its "Safe Envelope."
+          </p>
+          <p>
+            <strong>Rational Plan Attribution:</strong> Every accepted plan is a <strong>Verified Plan</strong>. It is accompanied by a formal witness showing that each step is both necessary and consistent with the agent's goal and the system's policies. This provides a complete audit trail for autonomous decision-making.
+          </p>
+        </section>
 
-        <h2>Outputs you can expect</h2>
-        <ul>
-          <li>Valid action sequences (witnesses) with justifications.</li>
-          <li>Constraint-violating steps identified with origins.</li>
-          <li>Plan alternatives under different budgets or policies.</li>
-        </ul>
+        <section>
+          <h2>Mechanism: Planning as Satisfiability (Satisfy and Prove)</h2>
+          <p>
+            In UBHNL, planning is transformed into an <strong>Existential Query Task</strong>. The agent's goal is formulated as a logical statement: "Does there exist a sequence of actions such that the final state satisfies the goal while all intermediate states respect safety invariants?". The system's backends (using fragments like IC3/PDR or SMT) search for a witness sequence. If found, the agent receives a guaranteed-safe plan. If <code>UNSAT</code>, the system proves that no safe path to the goal exists given the current constraints.
+          </p>
+        </section>
 
-        <h2>Limits and constraints</h2>
-        <ul>
-          <li>Planning quality depends on action schema completeness.</li>
-          <li>Complex temporal constraints may require dedicated fragments or backends.</li>
-        </ul>
+        <section>
+          <h2>Research Frontier: Real-Time Constraint Adaptation</h2>
+          <p>
+            Operational environments are dynamic. We are developing <strong>Real-Time Session Mechanisms</strong> that allow agents to update their constraints based on new sensory data without re-planning from scratch. This involves "Incremental Plan Repair," where the Orchestrator identifies the minimal set of actions that must be modified to maintain the safety envelope in response to an environmental change.
+          </p>
+        </section>
 
-        <h2>What we still need</h2>
-        <ul>
-          <li>Action libraries for common tool APIs.</li>
-          <li>Cost and utility models to guide optimization.</li>
-          <li>Integration hooks for runtime tool execution.</li>
-        </ul>
+        <div class="footer-links">
+          <p>Technical reference on planning: <a href="../mdview.html?file=specs/DS/DS12-orchestrator-planner.md">Orchestrator Planning (MD)</a>.</p>
+        </div>
       </div>
     </main>
   </body>

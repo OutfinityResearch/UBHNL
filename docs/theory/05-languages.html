@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 05: The Human-Machine Bridge</title>
+    <title>Theory 05: Formal Languages and Determinism</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 05 — The Human-Machine Bridge</h1>
-      <p>How we speak to machines in a language both can understand.</p>
+      <h1>Theory 05 — Formal Languages: Determinism and Typing</h1>
+      <p>Mapping human intent to symbolic precision through isomorphic representations.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: narrative tutorial on CNL and DSL.</div>
+        <div class="draft">DRAFT: academic tutorial on CNL and DSL.</div>
 
         <div class="nav">
           <a href="04-solving.html">Prev: Solving</a>
@@ -23,67 +23,37 @@
         </div>
 
         <section>
-          <h2>The Use Case: The Compliance Officer</h2>
+          <h2>The Semantic Bridge</h2>
           <p>
-            Sarah is a compliance officer at a large bank. She needs to ensure that thousands of transactions follow the law: 
-            <em>"If a transaction is over $10,000 and the sender is from a high-risk region, then it must be flagged for review."</em>
-          </p>
-          <p>
-            Sarah isn't a coder, but she is a logic expert. UBHNL gives her a <strong>Controlled Natural Language (CNL)</strong> that looks like English but acts like code.
+            The effectiveness of a reasoning system is constrained by the precision of its input language. UBHNL addresses the inherent ambiguity of natural language by providing a <strong>Semantic Bridge</strong> consisting of two isomorphic representations: <strong>Controlled Natural Language (CNL)</strong> for human readability and <strong>DSL (sys2)</strong> for machine-efficient storage and processing. These languages share a single underlying logical soul, ensuring that no meaning is lost during translation.
           </p>
         </section>
 
         <section>
-          <h2>CNL: English without the "Oops"</h2>
+          <h2>Controlled Natural Language: Eliminating Ambiguity</h2>
           <p>
-            Human language is messy. "I saw the man with the telescope" (Did I use the telescope, or did he have it?). 
-            UBHNL uses <strong>Controlled Natural Language</strong> to remove this ambiguity. It uses strict patterns like:
-            <ul>
-              <li><code>X has Y</code> (e.g., <em>Transaction has HighRiskSender.</em>)</li>
-              <li><code>X is Y</code> (e.g., <em>Alice is a Manager.</em>)</li>
-              <li><code>If P then Q</code> (e.g., <em>If amount > 10000 then Flag(transaction).</em>)</li>
-            </ul>
-            By following these patterns, Sarah can write rules that the computer understands <em>exactly</em> as she intended.
+            CNL is a restricted subset of English designed to be parsed deterministically. By enforcing strict syntactic patterns—such as the Subject-Verb-Object (SVO) structure—CNL eliminates the referential ambiguity and scoping issues common in natural speech. Every statement in CNL, whether it is a fact (e.g., <code>Alice is a Patient</code>) or a universal rule (e.g., <code>Each Patient has a Temperature</code>), maps directly to a unique symbolic representation. This ensures that the user's intent is captured with the same rigor as a mathematical formula, while remaining accessible to domain experts who are not trained in formal logic.
           </p>
         </section>
 
         <section>
-          <h2>Two Skins, One Soul: CNL vs. DSL</h2>
+          <h2>Semantic Isomorphism: CNL vs. DSL</h2>
           <p>
-            While Sarah loves the CNL, developers might prefer something more structured. UBHNL provides an <strong>isomorphism</strong>: 
-            Every sentence in Sarah's English-like CNL has a 1-to-1 equivalent in our <strong>DSL (sys2)</strong>.
-          </p>
-          <div class="side-by-side">
-            <div class="cnl-side">
-              <strong>CNL (Human)</strong><br/>
-              <code>Every Patient with Flu has Fever.</code>
-            </div>
-            <div class="arrow">↔</div>
-            <div class="dsl-side">
-              <strong>DSL (Machine)</strong><br/>
-              <code>@rule1 ForAll Patient graph p<br/>&nbsp;&nbsp;Implies { HasFlu $p } { HasFever $p }<br/>end</code>
-            </div>
-          </div>
-          <p>
-            You can swap between them at any time. The system doesn't care which one you use—the underlying logic remains identical.
+            A core architectural principle of UBHNL is the <strong>Isomorphism</strong> between its two front-end languages. A rule authored in natural-sounding CNL and its counterpart in the symbolic DSL (sys2) resolve to the exact same Abstract Syntax Tree (AST). This property allows for a fluid workflow where experts can author and review theories in CNL, while automated tools and back-end solvers manipulate the compact DSL format. The system supports "round-trip" translation, enabling the output of a solver (originally in DSL) to be explained back to the user in the original CNL syntax.
           </p>
         </section>
 
         <section>
-          <h2>The Lexicon: The Common Dictionary</h2>
+          <h2>The Strict Lexicon and Type Safety</h2>
           <p>
-            How does the system know what a "Patient" or "Flu" is? Through the <strong>Lexicon</strong>. 
-            Before you start writing rules, you define your "vocabulary". This ensures that the system is <strong>Strictly Typed</strong>. If Sarah mentions a "Symptom" that isn't in her lexicon, the system will politely stop her and ask for a definition.
+            To maintain logical integrity, UBHNL operates under a <strong>Strict Lexicon</strong> policy. Every symbol—whether it is a domain, a constant, or a predicate—must be explicitly declared before it is used. This mandatory typing prevents the introduction of "silent errors," such as typos that would otherwise be interpreted as new, undefined variables. The Lexicon serves as the system's "shared dictionary," ensuring that both the human user and the machine solver are operating on a consistent set of definitions. Arity and argument types are validated during the parsing stage, catching semantic mismatches before they reach the reasoning engine.
           </p>
         </section>
 
         <section>
-          <h2>Where we are going</h2>
+          <h2>Future Extensions: Beyond SVO Patterns</h2>
           <p>
-            <strong>What we have:</strong> A deterministic translator that handles SVO (Subject-Verb-Object) patterns and complex quantifiers.
-          </p>
-          <p>
-            <strong>What we need:</strong> We are working on <strong>Grammar Extensions</strong>. We want to support more natural ways of expressing time ("After a transaction is flagged...") and uncertainty ("It is 80% likely that...").
+            Current development is focused on expanding the <strong>Grammar Expressivity</strong> of the CNL. We are developing natural patterns for temporal constraints ("after T has elapsed"), probabilistic assertions ("with probability P"), and complex aggregations. These extensions are designed to maintain the deterministic nature of the parser while providing experts with the tools needed to describe increasingly sophisticated domain behaviors.
           </p>
         </section>
 

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theory 09: Rational Attribution and Explainability</title>
+    <link rel="stylesheet" href="../site.css" />
+    <script src="../site-nav.js" defer></script>
+  </head>
+  <body class="with-diagram">
+    <header>
+      <h1>Theory 09 — Explainability: Rational Attribution</h1>
+      <p>Bridging the gap between mathematical proofs and human understanding through origin tracking and core synthesis.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="draft">DRAFT: academic tutorial on explainability and origin tracking.</div>
+
+        <div class="nav">
+          <a href="08-examples.html">Prev: Case Studies</a>
+          <a href="index.html">Theory Index</a>
+          <a href="../vision/trustworthy-ai.html">Vision: Trustworthy AI</a>
+        </div>
+
+        <section>
+          <h2>The Epistemology of "Why"</h2>
+          <p>
+            In the context of formal reasoning, explainability is not merely a user-interface feature; it is an epistemological necessity. A conclusion, whether <code>SAT</code> or <code>UNSAT</code>, is of limited utility in a collaborative human-AI environment if the derivation remains opaque. <strong>Rational Attribution</strong> is the process of mapping low-level computational artifacts—such as SAT witnesses or UNSAT certificates—back to the high-level semantic constructs defined by the user. UBHNL achieves this by maintaining a strict chain of causality from the initial <strong>Lexicon</strong> definition to the final solver verdict.
+          </p>
+        </section>
+
+        <section>
+          <h2>Mechanisms: Origin Tracking and Provenance</h2>
+          <p>
+            The foundation of UBHNL explainability is <strong>Origin Tracking</strong>. Every statement processed by the system—whether loaded from a persistent <code>.cnl</code> theory or learned during an ephemeral session—is assigned a unique <strong>Origin ID</strong>. This ID serves as a persistent link to the source metadata, including file path, line number, and column index. When the system "lowers" a rule into the Boolean substrate, these Origin IDs are propagated through the circuit. This ensures that every wire in the UBH Kernel retains a "provenance trail" back to the human-readable text that defined its meaning.
+          </p>
+        </section>
+
+        <section>
+          <h2>Synthesizing Explanations: Unsat Cores and Witnesses</h2>
+          <p>
+            The system synthesizes explanations based on the nature of the reasoning result:
+          </p>
+          <p>
+            <strong>For UNSAT (Contradiction):</strong> When a theory is inconsistent, the solver identifies an <strong>Unsat Core</strong>—the minimal set of constraints that are mutually exclusive. The Orchestrator then maps the low-level Boolean contradictions in the core back to their associated Origin IDs. The resulting explanation is a coherent narrative showing exactly which high-level rules are in conflict, allowing the user to resolve the logical failure at its source.
+          </p>
+          <p>
+            <strong>For SAT (Consistency):</strong> When a query is satisfied, the explanation is derived from the <strong>Witness Assignment</strong>. The system provides a concrete model of the world that satisfies all constraints. By translating these binary assignments back into the domain vocabulary defined in the Lexicon, UBHNL produces an "Evidence Story" that justifies the consistency of the result through concrete examples.
+          </p>
+        </section>
+
+        <section>
+          <h2>The Human-Centric Narrative: Proof Translation</h2>
+          <p>
+            While mathematical certificates (like DRAT or LRAT) are sufficient for computer-based verification, they are illegible to domain experts. UBHNL implements <strong>Proof Translation</strong>, a process that utilizes the semantic isomorphism between DSL and CNL to reconstruct a logical argument in natural language. This ensures that a bank auditor or a medical researcher can review a formal proof using the same Subject-Verb-Object patterns they used to author the knowledge base.
+          </p>
+        </section>
+
+        <section>
+          <h2>Research Frontier: Explaining Probabilistic Reasoning</h2>
+          <p>
+            Current research is focused on extending these attribution mechanisms to <strong>Probabilistic Fragments</strong>. Explaining why a specific outcome is "80% likely" requires more than identifying a minimal conflict; it requires summarizing the weight of evidence across multiple competing paths. We are developing techniques for "Marginal Attribution," identifying which specific rules contributed most significantly to the final probability distribution, thus providing a quantitative measure of influence within a qualitative logical framework.
+          </p>
+        </section>
+
+        <div class="footer-links">
+          <p>See it in action: <a href="../vision/trustworthy-ai.html">Trustworthy AI Vision</a>.</p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -233,18 +233,19 @@ c0 is a Cell.
 c0 has gene A.
 
 For any Cell c:
-    If geneA(c) and not inhibitor(c) then proteinP(c).
+    If geneA($c) and not inhibitor($c) then proteinP($c).
 ```
 
 **DSL** (`biology.sys2`):
 ```sys2
-@Cell:Cell __Atom
-@c0:c0 __Atom
-IsA c0 Cell
+Vocab
+    Domain Cell
+    Const c0 Cell
+end
 
 @f1 geneA c0
 
-@rule1 ForAll Cell graph c
+@rule1:GeneAImpliesProteinP ForAll Cell graph c
     @g geneA $c
     @inh inhibitor $c
     @ninh Not $inh
@@ -253,6 +254,7 @@ IsA c0 Cell
     @imp Implies $prem $p
     return $imp
 end
+Assert GeneAImpliesProteinP
 ```
 
 **Query**: Does c0 have protein P?
@@ -269,9 +271,9 @@ Ion is a Person.
 Ion has flu.
 
 For any Person p:
-    If p has flu then p has fever.
+    If $p has flu then $p has fever.
 
-Which Person p has fever?
+Which Person $p has fever?
 ```
 
 **Expected**:
@@ -282,20 +284,22 @@ Which Person p has fever?
 
 **DSL** (`contradiction.sys2`):
 ```sys2
-@Cell:Cell __Atom
-@c0:c0 __Atom
-IsA c0 Cell
+Vocab
+    Domain Cell
+    Const c0 Cell
+end
 
 @f1 geneA c0
 @f2 inhibitor c0
 
-@rule1 ForAll Cell graph c
+@rule1:GeneAImpliesNotInhibitor ForAll Cell graph c
     @g geneA $c
     @inh inhibitor $c
     @ninh Not $inh
     @imp Implies $g $ninh
     return $imp
 end
+Assert GeneAImpliesNotInhibitor
 ```
 
 **Expected**:

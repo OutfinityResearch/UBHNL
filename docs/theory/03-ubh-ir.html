@@ -9,12 +9,12 @@
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 03 — UBH: The Architecture of Compression</h1>
-      <p>How we store millions of thoughts in a handful of nodes.</p>
+      <h1>Theory 03 — UBH: The Architecture of Structural Sharing</h1>
+      <p>Optimizing reasoning through hash-consing and DAG-based representation.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: narrative tutorial on UBH IR and hash-consing.</div>
+        <div class="draft">DRAFT: academic tutorial on UBH IR and hash-consing.</div>
 
         <div class="nav">
           <a href="02-boolean-gf2.html">Prev: Foundations</a>
@@ -23,57 +23,37 @@
         </div>
 
         <section>
-          <h2>The Use Case: The LEGO Castle</h2>
+          <h2>The Principle of Structural Compression</h2>
           <p>
-            Imagine you are building a massive LEGO castle with 10,000 blue bricks. If you had to describe every single brick's position and color individually, your manual would be thousands of pages long. But if you realize that every brick is identical, you can just say: "Here is a blue 2x4 brick. Now, put it in these 10,000 places."
-          </p>
-          <p>
-            In UBHNL, logic works the same way. If a rule like "Patients have Fever" appears 1,000 times in different contexts, we only store it <strong>once</strong>.
+            The efficiency of a universal reasoning system is heavily dependent on its ability to handle repetitive logical structures without redundant computation. In UBHNL, we address this through <strong>Structural Sharing</strong>. When large theories are loaded, identical sub-expressions are often encountered across different rules. Instead of duplicating these expressions, the system ensures that every unique logical fragment is stored exactly once, transforming the problem from a tree of symbols into a dense, compressed graph.
           </p>
         </section>
 
         <section>
-          <h2>Hash-Consing: Logical Deduplication</h2>
+          <h2>Hash-Consing: Canonical Deduplication</h2>
           <p>
-            Our kernel, <strong>UBH</strong> (Universal Boolean Hypergraph), uses a technique called <strong>Hash-Consing</strong>. Whenever a new logical gate (XOR or AND) is created, the system first checks a global "dictionary" to see if that exact gate already exists.
-          </p>
-          <p>
-            If you try to create <code>AND(Alice, Bob)</code> twice, the system will give you back the <em>exact same ID</em> both times. This "Structural Compression" happens automatically and ensures that our memory footprint stays as small as possible.
+            Our kernel, <strong>UBH</strong> (Universal Boolean Hypergraph), implements this compression through a technique called <strong>Hash-Consing</strong>. During the construction of the Boolean circuit, every new logical gate (XOR or AND) is queried against a global hash table. If a gate with the same inputs and operator already exists, the kernel returns the existing node's unique identifier. To maximize the effectiveness of this deduplication, inputs are canonicalized—sorting by node ID—to handle commutativity. This ensures that <code>AND(A, B)</code> and <code>AND(B, A)</code> always resolve to the same physical node.
           </p>
         </section>
 
         <section>
-          <h2>Wires and Nodes: The Nervous System</h2>
+          <h2>Wires and Nodes: The Unified IR</h2>
           <p>
-            In UBH, we talk about <strong>Wires</strong> (or Node IDs). A wire represents a Boolean value. It could be:
-            <ul>
-              <li>A <strong>Constant</strong> (Always 0 or Always 1).</li>
-              <li>A <strong>Variable</strong> (A named input, like "Is it raining?").</li>
-              <li>A <strong>Gate</strong> (The result of an XOR or AND operation).</li>
-            </ul>
-            This graph of wires is immutable. Once a wire is created, its "meaning" (how it was computed) never changes.
+            The UBH Intermediate Representation is structured as an immutable Directed Acyclic Graph (DAG) of nodes, referred to as <strong>Wires</strong>. Each wire carries a unique identifier and represents a specific Boolean value within the circuit. A wire can be an atomic <strong>Constant</strong> (0 or 1), a <strong>Variable</strong> representing an external input or quantifier binder, or a <strong>Gate</strong> representing the result of an algebraic operation. Because wires are immutable, their semantic meaning is fixed upon creation, which simplifies the application of global optimizations and simplifies the verification of the resulting proofs.
           </p>
         </section>
 
         <section>
-          <h2>Separating "How" from "Must"</h2>
+          <h2>Decoupling Computation from Constraint</h2>
           <p>
-            There is a crucial distinction in UBHNL:
-            <ol>
-              <li><strong>The DAG:</strong> Defines <em>how</em> values are computed (The logic circuit).</li>
-              <li><strong>Assertions:</strong> Define <em>what</em> must be true (The constraints).</li>
-            </ol>
-            You can build a huge, complex circuit of logic, and then separately say: "I assert that the output wire of this circuit must be 1." This separation makes the system incredibly flexible and easy to debug.
+            A fundamental architectural distinction in UBH is the separation of <strong>Structural Definition</strong> from <strong>Logical Constraint</strong>. The DAG defines <em>how</em> values are computed (the "circuit"), while <strong>Assertions</strong> define <em>what</em> must be true (the "requirements"). For example, a theory might define a complex circuit of dependencies and then separately assert that a specific output wire must evaluate to <code>1</code>. This decoupling allows the kernel to maintain a small, auditable footprint while supporting highly complex compositions of rules and facts.
           </p>
         </section>
 
         <section>
-          <h2>What's missing and what's next</h2>
+          <h2>Optimization Objectives</h2>
           <p>
-            <strong>Current State:</strong> Our IR is solid and provides massive compression for repetitive logic.
-          </p>
-          <p>
-            <strong>The Challenge:</strong> We are refining our <strong>Local Simplifiers</strong>. Sometimes, two different-looking formulas mean the same thing (e.g., <code>A AND (A OR B)</code> is just <code>A</code>). We want our kernel to recognize these identities automatically before they even hit the solver.
+            While the current IR provides significant compression through hash-consing, ongoing development is focused on enhancing <strong>Local Simplifiers</strong>. By applying algebraic identities (such as idempotence and absorption) before the hash-consing stage, the system can identify semantically equivalent but syntactically different formulas. This further increases the deduplication rate and reduces the complexity of the problems presented to the back-end solvers.
           </p>
         </section>
 

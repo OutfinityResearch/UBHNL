@@ -61,7 +61,7 @@ Given `prove(phi)` defined as `solve(T ∧ ¬phi)`:
 
 ### 7) CNL Parsing and Typing
 - Parse a DS-005 block quantifier into a typed AST:
-  - `For any Cell c:` with an indented `If ... then ... .` body.
+  - `For any Cell c:` with an indented `If ... then ... .` body (variable uses must be `$c`).
 - Parse a DS-005 conditional with conjunction and negation inside a quantifier block.
 - Reject:
   - missing type in binder (e.g., `For any c:`),
@@ -95,7 +95,7 @@ Concrete scenario (CNL):
 1) Learn:
    ```cnl
    For any Cell c:
-       If geneA(c) then proteinP(c).
+       If geneA($c) then proteinP($c).
    ```
 2) Learn: `geneA(c0).`
 3) Query (goal kind `Prove`): `proteinP(c0)`

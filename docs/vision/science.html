@@ -3,65 +3,64 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vision: Scientific Review</title>
+    <title>Vision: Formal Scientific Review</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Scientific Theories and Peer Review</h1>
-      <p>Represent claims formally and check consistency across papers and experiments.</p>
+      <h1>Epistemic Rigor: Formal Methods in Scientific Review</h1>
+      <p>Representing scientific claims as formal theories to enable automated consistency checking and dependency tracking.</p>
     </header>
     <main>
       <div class="card">
         <div class="nav">
           <a href="index.html">Vision Home</a>
-          <a href="regulated.html">Regulated Industry</a>
-          <a href="literature.html">Literary Analysis</a>
-          <a href="system2.html">System 2 + LLM</a>
-          <a href="rag-thinking-db.html">RAG + Thinking DB</a>
-          <a href="science.html">Scientific Review</a>
+          <a href="rag-thinking-db.html">Symbolic RAG</a>
           <a href="synthetic-data.html">Synthetic Data</a>
-          <a href="agents.html">Agents + Tools</a>
-          <a href="trustworthy-ai.html">Trustworthy AI</a>
           <a href="integration.html">Integration Map</a>
         </div>
 
-        <h2>What this enables</h2>
-        <ul>
-          <li><strong>Formal claims</strong>: hypotheses and empirical constraints written in CNL/DSL.</li>
-          <li><strong>Consistency checks</strong>: detect contradictions within a paper or across sources.</li>
-          <li><strong>Traceable review</strong>: evidence links to specific statements and data constraints.</li>
-        </ul>
+        <section>
+          <h2>The Epistemological Crisis: Coherence in the Age of Information Overload</h2>
+          <p>
+            The scientific community faces a growing challenge in maintaining theoretical coherence across an exponentially expanding body of literature. Discoveries in one sub-field often rely on assumptions that may be latent or contradicted by findings in another. Traditional peer review is limited by the cognitive bandwidth of human experts, who cannot exhaustively check a new hypothesis against every established constraint. UBHNL addresses this "Coherence Gap" by providing a formal language for <strong>Claim Encapsulation</strong> and automated verification.
+          </p>
+        </section>
 
-        <h2>Workflow (practical)</h2>
-        <ol>
-          <li>Define domain vocabulary for the field (variables, units, categories).</li>
-          <li>Encode claims, assumptions, and constraints in CNL/DSL.</li>
-          <li>Run entailment/refutation queries to validate logical consistency.</li>
-          <li>Report contradictions and missing assumptions with origins.</li>
-        </ol>
+        <section>
+          <h2>Methodology: Scientific Theories as Constraint Networks</h2>
+          <p>
+            UBHNL enables researchers to represent hypotheses and empirical findings as sets of formal symbolic constraints. This transition from descriptive summaries to formal theories allows for several rigorous analytical processes:
+          </p>
+          <p>
+            <strong>Hypothesis Validation:</strong> Researchers can translate a new hypothesis into CNL and query the system to verify if it is logically compatible with existing experimental results. If the solver returns <code>UNSAT</code>, it provides a minimal conflict set (Unsat Core), identifying the specific established laws or data points that the new hypothesis contradicts.
+          </p>
+          <p>
+            <strong>Automated "Red-Teaming" of Papers:</strong> Peer reviewers can use the system to identify hidden assumptions or non-obvious edge cases where a proposed model fails. By searching for counterexamples (witnesses of inconsistency), the system acts as a formal "stress test" for scientific theories.
+          </p>
+          <p>
+            <strong>Global Dependency Mapping:</strong> Because every rule in UBHNL carries an <strong>Origin</strong>, the system can generate a global graph of scientific dependencies. This illustrates which conclusions rely on which specific axioms, allowing the community to track how a revision in a foundational theory propagates through all dependent research.
+          </p>
+        </section>
 
-        <h2>Outputs you can expect</h2>
-        <ul>
-          <li>Proofs or counterexamples for claims.</li>
-          <li>Conflict sets across multiple sources.</li>
-          <li>Explicit dependency graphs (which assumptions support which results).</li>
-        </ul>
+        <section>
+          <h2>Outcome: The "Proof-Carrying" Research Paper</h2>
+          <p>
+            The ultimate objective is the development of <strong>Executable Scientific Manuscripts</strong>. In this vision, a paper is not just a PDF, but a formal theory bundle (DSL/CNL). This allows the research to be reproducible by construction: any external observer can run the formal model, verify its internal consistency, and check the validity of its claims using the trusted UBH Kernel.
+          </p>
+        </section>
 
-        <h2>Limits and constraints</h2>
-        <ul>
-          <li>Numerical models require explicit modeling choices and fragments.</li>
-          <li>Ambiguous claims must be rewritten into precise CNL.</li>
-          <li>Large domains may require schema tactics or approximations with audit metadata.</li>
-        </ul>
+        <section>
+          <h2>Research Frontier: Integrating Uncertainty and Magnitude</h2>
+          <p>
+            The modeling of scientific phenomena often requires reasoning over continuous values and statistical significance. We are currently developing <strong>Theory-Specific Backends</strong> that integrate symbolic logic with numeric constraints. This will allow UBHNL to verify not just binary logical consistency, but also "range consistency"—ensuring that theoretical predictions stay within the bounds of measured physical constants and experimental error margins.
+          </p>
+        </section>
 
-        <h2>What we still need</h2>
-        <ul>
-          <li>Libraries for units, measurements, and experimental schemas.</li>
-          <li>Connectors to data repositories for reproducible evidence.</li>
-          <li>Peer-review workflows and templates for consistent encoding.</li>
-        </ul>
+        <div class="footer-links">
+          <p>Learn about theories: <a href="../theory/05-languages.html">Lexicon and Languages</a>.</p>
+        </div>
       </div>
     </main>
   </body>

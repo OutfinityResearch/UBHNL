@@ -3,64 +3,64 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vision: Trustworthy AI</title>
+    <title>Vision: Algorithmic Governance and Trustworthy AI</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Trustworthy AI, Bias, and Governance</h1>
-      <p>Make policies explicit and auditable, and detect rule-level bias or conflicts.</p>
+      <h1>Algorithmic Governance: Formalizing Trust in AI</h1>
+      <p>Utilizing constraint satisfaction to audit bias, ensure policy adherence, and provide formal provenance.</p>
     </header>
     <main>
       <div class="card">
         <div class="nav">
           <a href="index.html">Vision Home</a>
-          <a href="regulated.html">Regulated Industry</a>
+          <a href="agents.html">Autonomous Agents</a>
           <a href="literature.html">Literary Analysis</a>
-          <a href="system2.html">System 2 + LLM</a>
-          <a href="rag-thinking-db.html">RAG + Thinking DB</a>
-          <a href="science.html">Scientific Review</a>
-          <a href="synthetic-data.html">Synthetic Data</a>
-          <a href="agents.html">Agents + Tools</a>
-          <a href="trustworthy-ai.html">Trustworthy AI</a>
           <a href="integration.html">Integration Map</a>
         </div>
 
-        <h2>What this enables</h2>
-        <ul>
-          <li><strong>Policy checks</strong>: encode fairness and compliance constraints as rules.</li>
-          <li><strong>Conflict detection</strong>: identify incompatible policies and hidden assumptions.</li>
-          <li><strong>Audit trails</strong>: every decision references its formal origin.</li>
-        </ul>
+        <section>
+          <h2>The Epistemological Gap: From Heuristic Alignment to Formal Proof</h2>
+          <p>
+            The prevailing paradigm for "AI Alignment"—primarily Reinforcement Learning from Human Feedback (RLHF)—operates on a probabilistic basis. While effective at producing socially acceptable outputs in average cases, it offers no mathematical guarantees for edge cases or complex policy intersections. Trustworthy AI requires a fundamental shift: from <em>stochastic behavior modification</em> to <strong>Formal Algorithmic Governance</strong>. UBHNL addresses this by providing a layer where ethical and operational constraints are not just "suggestions" in a latent space, but hard invariants in a symbolic reasoning engine.
+          </p>
+        </section>
 
-        <h2>Workflow (practical)</h2>
-        <ol>
-          <li>Define governance vocabulary (protected attributes, decision outcomes).</li>
-          <li>Encode policies in CNL/DSL with explicit constraints.</li>
-          <li>Evaluate model outputs against policies and detect violations.</li>
-          <li>Report conflicts with origins and certificates.</li>
-        </ol>
+        <section>
+          <h2>Method: Policy Auditing and Constraint Enforcement</h2>
+          <p>
+            UBHNL enables a rigorous auditing lifecycle by encoding governance standards as symbolic rules. This approach facilitates three critical operations:
+          </p>
+          <p>
+            <strong>Decision Space Audit:</strong> Instead of monitoring model outputs post-hoc, UBHNL-enabled solvers can exhaustively search the combinatorial space of policy interactions. This identifies "latent bias"—edge cases where a model, despite being statistically fair on training data, may exhibit disparate impact when certain conditions align.
+          </p>
+          <p>
+            <strong>Invariant Enforcement:</strong> By acting as a formal gate, UBHNL ensures that model outputs are consistent with non-negotiable standards, such as GDPR "Right to Explanation" or industry-specific safety protocols. If a proposed decision violates an invariant, the system blocks the output and returns a proof of violation.
+          </p>
+          <p>
+            <strong>Assumptive Extraction:</strong> Trust is often hindered by the "black box" nature of neural reasoning. UBHNL facilitates the extraction of the latent rules and assumptions driving a model's output into checkable <strong>Controlled Natural Language (CNL)</strong>. This makes the model's internal "logic" legible to human auditors and regulators.
+          </p>
+        </section>
 
-        <h2>Outputs you can expect</h2>
-        <ul>
-          <li>Policy compliance reports with traceability.</li>
-          <li>Formal explanations for violations or exclusions.</li>
-          <li>Counterexamples that reveal bias or inconsistent rules.</li>
-        </ul>
+        <section>
+          <h2>Explainability as a Prerequisite for Trust</h2>
+          <p>
+            A core tenet of Trustworthy AI is that a result without a derivation is merely an assertion. UBHNL provides <strong>Proof-Carrying Governance</strong>. Every decision is accompanied by a formal trace linking back to the authoritative policy source. This transparency is achieved through the integration of <strong>Explainability</strong> mechanisms (see <a href="../theory/09-explainability.html">Theory 09: Explainability</a>), which translate low-level mathematical contradictions into high-fidelity narratives of compliance or failure.
+          </p>
+        </section>
 
-        <h2>Limits and constraints</h2>
-        <ul>
-          <li>Fairness notions must be modeled explicitly; no implicit definitions.</li>
-          <li>Quantitative fairness metrics require dedicated fragments or numeric encodings.</li>
-        </ul>
+        <section>
+          <h2>Research Horizons: Quantitative and Deontic Logic</h2>
+          <p>
+            We are extending the UBHNL framework to handle the nuances of normative reasoning. Current development focuses on <strong>Quantitative Fairness Encodings</strong>, allowing for reasoning over statistical thresholds and disparate impact ratios within a symbolic framework. Furthermore, we are exploring <strong>Deontic Logic Fragments</strong> to formally distinguish between strict prohibitions, obligations, and conditional permissions, enabling a more sophisticated representation of legal and ethical codebases.
+          </p>
+        </section>
 
-        <h2>What we still need</h2>
-        <ul>
-          <li>Reusable governance libraries for common standards.</li>
-          <li>Integration with model evaluation pipelines and datasets.</li>
-          <li>Benchmark suites for policy consistency and bias detection.</li>
-        </ul>
+        <div class="footer-links">
+          <p>Full Specification: <a href="mdview.html?file=specs/UBH-SPEC.md">UBH Spec (MD)</a>.</p>
+        </div>
       </div>
     </main>
   </body>

@@ -77,9 +77,10 @@ c0 has gene A.
 ↔
 ```sys2
 # Biology rules
-@Cell:Cell __Atom
-@c0:c0 __Atom
-IsA c0 Cell
+Vocab
+    Domain Cell
+    Const c0 Cell
+end
 @f1 GeneA c0
 ```
 
@@ -421,12 +422,12 @@ end
 
 | CNL | DSL |
 |-----|-----|
-| `Which Type var has pred?` | `@queryN Exists Type graph var ... end` |
+| `Which Type $var has pred?` | `@queryN Exists Type graph var ... end` |
 | `Find a Type var such that body?` | `@queryN Exists Type graph var ... end` |
 
 **Example**:
 ```cnl
-Which Person p has Fever?
+Which Person $p has Fever?
 ```
 ↔
 ```sys2
@@ -618,7 +619,7 @@ Let c0 be a Cell.
 
 Definition Producer(Cell c):
     For all Protein p:
-        If c expresses p then p is active.
+        If $c expresses $p then $p is active.
 
 c0 is a Producer.
 ```

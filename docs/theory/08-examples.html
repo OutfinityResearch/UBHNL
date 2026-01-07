@@ -3,19 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 08: Stories of Logic</title>
+    <title>Theory 08: Case Studies in Formal Reasoning</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 08 — Stories of Logic</h1>
-      <p>How UBHNL solves real-world puzzles through clear reasoning.</p>
+      <h1>Theory 08 — Case Studies: Applied Formal Reasoning</h1>
+      <p>Demonstrating system capabilities through diverse logical fragments and verification tasks.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: narrative examples of UBHNL in action.</div>
-
         <div class="nav">
           <a href="07-fragments-orchestrator.html">Prev: Orchestrator</a>
           <a href="index.html">Theory Index</a>
@@ -23,56 +21,41 @@
         </div>
 
         <section>
-          <h2>The Medical Detective</h2>
+          <h2>Case Study 1: Epistemic Abduction in Medical Diagnostics</h2>
           <p>
-            A patient walks into a clinic with a fever and a cough. The system doesn't just guess. It looks at its <strong>Medical Theory</strong>: <em>"Flu causes fever and cough. A common cold causes a cough but rarely a high fever."</em>
-          </p>
-          <p>
-            The system performs <strong>Abduction</strong>. It asks: "What disease, if present, would explain these observations?" 
-            <strong>The Result:</strong> The system suggests "Flu" as a likely witness, providing the logical chain that connects the disease to the symptoms.
+            In the domain of medical informatics, UBHNL can be utilized for <strong>Abductive Reasoning</strong> to identify diseases that explain observed symptoms. When presented with a patient exhibit (e.g., high temperature and cough), the system queries its medical theory to find diseases whose causal rules entail the observations. Unlike a probabilistic guess, the system returns a <strong>Witness</strong>—a specific disease state—along with the logical chain from the theory that justifies why this disease is a sufficient explanation for the patient's condition.
           </p>
         </section>
 
         <section>
-          <h2>The Chain of Trust</h2>
+          <h2>Case Study 2: Relational Transitivity in Social Networks</h2>
           <p>
-            In a digital social network, Alice trusts Bob, and Bob trusts Charlie. Does Alice trust Charlie? 
-            The system applies a <strong>Transitivity Rule</strong>: <em>"If X trusts Y, and Y trusts Z, then X trusts Z."</em>
-          </p>
-          <p>
-            This is <strong>Deduction</strong>. The system follows the links, building a bridge of trust from Alice to Charlie. It doesn't just say "Yes"—it shows the path it took through the network.
+            The system excels at <strong>Deductive Inference</strong> over relational structures. In a social network context, transitivity rules (e.g., "If X trusts Y, and Y trusts Z, then X trusts Z") can be applied to large graphs. By querying for the existence of trust between two nodes, the Orchestrator explores the transitive closure of the trust relation. The result is a proof that demonstrates how the conclusion is derived from the atomic facts and the transitivity rule, ensuring that every link in the reasoning chain is explicit and auditable.
           </p>
         </section>
 
         <section>
-          <h2>The Ethical Switch</h2>
+          <h2>Case Study 3: Conflict Detection in Safety-Critical Systems</h2>
           <p>
-            Imagine a safety system for a power plant. A switch cannot be both ON and OFF at the same time. This is a <strong>Consistency Constraint</strong>. 
-          </p>
-          <p>
-            If a faulty sensor reports that the switch is both ON and OFF, the system detects a <strong>Conflict</strong>. It returns <strong>UNSAT</strong> and points exactly to the sensor data and the safety rule that are clashing. It prevents the system from making a dangerous decision based on contradictory data.
+            For safety-critical environments, UBHNL is used to detect <strong>Internal Contradictions</strong> within sensor data and operational constraints. If multiple sensors provide mutually exclusive data (e.g., a switch reported as both ON and OFF), the system identifies the violation of the <strong>Exclusion Invariant</strong>. The output is an <strong>UNSAT Core</strong>, pinpointing the specific conflicting inputs and rules. This prevents the system from reaching a dangerous state based on inconsistent information, providing a mathematical guarantee of operational safety.
           </p>
         </section>
 
         <section>
-          <h2>The Ancestor's Legacy</h2>
+          <h2>Case Study 4: Fixed-Point Reasoning in Genealogy</h2>
           <p>
-            In a genealogical database, we know who everyone's parents are. But how do we find an ancestor from five generations ago? 
-            We use a <strong>Recursive Rule</strong>: <em>"Your parent is your ancestor. Your parent's ancestor is also your ancestor."</em>
-          </p>
-          <p>
-            The system uses <strong>Fixed-Point Reasoning</strong> to climb the family tree, connecting long-lost relatives through a rock-solid chain of "Parent-of" facts.
+            The system handles <strong>Recursive Definitions</strong> through fixed-point reasoning, common in genealogical or hierarchical datasets. By defining ancestors recursively (e.g., "A parent is an ancestor; a parent's ancestor is also an ancestor"), UBHNL can verify ancestral relationships across any number of generations. The solver identifies a satisfying witness for the relationship, providing the full lineage as evidence of the connection, thus demonstrating the system's ability to handle recursive properties within a finite domain.
           </p>
         </section>
 
         <section>
-          <h2>Try It Yourself</h2>
+          <h2>Verification and Evaluation</h2>
           <p>
-            These aren't just stories—they are <strong>Verified Test Suites</strong>. You can run them yourself to see the system in action:
+            These case studies are formalized as part of the <strong>UBHNL Evaluation Suite</strong>. These tests, ranging from physics to linguistics, ensure that the system maintains its accuracy across diverse logical fragments. Developers can execute these formal benchmarks to verify that new backends or language features do not compromise the integrity of the core reasoning engine:
           </p>
           <pre><code>node evals/runFastEval.mjs</code></pre>
           <p>
-            This command runs 14 different scenarios, from physics to linguistics, proving that UBHNL's narrative approach works across every domain.
+            The results of these evaluations provide the primary metric for the system's performance, coverage, and proof-generation reliability.
           </p>
         </section>
 

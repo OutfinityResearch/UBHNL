@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 06: The Scientist's Notebook</title>
+    <title>Theory 06: Ephemeral and Persistent Knowledge</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 06 — Sessions: The Ephemeral Lab</h1>
-      <p>How we balance stable knowledge with rapid experimentation.</p>
+      <h1>Theory 06 — Sessions: Managing Ephemeral Knowledge</h1>
+      <p>Decoupling persistent theory from transient experimentation through structured workspaces.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: narrative tutorial on sessions and origins.</div>
+        <div class="draft">DRAFT: academic tutorial on sessions and origins.</div>
 
         <div class="nav">
           <a href="05-languages.html">Prev: Languages</a>
@@ -23,51 +23,37 @@
         </div>
 
         <section>
-          <h2>The Use Case: The Lab Notebook</h2>
+          <h2>Persistence vs. Transience</h2>
           <p>
-            Meet David, a research scientist. He has a <strong>Textbook</strong> of established biological facts (Theory files). But today, he's in the lab, and he wants to try something new: <em>"What if this specific protein is inhibited? How does the cell react?"</em>
-          </p>
-          <p>
-            David doesn't want to rewrite the textbook. He just wants a <strong>Lab Notebook</strong> (a Session) where he can add temporary notes, run a simulation, and then decide whether to keep the results or throw them away.
+            In any reasoning workflow, there is a fundamental distinction between <strong>Persistent Theory</strong> and <strong>Transient Observation</strong>. Persistent knowledge consists of stable, foundational axioms (e.g., biological laws or legal statutes) that are stored on disk as theory files. Transient knowledge, however, represents the ephemeral state of a specific experiment or "what-if" scenario. UBHNL manages this duality through the <strong>Session</strong>—a temporary workspace that allows for rapid iteration without corrupting the authoritative knowledge base.
           </p>
         </section>
 
         <section>
-          <h2>The Ephemeral Workspace</h2>
+          <h2>The Session as a Structured Workspace</h2>
           <p>
-            In UBHNL, a <strong>Session</strong> is your personal, temporary workspace. 
-            <ul>
-              <li><strong>Theory Files</strong> are your "Ground Truth"—stable, reproducible, and stored on disk.</li>
-              <li><strong>Sessions</strong> are where you <em>learn</em> new, transient facts or ask "What-if" questions.</li>
-            </ul>
-            When the session ends, the temporary facts disappear, but the stable Theory remains untouched.
+            A UBHNL Session acts as an active memory layer. It begins by loading the persistent theory files, which serve as the "ground truth." Within this environment, users can perform <strong>Learn</strong> operations to add transient facts or temporary rules. These additions are local to the session and do not persist to disk, enabling researchers and engineers to explore hypothetical states—such as "inhibiting a protein" or "modeling a specific transaction"—while maintaining the integrity of the underlying theory.
           </p>
         </section>
 
         <section>
-          <h2>Origins: No Fact Left Behind</h2>
+          <h2>Origin Tracking and Conflict Attribution</h2>
           <p>
-            Every time David adds a note to his notebook, the system attaches an <strong>Origin</strong> to it. An origin is like a digital fingerprint that says exactly where a piece of logic came from (e.g., "File A, Line 42" or "Interactive Input #5").
-          </p>
-          <p>
-            Why does this matter? Because if the system finds a contradiction, it can tell David: <em>"Your experiment failed because the fact you just added in the notebook contradicts the textbook at Page 200."</em> This makes debugging complex rules a breeze.
+            Every statement within a session—whether loaded from a file or learned interactively—is tagged with a unique <strong>Origin</strong>. These origins serve as a digital fingerprint, recording the exact source of the information (e.g., file path, line number, or input ID). This metadata is critical for explainability. If the system detects a logical contradiction (UNSAT), it uses these origins to pinpoint the exact set of conflicting statements. By attributing conflicts to their sources, the system can distinguish between a flaw in the foundational theory and an inconsistency in the transient observations added during the session.
           </p>
         </section>
 
         <section>
-          <h2>Caching: Standing on the Shoulders of Giants</h2>
+          <h2>Incremental Reasoning and Caching</h2>
           <p>
-            Reasoning is hard work for a computer. To keep things fast, UBHNL uses <strong>Intelligent Caching</strong>. If David asks the same question twice, or if he only changes one tiny variable, the system recognizes that the rest of the "Textbook" hasn't changed. It reuses its previous calculations, giving David results in milliseconds instead of minutes.
+            To ensure high performance during iterative querying, the Session implements <strong>Artifact Caching</strong>. The reasoning process is computationally expensive, particularly for large theories. The session tracks the dependencies between rules and their lowered Boolean representations. If a user adds a small set of transient facts, the system only re-evaluates the affected sub-graphs of the theory, reusing cached results for the untouched portions. This incremental approach allows for near-instantaneous feedback during interactive exploration.
           </p>
         </section>
 
         <section>
-          <h2>What's next</h2>
+          <h2>Future Capabilities: Collaborative State Management</h2>
           <p>
-            <strong>What we have:</strong> A robust session system that tracks origins and ensures reproducibility.
-          </p>
-          <p>
-            <strong>What we're building:</strong> <em>Collaboration Features.</em> We want to make it easy for David to "Export" his successful lab notes and merge them back into the main Theory files, complete with all their proofs and origins intact.
+            Ongoing research is exploring <strong>Distributed Session Management</strong>. This would enable multiple users to share a common persistent theory while managing their own local deltas, potentially merging successful transient findings back into the authoritative theory. This evolution aims to transform the session from a solitary workspace into a collaborative environment for large-scale formal modeling.
           </p>
         </section>
 

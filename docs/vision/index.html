@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBHNL Vision</title>
+    <title>UBHNL Vision: Formal Grounding for AI</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>UBHNL Vision</h1>
-      <p>A System 2 reasoning engine for explicit meaning, auditability, and contradiction analysis.</p>
+      <h1>UBHNL Vision: The Epistemological Grounding of AI</h1>
+      <p>Advancing from probabilistic inference to a System 2 architecture for explicit, auditable reasoning.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: vision and positioning. Implementation is in progress.</div>
+        <div class="draft">DRAFT: architectural vision; implementation is ongoing.</div>
 
         <div class="nav">
           <a href="../index.html">Docs Index</a>
@@ -30,125 +30,44 @@
           <a href="integration.html">Integration Map</a>
         </div>
 
-        <h2>Why this system exists</h2>
-        <p>
-          UBHNL is built to give <strong>explicit, checkable meaning</strong> to text and rules. It complements LLMs by adding a
-          deterministic layer that stores knowledge in CNL/DSL, detects contradictions, and returns evidence (origins, cores, witnesses).
-        </p>
+        <section>
+          <h2>The Rational Necessity for System 2 Reasoning</h2>
+          <p>
+            The current landscape of Artificial Intelligence is dominated by "System 1" models—large-scale neural networks that excel at intuitive, probabilistic token prediction. While these models demonstrate remarkable creative and linguistic capabilities, they lack an internal mechanism for logical verification and consistency. In domains where the cost of error is high—such as medicine, regulatory compliance, and safety-critical engineering—probabilistic confidence is an insufficient metric for trust. <strong>UBHNL is engineered to serve as the missing System 2 layer</strong>: a methodical, deterministic engine that grounds AI outputs in the bedrock of formal logic and mathematical proof.
+          </p>
+        </section>
 
-        <h2>System diagram</h2>
-        <svg viewBox="0 0 900 450" width="100%" height="auto" role="img" aria-label="System diagram">
-          <rect x="60" y="10" width="300" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="210" y="30" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Theory files (long-term)</text>
-          <text x="210" y="45" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">*.sys2 / *.cnl</text>
+        <section>
+          <h2>Core Architectural Objectives</h2>
+          <p>
+            The transition from heuristic to formal reasoning is achieved through a multi-stage pipeline designed to eliminate ambiguity and establish a clear chain of trust. Initially, the system refines ambiguous natural language into <strong>Controlled Natural Language (CNL)</strong>, ensuring that every statement carries a unique and deterministic semantic meaning. These high-level rules are subsequently "lowered" into the universal substrate of the <strong>UBH Kernel</strong>, where they are expressed as primitive bits and algebraic gates. This allows back-end solvers to search for satisfying assignments (witnesses) or mathematical contradictions (certificates), ensuring that every result is backed by checkable evidence.
+          </p>
+        </section>
 
-          <rect x="540" y="10" width="300" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="690" y="30" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Session delta (short-term)</text>
-          <text x="690" y="45" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">learn(...) inputs</text>
+        <section>
+          <h2>Diverse Domains of Application</h2>
+          <p>
+            The UBHNL paradigm is universally applicable across a wide spectrum of high-risk and high-complexity domains. In <strong>Regulated Industries</strong>, it provides a mechanism for proving consistency across conflicting policies. For <strong>Scientific Research</strong>, it enables the formalization and verification of empirical hypotheses. In the realm of <strong>Autonomous Systems</strong>, it allows agents to plan actions within a verified safety envelope. Furthermore, it enhances <strong>Trustworthy AI</strong> by providing a formal audit layer to detect bias and ensure adherence to ethical governance standards.
+          </p>
+        </section>
 
-          <rect x="160" y="70" width="580" height="48" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="450" y="90" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Parse/type (strict vocab + origins)</text>
-          <text x="450" y="106" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">deterministic typing and symbol checks</text>
+        <section>
+          <h2>Systemic Constraints and Design Principles</h2>
+          <p>
+            To maintain its rigorous verification guarantees, UBHNL adheres to several fundamental design constraints. The system enforces <strong>Deterministic Input</strong>, rejecting any symbol or syntax that is not explicitly defined within its Lexicon. It operates under a policy of <strong>Explicit Modeling</strong>, requiring all domain semantics and constraints to be formally declared rather than inferred. Crucially, the system implements a <strong>Proof-Carrying Result</strong> policy: claims of unsatisfiability or optimality are only accepted when accompanied by a checkable certificate; otherwise, the system returns a status of <code>UNKNOWN</code>. This ensures that UBHNL remains a precise mathematical instrument rather than a text generator.
+          </p>
+        </section>
 
-          <rect x="260" y="130" width="380" height="40" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="450" y="155" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Typed semantic IR</text>
+        <section>
+          <h2>Integration and Future Research</h2>
+          <p>
+            The vision for UBHNL is a fully integrated System 2 stack, as detailed in the <a href="integration.html">Integration Map</a>. Current development is focused on enhancing <strong>CNL Extraction Pipelines</strong> and expanding the set of <strong>Certificate Checkers</strong> for diverse backends. By providing a structured layer that keeps AI outputs grounded in explicit, traceable meaning, UBHNL establishes a new standard for auditable and trustworthy machine reasoning.
+          </p>
+        </section>
 
-          <rect x="210" y="180" width="480" height="40" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="450" y="205" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Fragment detection + GoalKind normalization</text>
-
-          <rect x="210" y="230" width="480" height="40" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="450" y="255" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Orchestrator builds plan DAG</text>
-
-          <rect x="190" y="285" width="520" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="450" y="305" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Backends (SAT/UBH, SMT, MC/IC3, ...)</text>
-          <text x="450" y="321" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">return witness or certificate</text>
-
-          <rect x="210" y="340" width="480" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="450" y="366" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Certificate checkers (trusted core)</text>
-
-          <rect x="210" y="395" width="480" height="44" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="450" y="421" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Result + explanation (origins)</text>
-
-          <path d="M210 54 L450 70" stroke="#2f5d50" stroke-width="2.5" />
-          <path d="M690 54 L450 70" stroke="#2f5d50" stroke-width="2.5" />
-
-          <path d="M450 118 L450 130" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="450,130 444,122 456,122" fill="#2f5d50" />
-          <path d="M450 170 L450 180" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="450,180 444,172 456,172" fill="#2f5d50" />
-          <path d="M450 220 L450 230" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="450,230 444,222 456,222" fill="#2f5d50" />
-          <path d="M450 270 L450 285" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="450,285 444,277 456,277" fill="#2f5d50" />
-          <path d="M450 329 L450 340" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="450,340 444,332 456,332" fill="#2f5d50" />
-          <path d="M450 384 L450 395" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="450,395 444,387 456,387" fill="#2f5d50" />
-        </svg>
-
-        <h2>Domains and use cases</h2>
-        <div class="grid">
-          <div class="mini-card">
-            <h3><a href="regulated.html">Highly regulated industry</a></h3>
-            <div class="muted">CNL as a formal layer for rules, audits, and contradiction detection across documents.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="literature.html">Literary analysis</a></h3>
-            <div class="muted">Internal consistency for characters, locations, timelines, and style constraints.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="system2.html">System 2 companion</a></h3>
-            <div class="muted">LLMs generate proposals; UBHNL checks, explains, and preserves meaning.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="rag-thinking-db.html">RAG + Thinking DB</a></h3>
-            <div class="muted">Hybrid retrieval and reasoning: answers with proofs, witnesses, and provenance.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="science.html">Scientific review</a></h3>
-            <div class="muted">Formalize claims, test consistency, and track dependencies across papers.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="synthetic-data.html">Synthetic data</a></h3>
-            <div class="muted">Generate data that satisfies constraints and probabilistic weights.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="agents.html">Agents + tool usage</a></h3>
-            <div class="muted">Plan with explicit preconditions, policies, and safety constraints.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="trustworthy-ai.html">Trustworthy AI</a></h3>
-            <div class="muted">Audit bias and policy constraints with formal checks and provenance.</div>
-          </div>
-          <div class="mini-card">
-            <h3><a href="integration.html">Integration map</a></h3>
-            <div class="muted">How all domains connect and which components are still needed.</div>
-          </div>
+        <div class="footer-links">
+          <p>Explore the architecture: <a href="../architecture.html">The Anatomy of Truth</a>.</p>
         </div>
-
-        <h2>Limits and accepted constraints</h2>
-        <ul>
-          <li><strong>Deterministic input</strong>: CNL/DSL reject ambiguity; unknown symbols are errors.</li>
-          <li><strong>Explicit modeling</strong>: the system does not infer missing semantics; the vocabulary and rules must be declared.</li>
-          <li><strong>Finite domains</strong>: CNL/DSL is compiled by enumeration or schemas; very large domains require schema tactics.</li>
-          <li><strong>Checkable results</strong>: <code>UNSAT</code>/<code>OPTIMAL</code> are accepted only with certificates; otherwise <code>UNKNOWN</code>.</li>
-          <li><strong>Not a text generator</strong>: UBHNL complements LLMs; it does not replace them.</li>
-        </ul>
-
-        <h2>How the vision pages connect</h2>
-        <p>
-          Every domain page uses the same backbone: CNL/DSL as a precise meaning layer, strict vocabulary for typing,
-          and checkable results with traceable origins. The <a href="integration.html">Integration Map</a> connects the domain workflows
-          into a single System 2 stack.
-        </p>
-
-        <h2>What we still need</h2>
-        <ul>
-          <li>Domain-focused CNL templates and vocabulary libraries.</li>
-          <li>Extraction/annotation workflows to translate text into CNL safely.</li>
-          <li>More certificate checkers for non-Boolean backends.</li>
-          <li>Evaluation suites for consistency, coverage, and audit quality.</li>
-        </ul>
       </div>
     </main>
   </body>

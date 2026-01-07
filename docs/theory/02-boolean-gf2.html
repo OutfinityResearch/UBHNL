@@ -3,76 +3,65 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 02: The Mathematical Soul</title>
+    <title>Theory 02: The Mathematical Foundation</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 02 — The Mathematical Soul</h1>
-      <p>How the simple beauty of GF(2) powers universal reasoning.</p>
+      <h1>Theory 02 — The Mathematical Foundation: GF(2)</h1>
+      <p>Exploiting the algebraic beauty of Boolean fields for universal reasoning.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: narrative tutorial on Boolean foundations.</div>
+        <div class="draft">DRAFT: academic tutorial on Boolean foundations.</div>
 
         <div class="nav">
           <a href="01-orientation.html">Prev: Orientation</a>
           <a href="index.html">Theory Index</a>
+          <a href="../wiki/index.html">Wiki</a>
           <a href="03-ubh-ir.html">Next: The UBH Kernel</a>
         </div>
 
         <section>
-          <h2>The Use Case: The Hallway Light</h2>
+          <h2>The Bit as an Atomic Unit of Meaning</h2>
           <p>
-            Think of a hallway with two switches, one at each end. If you flip <em>either</em> switch, the light's state changes. This is the classic <strong>XOR</strong> (Exclusive OR) logic. 
-          </p>
-          <p>
-            In traditional logic systems, representing this "flip-to-change" behavior can get surprisingly messy. In UBHNL, we treat XOR as a first-class citizen because it is the most natural way to describe how changes propagate through a system.
+            In UBHNL, the most fundamental unit of information is the <strong>Bit</strong>, represented as an element in the set <code>{0,1}</code>. Under a chosen interpretation or model, "Truth" is not an abstract concept but a concrete binary value. This grounding allows us to treat complex logical systems as large-scale Boolean functions.
           </p>
         </section>
 
         <section>
-          <h2>Why GF(2)? The Minimal Language of Truth</h2>
+          <h2>GF(2): The Algebraic Interpretation of Logic</h2>
           <p>
-            At its heart, everything in UBHNL is a <strong>Bit</strong>: 0 or 1. But how do we combine these bits? 
-            Instead of just using traditional "AND", "OR", and "NOT", we use the mathematics of <strong>GF(2)</strong> (Galois Field of 2 elements). 
-          </p>
-          <p>
-            In this world:
-            <ul>
-              <li><strong>XOR</strong> is Addition (modulo 2).</li>
-              <li><strong>AND</strong> is Multiplication.</li>
-            </ul>
-            This might seem like a small detail, but it's a superpower. It allows us to treat logical rules as <em>Algebraic Polynomials</em>.
+            The system interprets logic through the lens of <strong>GF(2)</strong> (the Galois Field of 2 elements). In this algebraic framework, the traditional logical Exclusive OR (XOR) corresponds to addition modulo 2, while the logical AND corresponds to multiplication. This mapping is significant because it transforms logical inference into polynomial manipulation. Specifically, <strong>XOR</strong> acts as the primary operator for addition (<code>a ⊕ b ↔ a + b mod 2</code>), and <strong>AND</strong> acts as the operator for multiplication (<code>a ∧ b ↔ a · b</code>).
           </p>
         </section>
 
         <section>
-          <h2>The ANF: Flattening Complexity</h2>
+          <h2>Completeness of the {XOR, AND, 1} Basis</h2>
           <p>
-            There is a beautiful theorem called <strong>Algebraic Normal Form (ANF)</strong>. It states that <em>any</em> logical function—no matter how complex—can be written as a unique polynomial using only XOR and AND.
-          </p>
-          <p>
-            This is the "Secret Sauce" of our kernel. By reducing everything to polynomials, we can use 300 years of mathematical breakthroughs (like Gaussian Elimination) to solve logic puzzles that would choke a traditional "brute-force" solver.
+            A critical design choice in UBHNL is the use of the <code>{XOR, AND, 1}</code> basis. This set is functionally complete, meaning any Boolean function can be uniquely represented using only these operators. For instance, negation is derived as <code>¬x = 1 ⊕ x</code>, and the logical OR is expressed as <code>x ∨ y = x ⊕ y ⊕ (x ∧ y)</code>. From an engineering perspective, this allows the kernel to remain exceptionally lean, while richer logical operators—such as implication, arithmetic, and comparison—are implemented as macros that the front-end compiles down to this minimal algebraic core.
           </p>
         </section>
 
         <section>
-          <h2>Native XOR: Why It Matters</h2>
+          <h2>Algebraic Normal Form (ANF) and Polynomial Consistency</h2>
           <p>
-            Most modern SAT solvers try to turn everything into "OR" clauses (CNF). But "OR" is terrible at representing "XOR". 
-            UBHNL is a <strong>Hybrid</strong>. We have a dedicated engine for the linear math (XOR) and another for the constraints (AND). They talk to each other, sharing their discoveries in real-time.
+            The <strong>Algebraic Normal Form (ANF)</strong> theorem guarantees that every Boolean function has a unique representation as a multilinear polynomial over GF(2). This uniqueness is the theoretical anchor for our UBH IR. By treating logic as polynomials, UBHNL can leverage centuries of mathematical research in linear algebra and polynomial systems (such as Gaussian Elimination for XOR fragments) to solve consistency problems that are often computationally expensive for traditional CNF-based SAT solvers.
           </p>
         </section>
 
         <section>
-          <h2>Status & The Road Ahead</h2>
+          <h2>Strategic Hybridization: SAT and Native XOR</h2>
           <p>
-            <strong>What works:</strong> Our kernel handles native XOR/AND with structural compression. It's fast, lean, and mathematically sound.
+            While traditional SAT solvers typically require XOR constraints to be expanded into numerous OR clauses—leading to a significant "encoding blow-up"—UBHNL treats XOR as a first-class citizen. Our solver strategy is a <strong>SAT + Native XOR hybrid</strong>, which solves linear equations over bits using dedicated algebraic backends while simultaneously managing non-linear constraints through CDCL-style SAT solving.
           </p>
+        </section>
+
+        <section>
+          <h2>Current Implementation and Scalability</h2>
           <p>
-            <strong>What we're building:</strong> We are currently expanding our "Bit-Blasting" library. We want to make it easier to talk about <em>Numbers</em> (integers, floats) by automatically translating them into these elegant GF(2) polynomials.
+            The existing kernel currently implements this algebraic foundation with high fidelity, supporting structural compression and native XOR/AND nodes. Future development is focused on expanding our "Bit-Blasting" libraries to automate the translation of higher-level types, such as integers and floating-point numbers, into these elegant GF(2) polynomials, thereby extending the reach of our formal verification to numerical reasoning.
           </p>
         </section>
 

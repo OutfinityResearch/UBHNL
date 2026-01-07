@@ -30,7 +30,7 @@ The CNL supports three levels of naturality:
 | Style | When to Use | Example |
 |-------|-------------|---------|
 | **Natural** | Simple single-variable rules | `Every Person with Flu has Fever.` |
-| **Semi-formal** | Rules where variables need names | `For any Person x, y: If x trusts y then y knows x.` |
+| **Semi-formal** | Rules where variables need names | `For any Person x, y: If $x trusts $y then $y knows $x.` |
 | **Explicit** | Complex multi-variable rules | `For all Person x, Person y, Person z:` |
 
 All three styles translate to the same DSL format.
@@ -114,7 +114,7 @@ load "theories/domains/medical.cnl"
 // Now we can use Patient, Disease, Symptom from medical.cnl
 Let p1 be a Patient.
 p1 has Flu.
-// Rule from medical.cnl applies: If p has Flu then p has Fever.
+// Rule from medical.cnl applies: If $p has Flu then $p has Fever.
 ```
 
 ### DSL Equivalent
@@ -148,7 +148,7 @@ CNL uses **Python-style indentation** to determine scope and grouping. There are
 For any Person x:
     $x has Fever.          // Inside the ForAll block
     $x is sick.            // Also inside (same indent)
-x is healthy.             // OUTSIDE - dedented, new statement
+Alice is healthy.         // OUTSIDE - dedented, new statement
 ```
 -> DSL:
 ```sys2
@@ -158,7 +158,7 @@ x is healthy.             // OUTSIDE - dedented, new statement
     @and And $c1 $c2
     return $and
 end
-@f1 IsHealthy x           # Separate statement
+@f1 IsHealthy Alice       # Separate statement
 ```
 
 ### Nested blocks
@@ -186,7 +186,7 @@ end
 ```cnl
 Definition: Producer <Cell c> is:
     For all Protein p:
-        If Expresses(c, p) then Active(p).
+        If Expresses($c, $p) then Active($p).
 ```
 The indentation shows:
 - `For all Protein p:` is INSIDE the Definition
@@ -197,17 +197,17 @@ The indentation shows:
 ```cnl
 // WRONG - body not indented
 For any Person x:
-x has Fever.              // ERROR: should be indented
+$x has Fever.              // ERROR: should be indented
 
 // WRONG - inconsistent indentation  
 For any Person x:
-    x has Fever.
-  x is sick.              // ERROR: 2 spaces, should be 4
+    $x has Fever.
+  $x is sick.              // ERROR: 2 spaces, should be 4
 
 // CORRECT
 For any Person x:
-    x has Fever.
-    x is sick.
+    $x has Fever.
+    $x is sick.
 ```
 
 ## 1B.5 Inline vs Block Style
@@ -215,12 +215,12 @@ For any Person x:
 Short rules can be written inline (no block needed):
 ```cnl
 // Inline (single statement, no colon needed for body)
-If HasFlu(x) then HasFever(x).
+If Alice has Flu then Alice has Fever.
 
 // Block style (multiple statements need indentation)
 For any Person x:
-    If HasFlu(x) then HasFever(x).
-    If HasFlu(x) then Coughs(x).
+    If HasFlu($x) then HasFever($x).
+    If HasFlu($x) then Coughs($x).
 ```
 
 **Block semantics**: when a block contains multiple statements, they are combined with an implicit `and`.
@@ -257,7 +257,7 @@ Use `Pred(arg1, arg2)` only when:
 p1 has Fever.
 Alice trusts Bob.
 Socrates is Man.
-If p has Flu then p has Fever.
+If Alice has Flu then Alice has Fever.
 
 // EXPLICIT (only when needed)
 Succ(n) is Nat.           // Nested function
@@ -271,8 +271,8 @@ Prob(Cloudy(today), 0.8).  // Complex annotation
 ```cnl
 // Input (natural CNL)
 For any Patient p:
-    If p has Flu then p has Fever.
-    If p has Cold then p coughs.
+    If $p has Flu then $p has Fever.
+    If $p has Cold then $p coughs.
 p1 has Fever.
 ```
 ```sys2
@@ -328,7 +328,7 @@ If the normalized name is not in the vocabulary, the input is rejected with `E_C
 Alice trusts Bob.
 Bob trusts Charlie.
 For any User x, y, z:
-    If x trusts y and y trusts z then x trusts z.
+    If $x trusts $y and $y trusts $z then $x trusts $z.
 ```
 ```sys2
 # Output
@@ -379,14 +379,13 @@ For any Patient p:
 Vocabulary is derived from Sys2 `Vocab` blocks (DS-008). Legacy `@... __Atom` + `IsA` is supported for compatibility.
 
 ```sys2
-@Person:Person __Atom
-@Cell:Cell __Atom
-@Alice:Alice __Atom
-@Bob:Bob __Atom
-@c0:c0 __Atom
-IsA Alice Person
-IsA Bob Person
-IsA c0 Cell
+Vocab
+    Domain Person
+    Domain Cell
+    Const Alice Person
+    Const Bob Person
+    Const c0 Cell
+end
 ```
 
 ## 2.3 Theory File Structure
@@ -395,10 +394,10 @@ IsA c0 Cell
 theories/
 ├── core/           # Core logic (built-in)
 ├── domains/        # Reusable domain theories
-│   ├── medical.cnl
-│   ├── family.cnl
-│   ├── social.cnl
-│   └── biology.cnl
+│   ├── medical.sys2
+│   ├── family.sys2
+│   ├── social.sys2
+│   └── biology.sys2
 └── README.md
 ```
 
@@ -416,8 +415,10 @@ c0 is a Cell.
 ```
 -> DSL:
 ```sys2
-@Alice:Alice __Atom
-IsA Alice Person
+Vocab
+    Domain Person
+    Const Alice Person
+end
 ```
 
 ### Multiple Constants
@@ -427,12 +428,12 @@ Alice, Bob, Charlie are Persons.
 ```
 -> DSL:
 ```sys2
-@Alice:Alice __Atom
-@Bob:Bob __Atom
-@Charlie:Charlie __Atom
-IsA Alice Person
-IsA Bob Person
-IsA Charlie Person
+Vocab
+    Domain Person
+    Const Alice Person
+    Const Bob Person
+    Const Charlie Person
+end
 ```
 
 ### Domain Declaration
@@ -442,7 +443,9 @@ Person is a Domain.
 ```
 -> DSL:
 ```sys2
-@Person:Person __Atom
+Vocab
+    Domain Person
+end
 ```
 
 ### Subtype Declaration
@@ -601,7 +604,7 @@ end
 When you need to name variables:
 ```cnl
 For any Person x, y:
-    If x trusts y then y knows x.
+    If $x trusts $y then $y knows $x.
 ```
 -> DSL:
 ```sys2
@@ -623,7 +626,7 @@ Note: `For any Person x, y:` is shorthand for `For all Person x, Person y:`.
 For transitivity and similar patterns:
 ```cnl
 For any Person x, y, z:
-    If x trusts y and y trusts z then x trusts z.
+    If $x trusts $y and $y trusts $z then $x trusts $z.
 ```
 -> DSL:
 ```sys2
@@ -663,7 +666,7 @@ Every Person x:          // Natural (with colon)
 When mixing types:
 ```cnl
 For all Person x, Cell c, Protein p:
-    If c expresses p then p affects x.
+    If $c expresses $p then $p affects $x.
 ```
 
 ## 6.2 Nested Quantifiers
@@ -698,7 +701,7 @@ Find a Person $p such that $p is sick?
 
 ```cnl
 Define Producer as a Cell c where:
-    Every Protein expressed by c is active.
+    Every Protein expressed by $c is active.
 ```
 -> DSL:
 ```sys2
@@ -718,7 +721,7 @@ end
 ```cnl
 Definition: Producer <Cell c> is:
     For all Protein p:
-        If Expresses(c, p) then Active(p).
+        If Expresses($c, $p) then Active($p).
 ```
 Same DSL output.
 
@@ -726,8 +729,8 @@ Same DSL output.
 
 ```cnl
 Define Ancestor(Person x, Person y) as:
-    x is Parent of y
-    or (there exists Person z: x is Parent of z and z is Ancestor of y).
+    $x is Parent of $y
+    or (there exists Person z: $x is Parent of $z and $z is Ancestor of $y).
 ```
 
 ---
@@ -749,7 +752,7 @@ Translation note:
 ```cnl
 Rule TransitiveTrust:
     For any Person x, y, z:
-        If x trusts y and y trusts z then x trusts z.
+        If $x trusts $y and $y trusts $z then $x trusts $z.
 ```
 -> DSL:
 ```sys2
@@ -791,7 +794,7 @@ Semantics:
 ```cnl
 Axiom SymmetricTrust:
     For any Person x, y:
-        x trusts y if and only if y trusts x.
+        $x trusts $y if and only if $y trusts $x.
 ```
 
 ## 8.4 Proof Blocks (CNL)
@@ -1003,7 +1006,7 @@ Let Alice, Bob, Charlie be Users.
 
 // Semi-formal (named variables for transitivity)
 For any User x, y, z:
-    If x trusts y and y trusts z then x trusts z.
+    If $x trusts $y and $y trusts $z then $x trusts $z.
 
 // Facts
 Alice trusts Bob.

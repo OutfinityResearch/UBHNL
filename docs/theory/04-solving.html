@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theory 04: The Act of Solving</title>
+    <title>Theory 04: The Solving Strategy</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body class="with-diagram">
     <header>
-      <h1>Theory 04 — Solving: The Quest for Evidence</h1>
-      <p>Why we never accept an answer without a proof.</p>
+      <h1>Theory 04 — Solving Strategy: Verification and Evidence</h1>
+      <p>Establishing truth through checkable witnesses and certificates.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: narrative tutorial on solving and certificates.</div>
+        <div class="draft">DRAFT: academic tutorial on solving and certificates.</div>
 
         <div class="nav">
           <a href="03-ubh-ir.html">Prev: UBH Kernel</a>
@@ -23,54 +23,47 @@
         </div>
 
         <section>
-          <h2>The Use Case: The Courtroom</h2>
+          <h2>The Epistemology of Proof</h2>
           <p>
-            Imagine a courtroom. A prosecutor stands up and says: "The defendant is guilty." The judge doesn't just say "Okay" and close the case. The judge demands <strong>Evidence</strong> and a <strong>Logical Argument</strong> that connects that evidence to the crime.
-          </p>
-          <p>
-            In UBHNL, our Solver is the Judge. When it claims that a set of rules is impossible (UNSAT), it must provide a <strong>Certificate</strong>—a step-by-step proof that anyone can verify to ensure no mistakes were made.
+            In a rigorous reasoning system, an unsupported claim is equivalent to an unknown value. UBHNL adheres to the principle of <strong>Result Verification</strong>: no claim of truth (SAT) or impossibility (UNSAT) is accepted unless it is accompanied by checkable evidence. This requirement shifts the burden of trust from the complexity of the solver's internal algorithms to the simplicity of the kernel's verification logic.
           </p>
         </section>
 
         <section>
-          <h2>The Three Answers: SAT, UNSAT, and UNKNOWN</h2>
+          <h2>The Tri-State Result Model</h2>
           <p>
-            Most software gives you "True" or "False". UBHNL is more honest. It has three possible responses:
-            <ul>
-              <li><strong>SAT (Satisfiable):</strong> "I found a way to make this work. Here is the <em>Witness</em> (a model) to prove it."</li>
-              <li><strong>UNSAT (Unsatisfiable):</strong> "This is mathematically impossible. Here is the <em>Certificate</em> (the proof) that shows the contradiction."</li>
-              <li><strong>UNKNOWN:</strong> "I don't know yet. Maybe the problem is too hard, or I ran out of time, or I'm using a method that isn't precise enough."</li>
-            </ul>
+            Unlike binary systems that return only "True" or "False," UBHNL utilizes a tri-state status model to accurately reflect the certainty of the reasoning process.
+          </p>
+          <p>
+            The <strong>SAT (Satisfiable)</strong> status indicates that a consistent assignment has been found. This result is only accepted if it includes a <strong>Witness</strong> (a model) that the kernel can deterministically evaluate. Conversely, the <strong>UNSAT (Unsatisfiable)</strong> status indicates that no consistent assignment exists. This claim must be supported by a <strong>Certificate</strong> (such as a DRAT or LRAT proof trace) that demonstrates the inevitable contradiction. If a result cannot be reached within the allocated resource budget or if a checkable proof cannot be generated, the system returns <strong>UNKNOWN</strong>, ensuring that unverifiable claims never pollute the knowledge base.
           </p>
         </section>
 
         <section>
-          <h2>The Hybrid Engine: SAT + XOR</h2>
+          <h2>The Hybrid SAT + Native XOR Engine</h2>
           <p>
-            How does the "Judge" reach a verdict so quickly? By using two specialized specialists:
-            <ol>
-              <li><strong>The SAT Specialist:</strong> Great at handling "If-Then" rules and complex dependencies using a method called CDCL.</li>
-              <li><strong>The XOR Specialist:</strong> A math whiz who handles linear equations over bits (GF(2)) using Gaussian Elimination.</li>
-            </ol>
-            By letting these two specialists talk to each other, UBHNL can solve problems that would be hundreds of times larger if we only used one method.
+            To achieve high efficiency across diverse logical fragments, UBHNL employs a <strong>Hybrid Solver Architecture</strong>. This system orchestrates two distinct reasoning strategies:
+          </p>
+          <ul>
+            <li><strong>CDCL SAT Solving:</strong> Optimized for the non-linear constraints typically found in "If-Then" rules and boolean dependencies.</li>
+            <li><strong>XOR-Linear Reasoning:</strong> Utilizes algebraic methods (such as Gaussian Elimination) to solve linear equations over GF(2) directly, avoiding the exponential expansion that occurs when XOR constraints are bit-blasted into pure CNF.</li>
+          </ul>
+          <p>
+            The communication between these strategies allows the solver to prune the search space much more effectively than either method could achieve in isolation.
           </p>
         </section>
 
         <section>
-          <h2>Explainability: Why did this happen?</h2>
+          <h2>Explainability and Origin Tracking</h2>
           <p>
-            If the system finds a contradiction, it can pinpoint exactly which rules caused the problem. This is called an <strong>Unsat Core</strong>. 
-            For our doctor, Elena, this means the system can say: "Your rules are contradictory because Rule A says 'Fever is required' but Rule B says 'Fever is impossible' for this specific patient."
+            When a contradiction is detected, the system provides an <strong>Unsat Core</strong>. This core is a minimal set of constraints that are mutually exclusive. By leveraging the system's internal <strong>Origin Tracking</strong>, UBHNL can map these low-level Boolean contradictions back to the original lines of CNL text authored by the user. This provides a clear, auditable trail that explains <em>why</em> a theory is inconsistent, grounded in the user's own vocabulary.
           </p>
         </section>
 
         <section>
-          <h2>Limits & Future: The Quest for Better Proofs</h2>
+          <h2>Research Horizons: Human-Readable Proofs</h2>
           <p>
-            <strong>What we have:</strong> A system that returns certificates for its claims, ensuring that we never have to "blindly trust" the solver.
-          </p>
-          <p>
-            <strong>What we're building:</strong> <em>Human-Readable Proofs.</em> Currently, our certificates are in machine-readable formats like DRAT or LRAT. They are great for computers, but hard for humans. We are working on a <strong>Proof Translator</strong> that turns these mathematical traces back into Natural Language stories.
+            While the current system produces robust machine-verifiable certificates, work is ongoing to implement <strong>Proof Translation</strong>. This involves converting raw mathematical traces into high-level, human-readable narratives. The goal is to allow a domain expert to review a formal proof of unsatisfiability using the same natural language patterns they used to author the rules.
           </p>
         </section>
 

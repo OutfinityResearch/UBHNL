@@ -3,115 +3,70 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBHNL — Session API</title>
+    <title>UBHNL — Session API Specification</title>
     <link rel="stylesheet" href="site.css" />
-      <script src="site-nav.js" defer></script>
+    <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Session API: load / learn / query / explain</h1>
-      <p>Session = short-term memory + cache + orchestration; files = long-term memory.</p>
+      <h1>Session API: Workspace and Memory Management</h1>
+      <p>Decoupling persistent theory from transient experimentation through a structured orchestration layer.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: the API is described as a target. The semantics are normative; implementation is still in progress.</div>
+        <div class="draft">DRAFT: architectural target; the API semantics are normative while implementation is ongoing.</div>
 
         <div class="nav">
           <a href="index.html">Docs Index</a>
-          <a href="vision/index.html">Vision</a>
+          <a href="vision/index.html">Vision Home</a>
           <a href="languages.html">Lexicon/CNL/DSL</a>
-          <a href="reasoning.html">Reasoning</a>
+          <a href="reasoning.html">Reasoning Strategy</a>
           <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
-          <a href="theory/index.html">Theory</a>
-          <a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a>
+          <a href="theory/index.html">Theory Index</a>
         </div>
 
-        <h2>Mental model</h2>
-        <ul>
-          <li><strong>Theory files</strong>: <code>*.sys2</code>/<code>*.cnl</code> (long-term), loaded deterministically; contain axioms/facts/rules.</li>
-          <li><strong>Session</strong>: an ephemeral workspace (short-term) that can add transient facts and caches artifacts.</li>
-          <li><strong>Orchestrator</strong>: plans and runs backends (SAT/SMT/QBF/MC/...) and validates certificates.</li>
-        </ul>
+        <section>
+          <h2>The Knowledge Duality: Persistent vs. Ephemeral</h2>
+          <p>
+            The UBHNL architecture manages knowledge through two distinct memory tiers. <strong>Persistent Theory Files</strong> (<code>*.sys2</code> and <code>*.cnl</code>) represent the long-term, authoritative axioms of a domain and are loaded deterministically from disk. In contrast, the <strong>Session</strong> acts as an ephemeral, short-term workspace. It allows for the addition of transient facts and the execution of hypothetical "what-if" queries without altering the foundational theory. This decoupling ensures that experimental deltas remain isolated, while the <strong>Orchestrator</strong> manages the planning and execution across both knowledge tiers.
+          </p>
+        </section>
 
-        <h2>Statuses and acceptance contract</h2>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Status</th><th>Meaning</th><th>Required evidence</th></tr></thead>
-            <tbody>
-              <tr><td><code>SAT</code></td><td>a model exists</td><td>a checkable witness model</td></tr>
-              <tr><td><code>UNSAT</code></td><td>no model exists</td><td>a checkable certificate (or confirmation by a trusted route)</td></tr>
-              <tr><td><code>PROVED</code></td><td><code>T ⊨ φ</code></td><td><code>UNSAT</code> for <code>T ∧ ¬φ</code> plus certificate/core</td></tr>
-              <tr><td><code>DISPROVED</code></td><td>counterexample exists</td><td>a checkable model (or trace) for <code>T ∧ ¬φ</code></td></tr>
-              <tr><td><code>UNKNOWN</code></td><td>cannot decide within budget / without a certificate</td><td>audit metadata (why)</td></tr>
-            </tbody>
-          </table>
+        <section>
+          <h2>Result Acceptance and Verification Contract</h2>
+          <p>
+            A cornerstone of the Session API is its strict <strong>Acceptance Contract</strong>. The system recognizes three primary result statuses, each requiring specific checkable evidence. A <strong>SAT (Satisfiable)</strong> status is only accepted if accompanied by a witness model that satisfies all constraints. An <strong>UNSAT (Unsatisfiable)</strong> or <strong>PROVED</strong> status must be supported by a checkable certificate (or confirmation via a trusted path). In cases where the reasoning cannot be completed within the resource budget or a certificate cannot be generated, the system returns <strong>UNKNOWN</strong>, providing audit metadata to explain the limitation.
+          </p>
+        </section>
+
+        <section>
+          <h2>Lifecycle Management: Load and Learn</h2>
+          <p>
+            The lifecycle of a reasoning task begins with the <strong>LoadTheoryFile</strong> operation, which integrates persistent axioms into the session environment. This process is governed by strict deterministic typing: every statement is parsed against the Lexicon, and an <strong>Origin ID</strong> is attached to record its source (path, line, and column). 
+          </p>
+          <p>
+            Subsequently, the <strong>Learn</strong> operation allows for the injection of transient knowledge deltas. These interactive inputs update the session state and invalidate relevant caches but do not persist to disk. Like persistent statements, learned facts carry origin metadata, which is essential for conflict attribution and the generation of Unsat cores during the explanation phase.
+          </p>
+        </section>
+
+        <section>
+          <h2>Query Execution and Witness Attribution</h2>
+          <p>
+            The <strong>Query</strong> interface supports a diverse range of reasoning tasks, including satisfaction, formal proof, refutation, and optimization. For existential questions—such as "Which Cell has Protein P?"—the system performs a <strong>Witness Query</strong>. If successful, the result includes a <code>SAT</code> status and a set of <code>witnessAssignments</code>, mapping logical variables back to concrete domain elements. This provides a direct, verifiable answer to the user's question, grounded in the current state of the session.
+          </p>
+        </section>
+
+        <section>
+          <h2>The Explanation Layer: Attribution and Cores</h2>
+          <p>
+            Post-reasoning, the <strong>Explain</strong> operation provides the bridge back to human understanding. By analyzing the <strong>Origins</strong> of the statements involved in a proof or a contradiction, the system can synthesize an explanation in the user's preferred format (CNL or DSL). For unsatisfiable theories, this involves presenting the <strong>Unsat Core</strong>—the minimal subset of statements responsible for the conflict—ensuring that even the most complex logical failures are traceable back to their original source in the theory or the session delta.
+          </p>
+        </section>
+
+        <div class="footer-links">
+          <p>Full Specification: <a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009: Session and Proof Management (MD)</a>.</p>
         </div>
-
-        <h2>API: loading theory files (long-term)</h2>
-        <pre><code>// conceptual
-session.loadTheoryFile(path)
-session.unloadTheoryFile(docId)
-session.listLoadedTheories()</code></pre>
-
-        <p>Loading must be deterministic:</p>
-        <ul>
-          <li>parse + typecheck with the lexicon;</li>
-          <li>unknown symbol = error;</li>
-          <li>every statement gets an <code>Origin</code> (path/line/col).</li>
-        </ul>
-
-        <h2>API: learn (short-term)</h2>
-        <pre><code>// conceptual
-session.learn({ input: "...", kind: "DSL"|"CNL", origin? })</code></pre>
-
-        <p><code>learn</code>:</p>
-        <ul>
-          <li>adds transient statements to the session (does not write to disk);</li>
-          <li>invalidates/updates relevant caches;</li>
-          <li>attaches origin ids for unsat cores/explanations.</li>
-        </ul>
-
-        <h2>API: query</h2>
-        <pre><code>// conceptual
-session.query({
-  kind: "Satisfy" | "Prove" | "Refute" | "CountModels" | "Optimize" | "Synthesize",
-  input: "...",        // DSL/CNL text or AST
-  options: { budget?, requireCertificate? }
-})</code></pre>
-
-        <h3>Witness queries</h3>
-        <p>Witnesses are introduced by existential binders:</p>
-        <pre><code>Which Cell c has ProteinP?</code></pre>
-        <p>DSL form:</p>
-        <pre><code>@q1 Exists Cell graph c
-    @c1 ProteinP $c
-    return $c1
-end</code></pre>
-        <p>The result must include:</p>
-        <pre><code>{
-  status: "SAT",
-  witnessAssignments: { "c": "c0" }
-}</code></pre>
-
-        <h2>API: explain</h2>
-        <pre><code>// conceptual
-session.explain(result, { style: "CNL" | "DSL" | "debug" })</code></pre>
-
-        <p>The explanation is built from:</p>
-        <ul>
-          <li><strong>origins</strong> (which statements from which files were relevant),</li>
-          <li><strong>unsat cores</strong> (when available),</li>
-          <li><strong>models/traces</strong> (for disproved/sat cases).</li>
-        </ul>
-
-        <h2>Links (specs)</h2>
-        <ul>
-          <li><a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009 Sessions</a></li>
-          <li><a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010 Fragments</a></li>
-          <li><a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011 Certificates</a></li>
-          <li><a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012 Orchestrator</a></li>
-        </ul>
       </div>
     </main>
   </body>

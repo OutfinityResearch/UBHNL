@@ -3,212 +3,62 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBH Architecture</title>
+    <title>Architecture: Layered Verification and Trust</title>
     <link rel="stylesheet" href="site.css" />
-      <script src="site-nav.js" defer></script>
+    <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Architecture Overview</h1>
-      <p>UBHNL = UBH kernel + front-ends (CNL/DSL) + fragment/backends + orchestrator.</p>
+      <h1>System Architecture: The Layers of Formal Trust</h1>
+      <p>A multi-tiered approach to universal reasoning through minimal substrates.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">
-          DRAFT: this page describes the target architecture as if it were functional. Some modules are not implemented yet.
-        </div>
-
         <div class="nav">
-          <a href="index.html">Docs Index</a>
+          <a href="index.html">Index</a>
           <a href="vision/index.html">Vision</a>
-          <a href="languages.html">Lexicon/CNL/DSL</a>
-          <a href="session-api.html">Session API</a>
-          <a href="reasoning.html">Reasoning</a>
-          <a href="examples.html">Examples</a>
-          <a href="wiki/index.html">Wiki</a>
-          <a href="theory/index.html">Theory</a>
+          <a href="reasoning.html">Reasoning Strategy</a>
+          <a href="languages.html">Languages</a>
         </div>
 
-        <h2>Layers</h2>
-        <ol>
-          <li><strong>Trusted core</strong>: UBH IR + checkers (witness/certificate validation)</li>
-          <li><strong>Front-ends</strong>: CNL/DSL → typed semantic IR (deterministic parse + typing)</li>
-          <li><strong>Fragments</strong>: classify the constraint class and goal kind</li>
-          <li><strong>Backends</strong>: specialized engines (SAT/SMT/QBF/MC/MIP/…) that produce checkable artifacts</li>
-          <li><strong>Orchestrator</strong>: plan DAG, tactics (CEGAR/KC/fallbacks), budgets, caching, explanations</li>
-        </ol>
+        <section>
+          <h2>Core Philosophy: Minimizing the Trusted Computing Base</h2>
+          <p>
+            The UBHNL architecture is predicated on the principle of <strong>Functional Isolation</strong>. We distinguish between the untrusted layers that handle complex language and planning, and the tiny, trusted core that performs the actual mathematical validation. This separation ensures that even if a complex solver or parser fails, the integrity of the final proof remains protected.
+          </p>
+        </section>
 
-        <h2>Non-negotiables (design axioms)</h2>
-        <ul>
-          <li><strong>Minimal trusted core</strong>: keep the kernel small and auditable; push complexity into replaceable backends.</li>
-          <li><strong>Strict vocabulary</strong>: typos do not create new symbols; unknown identifiers are load errors.</li>
-          <li><strong>Determinism</strong>: parsing/typing and symbol resolution must be deterministic and reproducible.</li>
-          <li><strong>Accept only with verification</strong>: uncheckable <code>UNSAT</code>/<code>OPTIMAL</code> claims become <code>UNKNOWN</code>.</li>
-          <li><strong>Sessions vs files</strong>: sessions are short-term memory; theory files are long-term memory.</li>
-        </ul>
+        <section>
+          <h2>The Semantic Layer: Interface and Normalization</h2>
+          <p>
+            The "Front-End" of the architecture is responsible for mapping human intent to formal logic. This layer utilizes <strong>Semantic Isomorphism</strong>: whether a rule is authored in natural-sounding CNL or symbolic DSL, the underlying AST is identical. The use of a strict <strong>Lexicon</strong> ensures that the system is closed under its own vocabulary, preventing the introduction of undefined symbols or ambiguous semantics.
+          </p>
+        </section>
 
-        <h2>Layer contracts (what each layer owns)</h2>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Layer</th><th>Input</th><th>Output</th><th>Primary specs</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>Trusted core</td>
-                <td>UBH DAG + constraints, certificate objects</td>
-                <td>validated <code>SAT/UNSAT</code>, checker verdicts</td>
-                <td><a href="mdview.html?file=specs/UBH-SPEC.md">UBH-SPEC</a>, <a href="mdview.html?file=specs/DS/DS14-certificate-formats-verification.md">DS-014</a></td>
-              </tr>
-              <tr>
-                <td>Front-ends</td>
-                <td>text (CNL/DSL) + lexicon</td>
-                <td>typed semantic IR + origins</td>
-                <td><a href="mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005</a>, <a href="mdview.html?file=specs/DS/DS08-dsl.md">DS-008</a>, <a href="mdview.html?file=specs/DS/DS06-nl-pipeline.md">DS-006</a></td>
-              </tr>
-              <tr>
-                <td>Fragments</td>
-                <td>typed semantic IR</td>
-                <td>fragment id + normalized problem</td>
-                <td><a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a></td>
-              </tr>
-              <tr>
-                <td>Backends</td>
-                <td>fragment-specific IR</td>
-                <td>result + witness/certificate + artifacts</td>
-                <td><a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a></td>
-              </tr>
-              <tr>
-                <td>Orchestrator</td>
-                <td>problem + budgets + session caches</td>
-                <td>plan DAG + checked result + explanation payload</td>
-                <td><a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>, <a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a></td>
-              </tr>
-            </tbody>
-          </table>
+        <section>
+          <h2>The Orchestration Layer: Fragmentation and Tactics</h2>
+          <p>
+            The "Orchestrator" acts as the strategist. It analyzes the formal theory to identify its <strong>Logical Fragment</strong> (e.g., Boolean, SMT, or Temporal). Based on this classification, it constructs a <strong>Plan DAG</strong>—a sequence of lowering, solving, and checking tasks. This layer allows UBHNL to be universal: it doesn't rely on a single solver but instead delegates fragments to specialized, pluggable backends.
+          </p>
+        </section>
+
+        <section>
+          <h2>The Trusted Core: Validation via UBH</h2>
+          <p>
+            At the foundation lies the <strong>UBH Kernel</strong>. This is the only part of the system that must be implicitly trusted. It operates on a minimal set of Boolean gates (XOR and AND) using a <strong>Hash-Consed DAG</strong> for maximal structural sharing. Its primary responsibility is not solving, but <strong>Verification</strong>. It validates the "certificates" (proofs or witnesses) returned by the backends, ensuring that no result is accepted without checkable evidence.
+          </p>
+        </section>
+
+        <section>
+          <h2>Current State and Scalability</h2>
+          <p>
+            The current architecture is highly modular, allowing for the addition of new backends without altering the kernel. Future development is directed toward <strong>Distributed Orchestration</strong> and <strong>Incremental Proof Checking</strong>, enabling the system to reason over theories consisting of millions of constraints while maintaining near-instantaneous verification times.
+          </p>
+        </section>
+
+        <div class="footer-links">
+          <p>Full Specification: <a href="mdview.html?file=specs/src/system-spec.md">System-Spec (MD)</a>.</p>
         </div>
-
-        <h2>Flow (high-level)</h2>
-        <svg viewBox="0 0 760 380" width="100%" height="auto" role="img" aria-label="High-level system flow">
-          <rect x="120" y="10" width="520" height="46" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="380" y="28" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Theory files (DSL/CNL) + session learn</text>
-          <text x="380" y="44" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">long-term files + short-term delta</text>
-
-          <rect x="120" y="70" width="520" height="46" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="380" y="88" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Parse/type (strict vocab) → typed semantic IR</text>
-          <text x="380" y="104" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">deterministic AST with origins</text>
-
-          <rect x="120" y="130" width="520" height="46" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="380" y="154" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Fragment detection + GoalKind</text>
-
-          <rect x="120" y="190" width="520" height="46" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="380" y="214" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Planner builds plan DAG (tactics/backends)</text>
-
-          <rect x="120" y="250" width="520" height="46" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="380" y="274" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Backend result + certificate/witness</text>
-
-          <rect x="120" y="310" width="520" height="46" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="380" y="328" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Checker validates → explain (origins) → user output</text>
-          <text x="380" y="344" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">accept only if checkable</text>
-
-          <path d="M380 56 L380 70" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="380,70 374,62 386,62" fill="#2f5d50" />
-          <path d="M380 116 L380 130" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="380,130 374,122 386,122" fill="#2f5d50" />
-          <path d="M380 176 L380 190" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="380,190 374,182 386,182" fill="#2f5d50" />
-          <path d="M380 236 L380 250" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="380,250 374,242 386,242" fill="#2f5d50" />
-          <path d="M380 296 L380 310" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="380,310 374,302 386,302" fill="#2f5d50" />
-        </svg>
-
-        <h2>Certificate checking (why results are trusted)</h2>
-        <p>
-          UBHNL separates <em>solving</em> from <em>acceptance</em>. Backends can be complex and even treated as untrusted.
-          What the system accepts is the result <em>after</em> the trusted core checks the witness/certificate.
-        </p>
-        <svg viewBox="0 0 860 170" width="100%" height="auto" role="img" aria-label="Certificate checking pipeline diagram">
-          <rect x="20" y="40" width="180" height="70" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="110" y="78" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="14">Backend</text>
-          <text x="110" y="98" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">solves / proposes</text>
-
-          <rect x="250" y="40" width="210" height="70" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="355" y="78" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="14">Result + evidence</text>
-          <text x="355" y="98" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">model / proof / invariant</text>
-
-          <rect x="510" y="40" width="170" height="70" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="595" y="78" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="14">Checker</text>
-          <text x="595" y="98" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">trusted core</text>
-
-          <rect x="730" y="40" width="110" height="70" rx="12" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="785" y="78" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="14">Accept</text>
-          <text x="785" y="98" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="12" fill="#5a534b">or UNKNOWN</text>
-
-          <path d="M200 75 L250 75" stroke="#2f5d50" stroke-width="3" />
-          <path d="M460 75 L510 75" stroke="#2f5d50" stroke-width="3" />
-          <path d="M680 75 L730 75" stroke="#2f5d50" stroke-width="3" />
-          <polygon points="248,75 238,70 238,80" fill="#2f5d50" />
-          <polygon points="508,75 498,70 498,80" fill="#2f5d50" />
-          <polygon points="728,75 718,70 718,80" fill="#2f5d50" />
-        </svg>
-
-        <h2>How a session feels (learn → query → explain)</h2>
-        <p>
-          A session is a short-term workspace. It loads theory files (long-term) and lets users add transient knowledge.
-          Each statement carries an origin so failures can be explained in terms of files and vocabulary.
-        </p>
-        <pre><code># 1) load files (long-term memory)
-loadTheoryFile("bio.sys2")
-
-# 2) learn (short-term delta)
-learn("@c2:c2 __Atom")
-learn("IsA c2 Cell")
-learn("@f1 GeneA c2")
-
-# 3) query (prove/refute/satisfy/…)
-query("ProteinP c2", kind="Prove")
-
-# 4) explain (origins + witness/core)
-explain(lastResult)</code></pre>
-        <p>
-          See <a href="session-api.html">Session API</a> and <a href="mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009</a> for the normative contract.
-        </p>
-
-        <h2>Adding a new backend (engineering checklist)</h2>
-        <ol>
-          <li>Choose the target <a href="wiki/concepts/fragment.html">fragment</a> and goal kinds it supports (<a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a>).</li>
-          <li>Define what artifacts it returns (model/proof/invariant/strategy) and how they map to origins (<a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>).</li>
-          <li>Define a checkable certificate format and checker route (<a href="mdview.html?file=specs/DS/DS14-certificate-formats-verification.md">DS-014</a>).</li>
-          <li>Integrate into the planner as a tactic or a candidate backend (budgets + fallbacks).</li>
-          <li>Add spec-level tests for acceptance and rejection (certificate invalid, missing checker, etc.).</li>
-        </ol>
-
-        <h2>Links to specs</h2>
-        <ul>
-          <li>
-            System Spec:
-            <a href="specs/src/system-spec.md">MD</a> |
-            <a href="mdview.html?file=specs/src/system-spec.md">HTML view</a>
-          </li>
-          <li>
-            UBH Kernel:
-            <a href="specs/UBH-SPEC.md">MD</a> |
-            <a href="mdview.html?file=specs/UBH-SPEC.md">HTML view</a>
-          </li>
-          <li>
-            Fragments/Backends/Planner:
-            <a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a>,
-            <a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a>,
-            <a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>,
-            <a href="mdview.html?file=specs/DS/DS14-certificate-formats-verification.md">DS-014</a>
-          </li>
-        </ul>
-
-        <h2>External references</h2>
-        <ul>
-          <li><a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem" target="_blank" rel="noreferrer">SAT (Wikipedia)</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Model_checking" target="_blank" rel="noreferrer">Model checking (Wikipedia)</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Tseytin_transformation" target="_blank" rel="noreferrer">Tseytin/Tseitin transformation (Wikipedia)</a></li>
-        </ul>
       </div>
     </main>
   </body>

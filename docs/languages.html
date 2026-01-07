@@ -3,118 +3,65 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBHNL — Lexicon, CNL, DSL</title>
+    <title>UBHNL — Formal Language Specification</title>
     <link rel="stylesheet" href="site.css" />
-      <script src="site-nav.js" defer></script>
+    <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Lexicon, CNL, and DSL</h1>
-      <p>Deterministic, typed input with a strict vocabulary.</p>
+      <h1>Language Specification: Lexicon, CNL, and DSL</h1>
+      <p>Establishing deterministic, typed input through a strict symbolic vocabulary.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: target syntax and contracts; parsers are still in progress.</div>
+        <div class="draft">DRAFT: target syntax and contracts; formal parsers are under development.</div>
 
         <div class="nav">
           <a href="index.html">Docs Index</a>
-          <a href="vision/index.html">Vision</a>
+          <a href="vision/index.html">Vision Home</a>
           <a href="session-api.html">Session API</a>
           <a href="examples.html">Examples</a>
           <a href="wiki/index.html">Wiki</a>
-          <a href="theory/index.html">Theory</a>
-          <a href="mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005</a>
-          <a href="mdview.html?file=specs/DS/DS08-dsl.md">DS-008</a>
+          <a href="theory/index.html">Theory Index</a>
         </div>
 
-        <h2>1) Lexicon (the vocabulary)</h2>
-        <p>
-          The vocabulary defines types and allowed symbols. The rule is simple:
-          every symbol used in CNL/DSL must be declared; otherwise it is a load error.
-          Preferred source of vocabulary is Sys2 schema files (<code>*.sys2</code>) and CNL domain files (<code>*.cnl</code>).
-        </p>
+        <section>
+          <h2>The Formal Lexicon: A Unified Vocabulary</h2>
+          <p>
+            The foundational requirement for any deterministic reasoning system is a strictly defined vocabulary. In UBHNL, this is managed through the <strong>Lexicon</strong>, which acts as the authoritative registry for all types, domains, and allowed symbols. Every symbol utilized within the system—whether in natural-sounding CNL or symbolic DSL—must be explicitly declared. Any attempt to reference an undeclared symbol results in a mandatory load error. This policy prevents the "silent failure" common in less rigorous systems, where typos or undefined terms are erroneously interpreted as new variables. The primary sources for this vocabulary are <code>.sys2</code> schema files and <code>.cnl</code> domain definitions, which establish the ontological grounding for the reasoning engine.
+          </p>
+        </section>
 
-        <h3>Schema (authoritative)</h3>
-        <pre><code>@Cell:Cell __Atom
-@Person:Person __Atom
-@c0:c0 __Atom
-@p0:p0 __Atom
-IsA c0 Cell
-IsA p0 Person</code></pre>
+        <section>
+          <h2>Controlled Natural Language (CNL): Deterministic Semantics</h2>
+          <p>
+            CNL is a restricted subset of natural language designed to eliminate lexical and syntactic ambiguity. While it maintains a surface similarity to English, it enforces a strict <strong>SVO (Subject-Verb-Object)</strong> structure and requires explicit quantification and scoping. The parser rejects any construction that allows for multiple interpretations, forcing the author to rephrase the intent into a deterministic form. 
+          </p>
+          <p>
+            Determinism is maintained through several key rules: all quantifiers must be bound to a specific domain (e.g., <code>For any Patient p: ...</code>), every predicate must match the arity and argument types defined in the lexicon, and any symbol not previously declared is treated as a hard error. This ensures that the high-level intent of the domain expert is captured with the same mathematical precision as a formal programming language.
+          </p>
+        </section>
 
-        <h2>2) CNL (Controlled Natural Language)</h2>
-        <p>
-          CNL is “almost” natural language, but controlled: explicit quantifiers, explicit connectives, and clear scoping.
-          Ambiguity is rejected, not guessed.
-        </p>
+        <section>
+          <h2>The DSL (sys2): Machine-Efficient Canonical IR</h2>
+          <p>
+            While CNL is optimized for human readability, the <strong>DSL (sys2)</strong> provides a compact and canonical representation for theory files. The DSL is structured around a few fundamental tokens: <code>@name</code> indicates a statement target or declaration, <code>$name</code> represents a reference to a variable or expression currently in scope, and a "bare" name represents a direct lookup in the persistent vocabulary. 
+          </p>
+          <p>
+            This symbolic format is designed for maximum reproducibility and ease of automated processing. It supports persistent KB declarations, fact statements, and complex logical blocks. Because the DSL and CNL are semantically isomorphic, the system can seamlessly translate between them, allowing for a workflow where rules are authored in natural language but stored and executed in the symbolic DSL format.
+          </p>
+        </section>
 
-        <h3>Examples</h3>
-        <pre><code>For any Cell c:
-    If c has GeneA and c does not have Inhibitor then c has ProteinP.
+        <section>
+          <h2>Grammatical Safety and Error Detection</h2>
+          <p>
+            The system's commitment to determinism is reflected in its <strong>Grammatical Safety</strong> policies. For example, the DSL prohibits multiple <code>@</code> tokens on a single line to ensure clear statement boundaries. If a rule attempts to reference an unknown predicate or a constant that has not been registered in the lexicon, the system halts execution with a detailed load error. This proactive verification ensures that only semantically sound theories reach the reasoning backends, significantly reducing the surface area for logical errors in the final proofs.
+          </p>
+        </section>
 
-Which Person p has Fever?</code></pre>
-
-        <h3>Determinism rules</h3>
-        <ul>
-          <li>All quantifiers must include a domain: <code>For any Cell c: ...</code>.</li>
-          <li>Unknown symbol (predicate/constant/domain) = error.</li>
-          <li>Strict typing: predicate arity and argument types must match the lexicon.</li>
-        </ul>
-
-        <h2>3) DSL (authoring + canonical IR)</h2>
-        <p>
-          DSL is the canonical <code>.sys2</code> format: compact, easy to process, good for theory files, and reproducible.
-          It is built on the <code>@ / $ / vocab</code> rule.
-        </p>
-
-        <h3>The @ / $ / vocab rule</h3>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Form</th><th>Meaning</th><th>Policy</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><code>@name</code></td>
-                <td>the statement target (declaration / fact statement)</td>
-                <td>at most one <code>@</code> per line; must be the first token</td>
-              </tr>
-              <tr>
-                <td><code>$name</code></td>
-                <td>working-memory reference in scope (binder or named expression)</td>
-                <td>if it is not in scope → error</td>
-              </tr>
-              <tr>
-                <td><code>name</code></td>
-                <td>vocabulary lookup (KB names + lexicon)</td>
-                <td>if it does not exist → error</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="footer-links">
+          <p>Detailed grammar specifications: <a href="mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005 (CNL)</a> and <a href="mdview.html?file=specs/DS/DS08-dsl.md">DS-008 (DSL)</a>.</p>
         </div>
-
-        <h3>Statements</h3>
-        <ul>
-          <li><strong>KB declaration</strong>: <code>@Alice:Alice __Atom</code> (persistent name)</li>
-          <li><strong>Fact statement</strong>: <code>@f1 HasFever Alice</code></li>
-          <li><strong>Logic block</strong>: <code>@rule1 ForAll Person graph p ... return $imp end</code></li>
-          <li><strong>Witness query</strong>: <code>@q Exists Person graph p ... return $expr end</code></li>
-        </ul>
-
-        <h3>Typical errors (intentional)</h3>
-        <pre><code># invalid: two @ tokens on the same line
-@p0 likes @p1
-# fix: p1 must be $p1 (variable) or a vocabulary constant (bare p1)
-
-# invalid: unknown vocabulary symbol
-@f1 HasFlu Bob
-# if "HasFlu" or "Bob" is not declared → load error</code></pre>
-
-        <h2>Links (specs)</h2>
-        <ul>
-          <li><a href="mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005 CNL + Lexicon</a></li>
-          <li><a href="mdview.html?file=specs/DS/DS08-dsl.md">DS-008 DSL</a></li>
-          <li><a href="mdview.html?file=specs/tests/cnl-cases.md">CNL cases</a></li>
-          <li><a href="mdview.html?file=specs/tests/dsl-cases.md">DSL cases</a></li>
-        </ul>
       </div>
     </main>
   </body>

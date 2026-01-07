@@ -3,75 +3,69 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vision: Regulated Industry</title>
+    <title>Vision: Formal Compliance in Regulated Industries</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Highly Regulated Industry</h1>
-      <p>Formalize rules and detect contradictions across policies, procedures, and legal documents.</p>
+      <h1>Formal Compliance: Verification in Regulated Environments</h1>
+      <p>Transitioning from heuristic document review to mathematical consistency guarantees.</p>
     </header>
     <main>
       <div class="card">
         <div class="nav">
           <a href="index.html">Vision Home</a>
-          <a href="regulated.html">Regulated Industry</a>
-          <a href="literature.html">Literary Analysis</a>
-          <a href="system2.html">System 2 + LLM</a>
-          <a href="rag-thinking-db.html">RAG + Thinking DB</a>
-          <a href="science.html">Scientific Review</a>
-          <a href="synthetic-data.html">Synthetic Data</a>
-          <a href="agents.html">Agents + Tools</a>
-          <a href="trustworthy-ai.html">Trustworthy AI</a>
+          <a href="system2.html">Neuro-Symbolic Integration</a>
+          <a href="rag-thinking-db.html">Symbolic RAG</a>
           <a href="integration.html">Integration Map</a>
         </div>
 
-        <h2>What this enables</h2>
-        <ul>
-          <li><strong>Semantic normalization</strong>: translate policies and standards into CNL/DSL with explicit vocabulary.</li>
-          <li><strong>Contradiction analysis</strong>: detect conflicts within a document and across multiple sources.</li>
-          <li><strong>Audit-ready output</strong>: unsat cores and origins show which clauses caused a conflict.</li>
-          <li><strong>Controlled updates</strong>: adding a rule is a change to a formal theory, not a free-text edit.</li>
-        </ul>
+        <section>
+          <h2>The Use Case: Managing Normative Contradictions</h2>
+          <p>
+            In highly regulated sectors—such as pharmaceuticals, finance, and aerospace—organizations must adhere to a multi-layered hierarchy of constraints: international standards, national laws, and internal operational procedures. A significant challenge arises when these sources, authored by different bodies at different times, contain latent contradictions or "semantic drift." For example, a data retention policy in a privacy regulation may clash with a record-keeping mandate in a financial statute, creating a legal impasse.
+          </p>
+          <p>
+            Traditional compliance management relies on manual cross-referencing, which is inherently prone to oversight. UBHNL addresses this by treating regulatory corpora as a unified logical theory. Every policy is modeled as a <strong>Formal Constraint</strong> rather than a descriptive text, enabling the system to exhaustively analyze the interplay between rules.
+          </p>
+        </section>
 
-        <h2>Workflow (practical)</h2>
-        <ol>
-          <li>Define a regulated-domain vocabulary in Sys2 (roles, assets, permissions, constraints).</li>
-          <li>Translate textual rules into CNL (assisted by tooling/LLMs, then validated).</li>
-          <li>Load multiple documents as theory files; treat each as a named source.</li>
-          <li>Run consistency checks and queries (prove/refute) across the combined theory.</li>
-          <li>Export contradictions with origin references and certificate evidence.</li>
-        </ol>
+        <section>
+          <h2>Methodology: Semantic Normalization and Lowering</h2>
+          <p>
+            The process begins with <strong>Semantic Normalization</strong>. Textual rules are mapped into Controlled Natural Language (CNL), which preserves the readability of the original rule while eliminating lexical ambiguity. This mapping ensures that terms are bound to a strict, pre-defined <strong>Lexicon</strong>, eliminating the risk of "equivocation" where the same word is used with different meanings across documents.
+          </p>
+          <p>
+            Once normalized, these rules are "lowered" into the <strong>UBH Kernel</strong>. In this Boolean substrate, the system performs a global consistency check. Unlike a simple keyword search or pattern match, the engine explores the entire combinatorial space of the rules to identify "conflict sets"—the minimal groups of statements that are mutually exclusive. This allows the organization to resolve contradictions at the design phase of a policy rather than during an audit.
+          </p>
+        </section>
 
-        <h2>Outputs you can expect</h2>
-        <ul>
-          <li>Explicit contradiction reports with traceable origins.</li>
-          <li>Coverage gaps: rules that are underspecified or conflicting.</li>
-          <li>Checkable acceptance: results are supported by certificates or a witness.</li>
-        </ul>
+        <section>
+          <h2>Expected Results: Checkable Proofs and Auditability</h2>
+          <p>
+            The output of a UBHNL-enabled compliance check is a <strong>Verification Certificate</strong>. When a contradiction is detected, the system provides an "Unsat Core" that references the exact <strong>Origins</strong> of the conflicting rules. This allows auditors to trace a failure back to specific paragraphs in different regulatory documents.
+          </p>
+          <p>
+            This enables a new standard of auditability: <strong>Proof-Carrying Compliance</strong>. Decisions are no longer justified by expert opinion alone but are supported by checkable evidence that demonstrates their consistency within the established logical framework. This level of rigor is essential for automating risk assessment and ensuring safe operation in high-stakes environments.
+          </p>
+        </section>
 
-        <h2>Limits and constraints</h2>
-        <ul>
-          <li>Ambiguous sentences are rejected; they must be rephrased into CNL.</li>
-          <li>All concepts must be modeled explicitly in the vocabulary.</li>
-          <li>Large domains require schema-based tactics; some results may be <code>UNKNOWN</code> under budget.</li>
-        </ul>
+        <section>
+          <h2>Current Limitations and Research Directions</h2>
+          <p>
+            The system currently operates within the bounds of <strong>Exact Logic</strong>. While highly effective for identifying binary contradictions (e.g., conflicting data retention durations), it requires further expansion to handle the full complexity of legal reasoning:
+          </p>
+          <ul>
+            <li><strong>Temporal Reasoning:</strong> Formalizing sequences of actions and deadlines over varying time horizons.</li>
+            <li><strong>Deontic Logic Fragments:</strong> Distinguishing between strict prohibitions, mandatory obligations, and conditional permissions.</li>
+            <li><strong>Automated Extraction:</strong> Enhancing the fidelity of the NLP pipelines that translate legacy legal text into deterministic CNL.</li>
+          </ul>
+        </section>
 
-        <h2>What we still need</h2>
-        <ul>
-          <li>Domain templates for common regulatory patterns (consent, retention, access control, reporting).</li>
-          <li>Guidelines for mapping legal text into CNL without semantic drift.</li>
-          <li>Certificate checkers for domain-specific backends (e.g., MIP, SMT).</li>
-        </ul>
-
-        <h2>Relevant specs</h2>
-        <ul>
-          <li><a href="../mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005 CNL</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS08-dsl.md">DS-008 DSL</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS09-sessions-query-proof.md">DS-009 Sessions</a></li>
-          <li><a href="../mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011 Certificates</a></li>
-        </ul>
+        <div class="footer-links">
+          <p>Technical Reference: <a href="../mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005: CNL and Lexicon</a>.</p>
+        </div>
       </div>
     </main>
   </body>

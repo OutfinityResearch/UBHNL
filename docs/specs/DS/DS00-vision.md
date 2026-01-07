@@ -265,7 +265,7 @@ UNSAT → certificate must be checkable OR confirmed by trusted route
 ### 10.1 From CNL to Results
 
 ```
-User writes:  "For all Cell c: if geneA(c) then proteinP(c)."
+User writes:  "For all Cell c: if geneA($c) then proteinP($c)."
               "c0 has geneA."
               "Does c0 have proteinP?"
 

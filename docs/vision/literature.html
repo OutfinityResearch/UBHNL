@@ -3,65 +3,64 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vision: Literary Analysis</title>
+    <title>Vision: Narrative Consistency and Literary Analysis</title>
     <link rel="stylesheet" href="../site.css" />
     <script src="../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Literary Analysis and Narrative Consistency</h1>
-      <p>Detect internal contradictions, track timelines, and enforce style constraints.</p>
+      <h1>Structural Logic: Formal Methods in Literary Analysis</h1>
+      <p>Utilizing constraint satisfaction to verify narrative consistency and track structural invariants in complex storylines.</p>
     </header>
     <main>
       <div class="card">
         <div class="nav">
           <a href="index.html">Vision Home</a>
-          <a href="regulated.html">Regulated Industry</a>
-          <a href="literature.html">Literary Analysis</a>
-          <a href="system2.html">System 2 + LLM</a>
-          <a href="rag-thinking-db.html">RAG + Thinking DB</a>
-          <a href="science.html">Scientific Review</a>
-          <a href="synthetic-data.html">Synthetic Data</a>
-          <a href="agents.html">Agents + Tools</a>
           <a href="trustworthy-ai.html">Trustworthy AI</a>
+          <a href="system2.html">Neuro-Symbolic Integration</a>
           <a href="integration.html">Integration Map</a>
         </div>
 
-        <h2>What this enables</h2>
-        <ul>
-          <li><strong>Consistency checking</strong>: detect contradictions in character attributes, locations, and timelines.</li>
-          <li><strong>Story logic constraints</strong>: enforce narrative rules (e.g., constraints on causality or knowledge).</li>
-          <li><strong>Style rules</strong>: formalize constraints such as tense consistency, viewpoint, or repetition limits.</li>
-        </ul>
+        <section>
+          <h2>The Analytical Objective: Ensuring Narrative Coherence</h2>
+          <p>
+            Complex fictional structures—including long-form novels, cinematic franchises, and branching game narratives—face a significant risk of logical decay. As characters, locations, and rules proliferate, it becomes increasingly difficult for human authors or editors to track the consistency of causality, timeline, and character knowledge. UBHNL addresses this by applying <strong>Formal Narrative Verification</strong>, treating the story's facts and universal rules as a logical theory.
+          </p>
+        </section>
 
-        <h2>Workflow (practical)</h2>
-        <ol>
-          <li>Define a narrative vocabulary: characters, locations, events, time points.</li>
-          <li>Translate key facts and events into CNL statements.</li>
-          <li>Add style constraints as rules (e.g., point-of-view restrictions).</li>
-          <li>Query for inconsistencies (UNSAT cores show which statements conflict).</li>
-        </ol>
+        <section>
+          <h2>Methodology: Story Elements as Formal Invariants</h2>
+          <p>
+            The analysis begins with the definition of a <strong>Narrative Lexicon</strong> (e.g., characters, locations, magical or technological systems, and time points). Mapping story events to CNL/DSL enables several advanced verification workflows:
+          </p>
+          <p>
+            <strong>Causal and Timeline Integrity:</strong> The system verifies that the sequence of events adheres to fundamental invariants. For example, it can prove if a character's presence in a specific scene contradicts their previously established location or if a plot resolution relies on a mechanism that violates the "hard rules" of the setting.
+          </p>
+          <p>
+            <strong>Epistemic Consistency:</strong> UBHNL can track "what characters know" at any given point. This prevents "epistemic hallucinations"—where a character acts on information they have not yet acquired—thereby identifying subtle "plot holes" that would be non-obvious during a standard reading.
+          </p>
+          <p>
+            <strong>Stylistic and Structural Rule Enforcement:</strong> Authors can encode stylistic constraints (e.g., POV restrictions, tense consistency, or thematic repetition limits) as formal rules. The system can then query the narrative to identify passages that violate these "soft" or "hard" structural constraints.
+          </p>
+        </section>
 
-        <h2>Outputs you can expect</h2>
-        <ul>
-          <li>Conflict reports with explicit explanations and origins.</li>
-          <li>Consistency proofs for subsets of the narrative.</li>
-          <li>Rule violations for style constraints.</li>
-        </ul>
+        <section>
+          <h2>Workflow: Solving for Narrative Contradictions</h2>
+          <p>
+            When a narrative theory is formalized, UBHNL can be queried for <strong>Satisfiability</strong>. If the narrative is consistent, the system can generate witnesses—alternative satisfying interpretations of ambiguous scenes. If inconsistent (<code>UNSAT</code>), the solver identifies the <strong>Unsat Core</strong>—the minimal set of plot points and rules that are mutually exclusive—allowing editors to resolve the contradiction at its source.
+          </p>
+        </section>
 
-        <h2>Limits and constraints</h2>
-        <ul>
-          <li>Natural language text must be mapped to CNL; ambiguity is not accepted.</li>
-          <li>The system does not infer literary meaning beyond what is encoded.</li>
-          <li>Large timelines require schema tactics; results may return <code>UNKNOWN</code> under budget.</li>
-        </ul>
+        <section>
+          <h2>Research Frontier: Probabilistic and Multi-Threaded Logic</h2>
+          <p>
+            Literature often thrives on ambiguity and "unreliable narrators." We are extending the UBHNL framework to handle <strong>Probabilistic Story Threads</strong>. This will allow the system to model multiple potential plot outcomes, each with an associated weight, while maintaining formal consistency within each branch. Furthermore, we are developing authoring tools that assist in the extraction of logical structures from natural language prose without infringing on the creative process.
+          </p>
+        </section>
 
-        <h2>What we still need</h2>
-        <ul>
-          <li>Authoring tools for narrative extraction into CNL.</li>
-          <li>Reusable story schemas (time, location, possession, causality).</li>
-          <li>Evaluation suites for contradiction coverage and precision.</li>
-        </ul>
+        <div class="footer-links">
+          <p>Grammar reference: <a href="../mdview.html?file=specs/DS/DS05-cnl-lexicon.md">DS-005 CNL (MD)</a>.</p>
+        </div>
       </div>
     </main>
   </body>

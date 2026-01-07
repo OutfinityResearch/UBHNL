@@ -3,130 +3,68 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UBHNL — Reasoning: Fragments, Backends, Certificates</title>
+    <title>Reasoning: The Orchestra of Logic</title>
     <link rel="stylesheet" href="site.css" />
-      <script src="site-nav.js" defer></script>
+    <script src="site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Reasoning: fragments, backends, certificates</h1>
-      <p>How UBHNL orchestrates SAT/SMT/QBF/MC/… without inflating the kernel.</p>
+      <h1>Reasoning: The Orchestra of Logic</h1>
+      <p>How UBHNL orchestrates a world of specialists to solve one complex problem.</p>
     </header>
     <main>
       <div class="card">
-        <div class="draft">DRAFT: describes the target workflow. Backends are pluggable; results must be validated.</div>
-
         <div class="nav">
           <a href="index.html">Docs Index</a>
           <a href="vision/index.html">Vision</a>
-          <a href="session-api.html">Session API</a>
-          <a href="examples.html">Examples</a>
-          <a href="wiki/index.html">Wiki</a>
-          <a href="theory/index.html">Theory</a>
-          <a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010</a>
-          <a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011</a>
-          <a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012</a>
+          <a href="session-api.html">Sessions</a>
+          <a href="languages.html">CNL & DSL</a>
         </div>
 
-        <h2>Why not “just SAT”</h2>
-        <p>
-          Many problems can be reduced to bits, but not all reductions are efficient or practically correct.
-          That is why the system has:
-        </p>
-        <ul>
-          <li><strong>Fragments</strong>: describe the constraint class (Bool/BV/QBF/TS/MIP/…)</li>
-          <li><strong>Backends</strong>: specialized methods (SAT, SMT, IC3/PDR, Gröbner, MIP, KC, …)</li>
-          <li><strong>Certificates</strong>: checkable proofs/witnesses</li>
-          <li><strong>Orchestrator</strong>: plans tactics (CEGAR, fallbacks, KC, optimize-by-bounds)</li>
-        </ul>
+        <section>
+          <h2>The Use Case: The Logistics War Room</h2>
+          <p>
+            Imagine Marco, a logistics manager. His problem is a messy puzzle: he has hard "if-then" rules (refrigerated trucks), complex routes with millions of combinations (optimization), and uncertain weather patterns (probability). 
+          </p>
+          <p>
+            No single "brain" is good at all these things. A specialized math solver might find the route but fail at the logic. A logical engine might understand the rules but drown in the math. Marco needs an <strong>Orchestra</strong>, where every instrument is a different type of solver. 
+            <strong>UBHNL's Orchestrator is the Conductor.</strong>
+          </p>
+        </section>
 
-        <h2>Goal kinds (what the user asks)</h2>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>GoalKind</th><th>Question</th><th>Output</th></tr></thead>
-            <tbody>
-              <tr><td><code>Satisfy</code></td><td>does a model exist?</td><td>model/witness</td></tr>
-              <tr><td><code>Prove</code></td><td><code>T ⊨ φ</code>?</td><td>UNSAT cert for <code>T ∧ ¬φ</code></td></tr>
-              <tr><td><code>Refute</code></td><td>is there a counterexample?</td><td>model for <code>T ∧ ¬φ</code></td></tr>
-              <tr><td><code>CountModels</code></td><td>how many models?</td><td>count (exact/approx) + audit</td></tr>
-              <tr><td><code>Optimize</code></td><td>min/max objective</td><td>witness + proof of optimality</td></tr>
-              <tr><td><code>Synthesize</code></td><td>construct an artifact</td><td>artifact + proof obligations</td></tr>
-            </tbody>
-          </table>
+        <section>
+          <h2>The Method: Fragments and Specialists</h2>
+          <p>
+            The secret to our "Universal" reasoning isn't one giant solver. It's the ability to recognize <strong>Fragments</strong>. When Marco asks a question, the Orchestrator looks at the request and breaks it apart. 
+          </p>
+          <p>
+            If a part of the problem is pure Boolean logic, the Orchestrator sends it to our <strong>SAT+XOR Backend</strong>. If another part involves complex constraints on time or amounts, it might use an <strong>SMT</strong> engine. If Marco wants to know "How likely is this?", the <strong>Probabilistic Engine</strong> takes the lead. 
+          </p>
+          <p>
+            The Orchestrator's job is to build a "Plan"—a step-by-step map of how to lower these high-level fragments into the minimal language of the UBH Kernel. It manages the handoffs between specialists, ensuring that everyone is playing the same song.
+          </p>
+        </section>
+
+        <section>
+          <h2>The Contract: Trust, not Faith</h2>
+          <p>
+            In many systems, you have to "have faith" that the solver is correct. Not in UBHNL. Here, the Orchestrator is a skeptic. 
+          </p>
+          <p>
+            Every time a backend (a specialist) returns an answer, the Orchestrator demands a <strong>Certificate</strong>. If the specialist says "This is impossible," it must provide a proof (a DRAT or LRAT certificate). If it says "I found a solution," it must provide a witness (a model) that our own <strong>Trusted Core</strong> can verify. We don't trust the specialists; we only trust our ability to verify their homework. If a specialist can't prove its work, the Orchestrator returns <strong>UNKNOWN</strong>—a result far more honest and safer than a lucky guess.
+          </p>
+        </section>
+
+        <section>
+          <h2>The Road Ahead: Smarter Conductors</h2>
+          <p>
+            Currently, our Orchestrator is a great delegator but a simple planner. We are working on <strong>Heuristic Guidance</strong>—teaching the Conductor to predict which specialist will be fastest for a new, unseen problem. We are also building "Certificate Translators" that take the raw, technical proofs from the backends and turn them into the Natural Language stories that people like Marco and Sarah can actually read.
+          </p>
+        </section>
+
+        <div class="footer-links">
+          <p>See the technical details in the <a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">Orchestrator Specification</a>.</p>
         </div>
-
-        <h2>Fragment → Backend → Certificate (mini matrix)</h2>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Fragment</th><th>Typical backend</th><th>What we check</th></tr></thead>
-            <tbody>
-              <tr><td><code>Frag_UBH</code></td><td>SAT+XOR</td><td>model (UBH eval) / DRAT-LRAT</td></tr>
-              <tr><td><code>Frag_SMT_BV</code></td><td>SMT(BV) or bit-blast</td><td>BV model / SAT certificate</td></tr>
-              <tr><td><code>Frag_QBF</code></td><td>QCDCL/CEGAR</td><td>strategy / Q-resolution</td></tr>
-              <tr><td><code>Frag_TS</code></td><td>IC3/PDR, BMC</td><td>invariant / trace</td></tr>
-              <tr><td><code>Frag_Opt</code></td><td>MaxSAT/PBO/OMT</td><td>witness + bound proof</td></tr>
-              <tr><td><code>Frag_MIP</code></td><td>branch-and-cut</td><td>primal + dual certificates</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2>Orchestrator: planning and tactics</h2>
-        <p>
-          The orchestrator builds a plan DAG out of tasks: <code>Lower</code>, <code>Solve</code>, <code>Check</code>, <code>Refine</code>, <code>Explain</code>.
-        </p>
-        <p class="muted">Task DAG (sketch)</p>
-        <svg viewBox="0 0 860 210" width="100%" height="auto" role="img" aria-label="Task DAG sketch">
-          <rect x="40" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="125" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Lower(to UBH)</text>
-
-          <rect x="240" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="325" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Solve(SAT)</text>
-
-          <rect x="440" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="525" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Check(DRAT)</text>
-
-          <rect x="640" y="30" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="725" y="56" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Explain</text>
-
-          <rect x="40" y="130" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="125" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Solve(SMT)</text>
-
-          <rect x="240" y="130" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="325" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Check(proof/model)</text>
-
-          <rect x="440" y="130" width="170" height="44" rx="10" fill="#ffffff" stroke="#d6d0c6" />
-          <text x="525" y="156" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-size="13">Explain</text>
-
-          <path d="M210 52 L240 52" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="240,52 232,46 232,58" fill="#2f5d50" />
-          <path d="M410 52 L440 52" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="440,52 432,46 432,58" fill="#2f5d50" />
-          <path d="M610 52 L640 52" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="640,52 632,46 632,58" fill="#2f5d50" />
-
-          <path d="M125 74 L125 130" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="125,130 119,122 131,122" fill="#2f5d50" />
-
-          <path d="M210 152 L240 152" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="240,152 232,146 232,158" fill="#2f5d50" />
-          <path d="M410 152 L440 152" stroke="#2f5d50" stroke-width="2.5" />
-          <polygon points="440,152 432,146 432,158" fill="#2f5d50" />
-        </svg>
-
-        <h2>The golden rule: accept only with verification</h2>
-        <ul>
-          <li><code>SAT</code>: accepted only if the witness satisfies all constraints (deterministic checker).</li>
-          <li><code>UNSAT</code>: accepted only with a checkable certificate (DRAT/LRAT/Q-res/dual ray/invariant, etc.) or after confirmation.</li>
-          <li><code>OPTIMAL</code>: accepted only with a witness plus a proof of optimality (bound certificate).</li>
-          <li>Probabilistic/heuristic methods: must be labeled (trust=heuristic) and include audit metadata; otherwise the result remains <code>UNKNOWN</code>.</li>
-        </ul>
-
-        <h2>Links (specs)</h2>
-        <ul>
-          <li><a href="mdview.html?file=specs/DS/DS10-fragments-goals.md">DS-010 Fragments &amp; GoalKinds</a></li>
-          <li><a href="mdview.html?file=specs/DS/DS11-backends-certificates.md">DS-011 Backends &amp; Certificates</a></li>
-          <li><a href="mdview.html?file=specs/DS/DS12-orchestrator-planner.md">DS-012 Orchestrator</a></li>
-        </ul>
       </div>
     </main>
   </body>

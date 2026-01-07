@@ -9,9 +9,10 @@ Use the shared vocabulary from `docs/specs/tests/cnl-cases.md`.
 ### 1) Constant declaration + typing
 Input:
 ```
-@Cell:Cell __Atom
-@c2:c2 __Atom
-IsA c2 Cell
+Vocab
+    Domain Cell
+    Const c2 Cell
+end
 ```
 Expected:
 - `c2` is declared and typed as a `Cell`.
@@ -19,9 +20,10 @@ Expected:
 ### 2) Fact statement (unary predicate, named)
 Input:
 ```
-@Cell:Cell __Atom
-@c0:c0 __Atom
-IsA c0 Cell
+Vocab
+    Domain Cell
+    Const c0 Cell
+end
 
 @f1 proteinP c0
 ```
@@ -33,11 +35,11 @@ Expected:
 ### 3) Multi-argument predicate (typed)
 Input:
 ```
-@Person:Person __Atom
-@p0:p0 __Atom
-@p1:p1 __Atom
-IsA p0 Person
-IsA p1 Person
+Vocab
+    Domain Person
+    Const p0 Person
+    Const p1 Person
+end
 
 @f1 trusts p0 p1
 ```
@@ -47,7 +49,9 @@ Expected:
 ### 4) Quantified rule (core logic, block form)
 Input:
 ```
-@Cell:Cell __Atom
+Vocab
+    Domain Cell
+end
 
 @rule1 ForAll Cell graph c
     @g geneA $c
@@ -62,7 +66,9 @@ Expected core AST shape:
 ### 5) Existential query (witness is the binder variable)
 Input:
 ```
-@Person:Person __Atom
+Vocab
+    Domain Person
+end
 
 @query1 Exists Person graph p
     @c1 has_fever $p
@@ -109,11 +115,11 @@ Expected: `ResolveError` (unknown constant `c99`).
 Assume `proteinP(Cell)` has arity 1.
 Input:
 ```
-@Cell:Cell __Atom
-@c0:c0 __Atom
-@c1:c1 __Atom
-IsA c0 Cell
-IsA c1 Cell
+Vocab
+    Domain Cell
+    Const c0 Cell
+    Const c1 Cell
+end
 
 proteinP c0 c1
 ```

@@ -6,24 +6,20 @@ They focus on determinism (one parse) and typing (schema-driven).
 ## Shared Vocabulary (sys2 schema excerpt)
 ```sys2
 # File: tests/shared-vocab.sys2
-@Cell:Cell __Atom
-@Person:Person __Atom
-
-@c0:c0 __Atom
-IsA c0 Cell
-@c1:c1 __Atom
-IsA c1 Cell
-@p0:p0 __Atom
-IsA p0 Person
-@p1:p1 __Atom
-IsA p1 Person
-
-@geneA:geneA __Atom
-@inhibitor:inhibitor __Atom
-@proteinP:proteinP __Atom
-@has_flu:has_flu __Atom
-@has_fever:has_fever __Atom
-@trusts:trusts __Atom
+Vocab
+    Domain Cell
+    Domain Person
+    Const c0 Cell
+    Const c1 Cell
+    Const p0 Person
+    Const p1 Person
+    Pred geneA Cell
+    Pred inhibitor Cell
+    Pred proteinP Cell
+    Pred has_flu Person
+    Pred has_fever Person
+    Pred trusts Person Person
+end
 ```
 
 ## Accepted Inputs
@@ -40,7 +36,7 @@ Expected core AST shape:
 Input:
 ```cnl
 For any Cell c:
-    If c has gene A then c has protein P.
+    If $c has gene A then $c has protein P.
 ```
 Expected core AST shape:
 `ForAll(c:Cell, Implies(Pred(geneA,[c]), Pred(proteinP,[c])))`
@@ -49,7 +45,7 @@ Expected core AST shape:
 Input:
 ```cnl
 For any Cell c:
-    If c has gene A and c does not have inhibitor then c has protein P.
+    If $c has gene A and $c does not have inhibitor then $c has protein P.
 ```
 Expected core AST shape:
 `ForAll(c:Cell, Implies(And(Pred(geneA,[c]), Not(Pred(inhibitor,[c]))), Pred(proteinP,[c])))`
@@ -57,7 +53,7 @@ Expected core AST shape:
 ### 4) Query (witness search)
 Input:
 ```cnl
-Which Person p has fever?
+Which Person $p has fever?
 ```
 Expected core AST shape:
 `Exists(p:Person, Pred(has_fever,[p]))`
@@ -66,7 +62,7 @@ Expected core AST shape:
 Input:
 ```cnl
 For any Cell c:
-    If c has gene A then proteinP(c).
+    If $c has gene A then proteinP($c).
 ```
 Expected:
 - `proteinP(c)` is parsed as function-style syntax (DS-005).
@@ -113,6 +109,6 @@ Expected: `VocabError` (unknown identifier).
 Input:
 ```cnl
 For any Cell c:
-    If geneA(c) inhibitor(c) then proteinP(c).
+    If geneA($c) inhibitor($c) then proteinP($c).
 ```
 Expected: `ParseError` (`E_CNL_MISSING_CONNECTOR`).

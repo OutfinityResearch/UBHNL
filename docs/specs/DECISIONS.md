@@ -308,9 +308,9 @@ Use explicit `Pred(args)` only for:
 
 ```cnl
 For any Person x:
-    x has Fever.      # Inside block (4 spaces)
-    x is sick.        # Also inside
-x is healthy.         # Outside (no indent)
+    $x has Fever.      # Inside block (4 spaces)
+    $x is sick.        # Also inside
+Alice is healthy.     # Outside (no indent)
 ```
 
 ### 3.9 Disjunction and Biconditional [CONFIRMED 2026-01-07]
@@ -324,7 +324,7 @@ x is healthy.         # Outside (no indent)
 Complex expressions in ForAll blocks:
 ```cnl
 For any Status s:
-    s is Active if and only if it is not the case that s is Sleeping.
+    $s is Active if and only if it is not the case that $s is Sleeping.
 ```
 
 Generates:
