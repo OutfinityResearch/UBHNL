@@ -109,6 +109,9 @@ Within proof blocks, use CNL statement syntax:
 - Rules: `Rule: <description>.`
 - Conclusions: Standard CNL sentences ending with `.`
 
+Non-formal narrative lines are allowed only inside `Apply:` and are treated as notes.
+When translated to DSL, these lines become `Note "..."` entries in a proof block.
+
 ## 2.3 Step Numbering (Optional)
 
 For complex proofs, steps can be numbered:

@@ -52,8 +52,10 @@ Rules:
   - fragment id,
   - canonicalized constraints,
   - goal kind and options that affect semantics.
+- Certificates must reference **canonical encodings** (e.g., normalized CNF/UBH serialization), not in-process node ids.
 - Large proofs/artifacts must be stored as artifacts and referenced via `artifactRefs`.
 - Any mismatch between `problemDigest` and the checked problem is a hard verification failure.
+- SAT witnesses (models) are stored as artifacts and referenced by the result; they are not certificate kinds.
 
 ## Artifact store (session-level)
 To avoid embedding large objects inside serialized certificates:
@@ -87,9 +89,9 @@ Reference:
 Applies to:
 - `SAT` results for `Frag_UBH` / `Frag_SAT_CNF`.
 
-Representation:
+Representation (artifact, not a certificate kind):
 ```text
-kind: MODEL
+artifactKind: MODEL
 assignment:
   - varId: 0
     value: 0|1

@@ -12,8 +12,9 @@ The “NL pipeline” is intentionally split into:
 The compiler (DS-007) should not care whether the source was CNL or DSL.
 
 ## Pipeline Stages (CNL → Typed AST)
-1) Load vocabulary from Sys2 schema files and build a symbol table (domains, predicates, surface patterns).
-   - Constants are derived from `@name:kbName __Atom` + `IsA` in `.sys2` files.
+1) Load vocabulary from Sys2 schema files and build a symbol table (domains, predicates, functions, surface patterns, aliases).
+   - **Canonical**: `Vocab ... end` blocks in `.sys2` (DS-008).
+   - **Legacy**: `@name:kbName __Atom` + `IsA` may be used as a fallback schema source.
 2) Tokenize input (keywords, identifiers, punctuation).
 3) Parse tokens to a **concrete syntax tree** (CST).
 4) Normalize:
@@ -21,11 +22,12 @@ The compiler (DS-007) should not care whether the source was CNL or DSL.
    - pattern expansion (CNL surface → canonical predicate form, see DS-005),
    - punctuation sugar (`->` → `implies`, `!` → `not`, etc.).
 5) Build a **surface AST** that preserves source locations (for errors).
-6) Resolve symbols and build a **typed AST**:
+6) Disambiguate any syntactically ambiguous parses using vocabulary signatures (deterministic tie-breaking).
+7) Resolve symbols and build a **typed AST**:
    - bind variables introduced by quantifiers,
    - resolve constants and predicate names,
    - validate arity and argument types.
-7) Desugar to a small **core logic AST**:
+8) Desugar to a small **core logic AST**:
    - `forall, exists, and, or, not, implies`
    - optional `iff`, `eq`, `bool literals`
 
@@ -40,12 +42,14 @@ This AST is the contract between front-ends and the UBH compiler.
 - `Not(expr: Expr)`
 - `Implies(lhs: Expr, rhs: Expr)`
 - `Pred(name: PredSym, args: Term[])`
+- `Func(name: FuncSym, args: Term[])` (term-level function application)
 - `BoolLit(value: true|false)` (optional)
 - `Eq(lhs: Term, rhs: Term)` (optional; mostly useful for enums/bitvectors)
 
 ### Terms
 - `VarRef(var: Var)` where `var` is introduced by a quantifier binder
 - `ConstRef(name: string, type: Domain)`
+- `NumLit(value: string)` (exact lexical form for numeric literals)
 
 ## Beyond Core Logic (Other Fragments)
 This DS defines the *minimal* typed AST needed for deterministic CNL and UBH compilation.
@@ -61,12 +65,19 @@ Design rule:
 Given a vocabulary `L` (built from Sys2 schemas):
 - A predicate call `P(t1,...,tn)` is valid iff:
   - `P` exists in `L.predicates`,
-  - `arity(P)=n`,
-  - each term `ti` resolves to a type compatible with `args(P)[i]`.
+  - `arity(P)=n` (including `n=0`),
+  - each term `ti` resolves to a type compatible with `args(P)[i]` (including subtyping).
+- A function call `F(t1,...,tn)` is valid iff:
+  - `F` exists in `L.functions`,
+  - `arity(F)=n`,
+  - each term `ti` resolves to a type compatible with `args(F)[i]` (including subtyping),
+  - the result type is used in the surrounding context.
 - A term `t` resolves as:
   1) a bound variable if it is in the current quantifier environment, else
   2) a constant if it is an element of some `L.domains[DomainName]`, else
-  3) error: unknown identifier.
+  3) a function application if it matches a known function symbol (with arity), else
+  4) a numeric literal (`NumLit`) if lexed as a number, else
+  5) error: unknown identifier.
 
 ## Error Handling (Required)
 Errors must be deterministic, categorized, and include source positions.

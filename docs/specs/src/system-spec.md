@@ -108,7 +108,7 @@ Spec:
 - `DS09-sessions-query-proof.md`
 
 Roles:
-- **Theory files** (long-term memory): CNL (`.cnl`) / DSL (`.sys2`) files on disk.
+- **Theory files** (long-term memory): canonical storage is DSL (`.sys2`); CNL is for authoring and is translated before persistence.
 - **Session** (short-term memory): working set with loaded theories, transient additions, and caches.
 
 ## 3) End-to-End Data Flow (CNL/DSL → Result)

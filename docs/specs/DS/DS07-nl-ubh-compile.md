@@ -10,6 +10,9 @@ This DS defines compilation from the **typed core logic AST** (DS-006) into:
 
 The compilation target is intentionally tiny. Everything else (sessions, schemas, proofs) is layered above.
 
+Note: terms involving functions or numeric literals must be lowered by a higher-level front-end (e.g., SMT/BV);
+this DS only covers boolean predicate instances over finite-domain constants.
+
 ## Decisions
 - All CNL/DSL types are lowered by **explicit enumeration** before UBH compilation (DS-003).
 - Predicates become indexed Boolean wires keyed by concrete arguments.
@@ -22,6 +25,7 @@ For the CNL/DSL pipeline, **no bitvector encoding is used** for finite domains:
 - Each domain element is a declared constant (`@c0:c0 __Atom`, `IsA c0 Cell`).
 - Quantifiers expand by **enumerating** domain elements (or emit a schema object).
 - Equality on domain elements is **syntactic** equality of constants.
+ - Subtypes: if `SubType A B`, then elements of `A` are included when enumerating `B`.
 
 If a different front-end uses bitvectors, it must provide its own lowering rules and
 domain constraints; that is outside this DS.
@@ -42,6 +46,7 @@ Compilation returns a UBH wire id for the resulting Boolean expression.
 Type checking is enforced before compilation:
 - predicate arity must match,
 - each argument must be a declared constant of the expected type.
+- arity may be 0; in that case the key is just the predicate name.
 
 ### Quantifiers (Expansion Semantics)
 Let `Body(d)` denote the body with the quantified variable substituted by concrete element `d`.

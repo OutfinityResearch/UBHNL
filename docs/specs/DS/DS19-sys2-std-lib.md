@@ -28,6 +28,11 @@ CNL keywords are **case-insensitive**.
 - `Let`, `be`, `a`, `an`, `Domain`
 - `is` (type declaration / adjective forms)
 - `has` (subject–predicate sugar)
+- `Alias`, `subtype` (aliasing and subtyping)
+
+### Proof keywords (DS-020)
+- `Proof`, `Given`, `Assume`, `Apply`, `Derive`, `Observed`, `Hypothesis`
+- `Verify`, `Constraint`, `Contradiction`, `Query`, `Found`, `Therefore`
 
 ### Boolean literals
 - `true`, `false`
@@ -42,6 +47,9 @@ Sys2 DSL keywords are **case-sensitive**.
 - Typing / declarations: `IsA`, `__Atom`
 - Literals: `true`, `false`
 - Probabilistic: `Weight`, `ProbQuery`, `Ask`, `Given`
+- Vocabulary: `Vocab`, `Domain`, `Const`, `Pred`, `Func`
+- Schema relations: `SubType`, `Alias`
+- Proof: `Proof`, `Given`, `Assume`, `Apply`, `Derive`, `Observed`, `Hypothesis`, `Verify`, `Constraint`, `Contradiction`, `Query`, `Found`, `Therefore`, `Note`
 
 ### Special tokens (not identifiers)
 - `@` declaration target (start of statement only; at most one per line)

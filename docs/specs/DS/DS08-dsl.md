@@ -47,6 +47,10 @@ true  false
 IsA  __Atom
 Weight  ProbQuery  Ask  Given
 load
+Vocab  Domain  Const  Pred  Func
+SubType  Alias
+Proof  Given  Assume  Apply  Derive  Observed  Hypothesis  Verify  Constraint  Contradiction  Query  Found  Therefore
+Note
 ```
 
 ## 1.3 Number Literals (for probabilistic weights)
@@ -56,6 +60,14 @@ NUMBER := DIGIT+ ("/" DIGIT+)? | DIGIT+ "." DIGIT+
 ```
 
 Examples: `3/10`, `1/2`, `0.8`, `12.5`
+
+## 1.3.1 String Literals (for proof notes)
+
+```
+STRING := "\"" (CHAR | ESC)* "\""
+```
+
+Examples: `"Modus Ponens on 1,2"`, `"Contradiction: ..."`
 
 ## 1.4 Special Tokens
 
@@ -132,8 +144,40 @@ load "local/helpers.sys2"                 # OK - subdirectory
 4. **Idempotent**: Loading same file twice has no effect (deduplication by path)
 5. **No shadowing**: A KB name may be introduced only once across all loaded files
 6. **Conflict policy**: If two files introduce the same KB name or predicate with different meaning, it is a hard error (`E_DSL_REDECLARATION`)
-7. **No automatic namespaces**: Use explicit name prefixes (e.g., `Medical_Patient`) or explicit aliases (`@local:GlobalName`) to avoid collisions
+7. **No automatic namespaces**: Use explicit name prefixes (e.g., `Medical_Patient`) or explicit aliases (`Alias local global`) to avoid collisions
 8. **Circular detection**: Circular loads reported as `E_DSL_CIRCULAR_LOAD`
+
+---
+
+## Rule 0A: Vocabulary Block (Canonical Schema)
+
+Sys2 files may declare an explicit vocabulary block. This is the **canonical** source of
+predicate/function signatures and alias mappings.
+
+```sys2
+Vocab
+    Domain Person
+    Domain Cell
+    Const Alice Person
+    Const c0 Cell
+    Pred Trusts Person Person
+    Pred Active Person
+    Func Age Person Int
+    SubType Patient Person
+    Alias localPatient Patient
+end
+```
+
+Rules:
+- `Domain` declares a type/domain.
+- `Const` declares a constant and its domain.
+- `Pred` declares a boolean predicate signature (arity = number of types listed).
+- `Func` declares a function signature; the **last type** is the return type, preceding types are arguments.
+- `SubType A B` means `A` is a subtype of `B` (see Rule 12).
+- `Alias local global` creates a local alias for an existing KB name.
+
+Legacy support:
+- `@name:kbName __Atom` + `IsA` may be used as a fallback schema source, but `Vocab` is normative.
 
 ---
 
@@ -150,6 +194,8 @@ Every named entity must be declared **exactly once** with `@`:
 
 **Invariant**: Each `@name` appears exactly once in the entire theory.
 
+Note: `@... __Atom` and `IsA` are legacy schema forms; prefer `Vocab` declarations for new files.
+
 ## Rule 1B: Working Memory vs KB Names
 
 Use `:` to control whether a name is **temporary** or **persistent**:
@@ -157,6 +203,19 @@ Use `:` to control whether a name is **temporary** or **persistent**:
 - `@tmp __Atom` or `@tmp expr` defines a **working-memory name**; reference it as `$tmp`.
 - `@tmp:kbName __Atom` or `@tmp:kbName expr` defines a **KB/vocabulary name**; reference it as `kbName` (bare).
 - Prefer `:kbName` for important facts, lemmas, or theorems so proofs/explanations stay compact.
+
+## Rule 1C: SubType and Alias Statements (Top-Level)
+
+Outside of `Vocab`, the following statements are allowed:
+
+```sys2
+SubType Patient Person
+Alias localPatient Patient
+```
+
+Rules:
+- `SubType A B` declares `A <: B` (see Rule 12).
+- `Alias local global` creates a local alias for an existing KB name in the current file.
 
 ## Rule 2: `$` References Only Working-Memory Names
 
@@ -211,9 +270,9 @@ Implies $a $b
 @:myImplication           # Names previous line as "myImplication" in KB
 ```
 
-## Rule 5: Predicate Application (Space-Separated)
+## Rule 5: Predicate and Function Application (Space-Separated)
 
-Predicates are applied with **space-separated** arguments. **NO PARENTHESES**.
+Predicates and functions are applied with **space-separated** arguments. **NO PARENTHESES**.
 
 ```sys2
 Predicate arg1 arg2 arg3
@@ -225,6 +284,18 @@ HasFever Alice         # Unary predicate (KB constant)
 Trusts $u $v           # Binary predicate (working-memory names)
 Between $x $y $z       # Ternary predicate (bound variables)
 ```
+
+Zero-arity predicates are allowed when declared in the vocabulary:
+```sys2
+Enabled
+```
+
+Function application uses the same syntax and is disambiguated by vocabulary signatures:
+```sys2
+Age Alice
+Succ $n
+```
+Parsing may be vocabulary-aware to resolve whether an identifier is a predicate or a function.
 
 ## Rule 6: Anonymous Grouping with `{ }`
 
@@ -258,6 +329,10 @@ Implies $c1 $c2        # Anonymous rule (named expressions)
 ---
 
 # PART 3: Statement Types
+
+## 3.0 Vocabulary Block
+
+See Rule 0A for canonical schema declarations. The `Vocab` block is preferred over legacy `__Atom` + `IsA` declarations.
 
 ## 3.1 Type/Domain Declaration
 
@@ -446,6 +521,25 @@ end
 
 `Given` is optional; when omitted, the query is unconditional.
 
+## 3.8 Proof Blocks
+
+Proof blocks serialize CNL proofs into DSL form for storage and checking.
+
+```sys2
+@Proof1 Proof
+    Given
+        HasFever Alice
+    Apply
+        Note "Modus Ponens on rule FluCausesFever."
+    Therefore
+        HasFever Alice
+end
+```
+
+Rules:
+- Each section contains one or more `expr` entries or `Note "..."`.
+- `Note` is intended for narrative; machine checking should rely on explicit expressions and named rules.
+
 ---
 
 # PART 4: Complete Grammar (EBNF)
@@ -457,12 +551,27 @@ statement    := declaration
               | typing
               | namedExpr
               | anonExpr
+              | vocabBlock
+              | aliasDecl
+              | subtypeDecl
               | quantified
               | definition
               | probWeight
               | probQuery
               | kbNaming
+              | proofBlock
               | COMMENT ;
+
+vocabBlock   := "Vocab" (vocabStmt)* "end" ;
+vocabStmt    := "Domain" IDENT
+              | "Const" IDENT IDENT
+              | "Pred" IDENT (IDENT)*
+              | "Func" IDENT (IDENT)+
+              | "SubType" IDENT IDENT
+              | "Alias" IDENT IDENT ;
+
+aliasDecl    := "Alias" IDENT IDENT ;
+subtypeDecl  := "SubType" IDENT IDENT ;
 
 declaration  := "@" IDENT (":" IDENT)? "__Atom" ;
 
@@ -491,6 +600,17 @@ probQuery    := "@" IDENT (":" IDENT)? "ProbQuery"
                     ("Given" "{" expr "}")?
                 "end" ;
 
+proofBlock   := "@" IDENT (":" IDENT)? "Proof"
+                    (proofSection)+
+                "end" ;
+
+proofSection := ("Given"|"Assume"|"Apply"|"Derive"|"Observed"|"Hypothesis"|
+                 "Verify"|"Constraint"|"Contradiction"|"Query"|"Found"|"Therefore")
+                 proofStmt+ ;
+
+proofStmt    := expr
+              | "Note" STRING ;
+
 quantifier   := "ForAll" | "Exists" ;
 
 expr         := connective
@@ -504,13 +624,14 @@ connective   := "And" term term (term)*
               | "Iff" term term
               | "Xor" term term ;
 
-predApply    := IDENT term (term)* ;
+predApply    := IDENT (term)* ;
 
 literal      := predApply
               | "Not" "{" predApply "}" ;
 
 term         := "$" IDENT              # bound variable or named expression reference
               | IDENT                  # constant/predicate from vocabulary
+              | NUMBER                 # numeric literal
               | "true" | "false"       # boolean literals
               | "{" expr "}" ;         # anonymous grouping
 
@@ -540,13 +661,18 @@ Inside a `ForAll`/`Exists` block, the graph variable is in scope for all nested 
 1. `$name` looks up **working-memory names** in scope (bound variables or local named expressions)
 2. If not found locally, looks in enclosing scopes
 3. If still not found, error `E_DSL_UNBOUND_VAR`
-4. Bare identifiers resolve **only** to KB/vocabulary names
+4. Bare identifiers resolve **only** to KB/vocabulary names (after alias expansion)
+
+Alias rule:
+- `Alias local global` binds `local` to the existing KB name `global` for the current file.
 
 ## 5.3 Type Checking
 
 1. `IsA const Type` requires both `const` and `Type` declared
 2. Predicate arguments must match types from the vocabulary schema
-3. Quantifier domain must be a declared type
+3. Function arguments and return types must match declared signatures
+4. Quantifier domain must be a declared type
+5. Subtyping: if `SubType A B`, then any `A` is also a valid `B`
 
 ## 5.4 KB Storage Semantics
 
@@ -767,6 +893,7 @@ IsA c0 Cell
 
 | Pattern | Meaning |
 |---------|---------|
+| `Vocab ... end` | Canonical vocabulary declarations |
 | `@name __Atom` | Declare working-memory type/constant |
 | `@name:kbName __Atom` | Declare KB/vocabulary type/constant |
 | `IsA const Type` | Type membership |
@@ -776,8 +903,11 @@ IsA c0 Cell
 | `expr` (no @) | Anonymous assertion |
 | `ForAll T graph v ... end` | Universal quantifier block |
 | `Exists T graph v ... end` | Existential quantifier block |
+| `SubType A B` | Subtype declaration (`A <: B`) |
+| `Alias local global` | Local alias for existing KB name |
 | `Weight { literal } w` | Probabilistic weight annotation |
 | `@q ProbQuery ... end` | Probabilistic query block |
+| `@p Proof ... end` | Proof block |
 
 ## Comparison with CNL
 
@@ -797,7 +927,7 @@ IsA c0 Cell
 
 # References
 
-- DS-005 (CNL syntax - bijective counterpart)
+- DS-005 (CNL syntax - aligned subset)
 - DS-006 (typed AST - shared representation)
 - DS-009 (sessions, origins, holes)
 - DS-016 (error handling)

@@ -2,11 +2,12 @@
 
 ## Goal
 
-Specify a **deterministic bidirectional translator** between CNL and DSL:
+Specify a **deterministic translator** between CNL and DSL:
 - **CNL → DSL**: Convert human-readable CNL to machine-friendly DSL for storage
 - **DSL → CNL**: Convert DSL back to CNL for display and explanation
 
-The translation is **lossless** and **bijective**: round-tripping preserves semantics exactly.
+The translation is **lossless for the CNL-core subset**: round-tripping preserves semantics exactly for that subset.
+DSL is a superset and may contain constructs with no CNL equivalent.
 
 ---
 
@@ -86,7 +87,9 @@ IsA c0 Cell
 
 | CNL | DSL |
 |-----|-----|
-| `Let TypeName be a Domain.` | `@TypeName:TypeName __Atom` |
+| `Let TypeName be a Domain.` | `Domain TypeName` (inside `Vocab`) |
+
+Note: the translator may emit or update a single `Vocab ... end` block per file.
 
 **Example**:
 ```cnl
@@ -95,15 +98,17 @@ Let Cell be a Domain.
 ```
 ↔
 ```sys2
-@Person:Person __Atom
-@Cell:Cell __Atom
+Vocab
+    Domain Person
+    Domain Cell
+end
 ```
 
 ## Rule T03: Constant Declaration
 
 | CNL | DSL |
 |-----|-----|
-| `Let name be a Type.` | `@name:name __Atom` + `IsA name Type` |
+| `Let name be a Type.` | `Const name Type` (inside `Vocab`) |
 
 Note: CNL declarations are treated as **persistent KB names** so they are favored in proofs/explanations.
 
@@ -114,30 +119,41 @@ Let c0 be a Cell.
 ```
 ↔
 ```sys2
-@Alice:Alice __Atom
-IsA Alice Person
-@c0:c0 __Atom
-IsA c0 Cell
+Vocab
+    Const Alice Person
+    Const c0 Cell
+end
 ```
 
 ## Rule T04: Multiple Constant Declaration
 
 | CNL | DSL |
 |-----|-----|
-| `Let a, b, c be Types.` | Multiple `@x:x __Atom` + `IsA x Type` |
+| `Let a, b, c be Types.` | Multiple `Const` entries in `Vocab` |
 
 **Example**:
 ```cnl
 Let Alice, Bob, Charlie be Persons.
 ```
+
+## Rule T04B: Subtype Declaration
+
+| CNL | DSL |
+|-----|-----|
+| `Patient is a subtype of Person.` | `SubType Patient Person` |
+
+## Rule T04C: Alias Declaration
+
+| CNL | DSL |
+|-----|-----|
+| `Alias localPatient as Patient.` | `Alias localPatient Patient` |
 ↔
 ```sys2
-@Alice:Alice __Atom
-@Bob:Bob __Atom
-@Charlie:Charlie __Atom
-IsA Alice Person
-IsA Bob Person
-IsA Charlie Person
+Vocab
+    Const Alice Person
+    Const Bob Person
+    Const Charlie Person
+end
 ```
 
 ## Rule T05: Simple Fact (Subject-Verb)
@@ -252,7 +268,7 @@ If Alice has Flu then Alice has Fever.
 **Example**:
 ```cnl
 For all Person p:
-    If p has Flu then p has Fever.
+    If $p has Flu then $p has Fever.
 ```
 ↔
 ```sys2
@@ -273,7 +289,7 @@ end
 **Example**:
 ```cnl
 For all Person x, Person y:
-    If x trusts y then y knows x.
+    If $x trusts $y then $y knows $x.
 ```
 ↔
 ```sys2
@@ -297,7 +313,7 @@ end
 **Example**:
 ```cnl
 There exists Person p:
-    p has Fever.
+    $p has Fever.
 ```
 ↔
 ```sys2
@@ -317,7 +333,7 @@ end
 ```cnl
 Rule TransitiveTrust:
     For all User x, User y, User z:
-        If x trusts y and y trusts z then x trusts z.
+        If $x trusts $y and $y trusts $z then $x trusts $z.
 ```
 ↔
 ```sys2
@@ -347,7 +363,7 @@ end
 ```cnl
 Definition Producer(Cell c):
     For all Protein p:
-        If c expresses p then p is active.
+        If $c expresses $p then $p is active.
 ```
 ↔
 ```sys2
@@ -366,12 +382,12 @@ end
 
 | CNL | DSL |
 |-----|-----|
-| Bare `x`, `y`, `p` (in quantifier scope) | Prefixed `$x`, `$y`, `$p` |
+| `$x`, `$y`, `$p` (in quantifier scope) | `$x`, `$y`, `$p` |
 
 **Example**:
 ```cnl
 For all Cell c:
-    If geneA(c) then proteinP(c).
+    If geneA($c) then proteinP($c).
 ```
 ↔
 ```sys2
@@ -408,6 +424,8 @@ Multi-word phrases are handled by the **fixed CNL patterns** defined in DS-005.
 There is no external alias schema; if a phrase is not recognized, the user must
 use explicit predicate syntax or add a formal rule/definition in Sys2.
 
+Normalization and alias resolution follow DS-005 (Section 1C.6).
+
 **Example**:
 ```cnl
 Alice has Fever.
@@ -434,6 +452,34 @@ Prob(Cloudy(today), 0.8).
 Weight { Cloudy today } 0.8
 ```
 
+## Rule T20: Proof Blocks
+
+Proof blocks are translated into DSL proof blocks. Each CNL statement inside a proof section is translated to DSL expressions as usual.
+Free-form narrative inside `Apply`/`Note` lines is preserved as a `Note "..."` entry.
+
+**CNL**:
+```cnl
+Proof Example:
+    Given:
+        Alice has Fever.
+    Apply:
+        Modus Ponens on rule FluCausesFever.
+    Therefore:
+        Alice has Fever.
+```
+
+**DSL**:
+```sys2
+@Example Proof
+    Given
+        HasFever Alice
+    Apply
+        Note "Modus Ponens on rule FluCausesFever."
+    Therefore
+        HasFever Alice
+end
+```
+
 ---
 
 # PART 3: Comprehensive Examples
@@ -449,26 +495,28 @@ Let p1 be a Patient.
 // Diagnostic rules
 Rule FluCausesFever:
     For all Patient p:
-        If p has Flu then p has Fever.
+        If $p has Flu then $p has Fever.
 
 Rule FluCausesCough:
     For all Patient p:
-        If p has Flu then p coughs.
+        If $p has Flu then $p coughs.
 
 // Observations
 p1 has Fever.
 p1 coughs.
 
 // Query
-Which Patient p has Flu?
+Which Patient $p has Flu?
 ```
+Note: variable references in bodies use `$p`.
 
 **DSL** (`diagnosis.sys2`):
 ```sys2
 # Domain declarations
-@Patient:Patient __Atom
-@p1:p1 __Atom
-IsA p1 Patient
+Vocab
+    Domain Patient
+    Const p1 Patient
+end
 
 # Diagnostic rules
 @FluCausesFever:FluCausesFever ForAll Patient graph p
@@ -508,18 +556,17 @@ Bob trusts Charlie.
 
 Rule TransitiveTrust:
     For all User x, User y, User z:
-        If x trusts y and y trusts z then x trusts z.
+        If $x trusts $y and $y trusts $z then $x trusts $z.
 ```
 
 **DSL** (`trust.sys2`):
 ```sys2
-@User:User __Atom
-@Alice:Alice __Atom
-@Bob:Bob __Atom
-@Charlie:Charlie __Atom
-IsA Alice User
-IsA Bob User
-IsA Charlie User
+Vocab
+    Domain User
+    Const Alice User
+    Const Bob User
+    Const Charlie User
+end
 
 @f1 Trusts Alice Bob
 @f2 Trusts Bob Charlie
@@ -557,10 +604,11 @@ c0 is a Producer.
 
 **DSL** (`biology.sys2`):
 ```sys2
-@Cell:Cell __Atom
-@Protein:Protein __Atom
-@c0:c0 __Atom
-IsA c0 Cell
+Vocab
+    Domain Cell
+    Domain Protein
+    Const c0 Cell
+end
 
 @Producer:Producer graph c
     @inner ForAll Protein graph p
@@ -609,7 +657,7 @@ end
 
 # PART 6: Round-Trip Guarantee
 
-The translator guarantees:
+The translator guarantees (for the CNL-core subset):
 ```
 parse(emit(parse(source))) ≡ parse(source)
 ```
@@ -626,7 +674,7 @@ Test runner:
 1. Translate CNL → DSL
 2. Compare with expected DSL (normalized whitespace)
 3. Translate DSL → CNL → DSL
-4. Verify round-trip produces identical DSL
+4. Verify round-trip produces identical DSL (CNL-core subset)
 
 ---
 

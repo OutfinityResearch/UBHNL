@@ -101,8 +101,16 @@ interface ErrorDetails {
 |------|-----------|---------|
 | `E_DSL_SYNTAX` | General DSL syntax error | `@rule1 ForAll Cell c` (missing `graph`) |
 | `E_DSL_TWO_AT` | Two `@` tokens on one line | `@x P @y` |
-| `E_DSL_AT_NOT_FIRST` | `@` not at start of line | `P(@x)` |
+| `E_DSL_AT_IN_EXPR` | `@` inside expression | `Implies @a @b` |
+| `E_DSL_AT_NOT_FIRST` | `@` not at start of line (alias of `E_DSL_AT_IN_EXPR`) | `P(@x)` |
 | `E_DSL_UNBOUND_VAR` | `$x` used outside scope | `geneA $x` |
+| `E_DSL_FORBIDDEN_PAREN` | Parentheses used | `Pred(a, b)` |
+| `E_DSL_FORBIDDEN_BRACKET` | Brackets used | `Pred[a]` |
+| `E_DSL_FORBIDDEN_SEMICOLON` | Semicolons used | `a; b` |
+| `E_DSL_REDECLARATION` | Same `@name` declared twice | `@a __Atom` twice |
+| `E_DSL_MISSING_RETURN` | Block without `return` | `ForAll ... end` |
+| `E_DSL_MISSING_END` | Block without `end` | Unclosed `ForAll` |
+| `E_DSL_ORPHAN_KB_NAME` | `@:name` without preceding expr | `@:foo` |
 
 ### Vocabulary / Typing Errors
 

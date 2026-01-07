@@ -120,6 +120,8 @@ check(problem: Problem, result: BackendResult) -> { ok: boolean, details? }
   - a witness solution, and
   - a lower/upper bound certificate proving optimality.
 
+Certificate artifacts must be tied to a **canonical encoding** of the problem (normalized CNF/UBH), not raw process-local ids.
+
 ## Required Backend Catalog (with Certificates)
 This section is normative: the system’s architecture must have slots for these methods, even if some are provided via adapters.
 

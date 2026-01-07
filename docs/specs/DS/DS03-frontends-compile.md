@@ -69,6 +69,9 @@ Let `D` be a finite domain and `P(x)` a Boolean expression:
 - `exists x in D: P(x)` means `∨_{d∈D} P(d)`
   - If `D` is empty: the result is `false` (`CONST0`).
 
+Subtype rule:
+- If `SubType A B`, then `D=B` enumerates all elements declared in `B` **and** all elements declared in its subtypes.
+
 These are not just math trivia: they affect compilation and must be tested.
 
 ### Expansion vs Lazy Instantiation

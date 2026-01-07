@@ -36,7 +36,7 @@ function buildHeaderMenu(root) {
 
   const links = [
     ["Index", "index.html"],
-    ["Vision", "vision.html"],
+    ["Vision", "vision/index.html"],
     ["Architecture", "architecture.html"],
     ["Languages", "languages.html"],
     ["Session API", "session-api.html"],

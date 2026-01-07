@@ -16,7 +16,7 @@ Many reasoning problems - from logic puzzles to medical diagnosis to hardware ve
 1. Building a **minimal trusted kernel** (UBH) that operates on Boolean circuits with native XOR handling
 2. **Compiling** higher-level logics (first-order, temporal, probabilistic) into UBH constraints
 3. **Requiring checkable certificates** for all solver claims (no blind trust)
-4. Providing **two isomorphic languages**: CNL for humans, DSL for machines
+4. Providing **two aligned languages**: CNL (human-friendly subset), DSL (machine-friendly superset)
 
 ### Target Use Cases
 
@@ -171,7 +171,8 @@ Equations are polynomials in GF(2) set to 0.
 
 ## 6. Kernel API
 
-Minimal async API (hosted as JS module, async-first). All ids are node ids:
+Minimal async API (hosted as JS module, async-first). All ids are node ids.
+Async constructors allow kernel execution in worker threads; a synchronous adapter MAY be provided for hot paths.
 
 ```typescript
 interface UBHKernel {
@@ -319,7 +320,7 @@ DS00-vision (this doc)
     │   │
     │   └── DS-008 DSL (machine language)
     │           └── defines: programming language format
-    │           └── isomorphic to DS-005
+    │           └── CNL-core subset of DS-005
     │
     ├── DS-006 Typed AST Pipeline
     │       └── defines: shared representation after parsing
@@ -378,7 +379,7 @@ Front-ends are responsible for:
 
 **See**: DS-005 (CNL), DS-008 (DSL)
 
-- Two isomorphic languages: CNL (human-friendly), DSL (machine-friendly)
+- Two aligned languages: CNL (human-friendly subset), DSL (machine-friendly superset)
 - A shared lexicon defines symbols, arities, and finite domains
 - Both parsers must be deterministic; ambiguous inputs are rejected
 - The AST lowers to core logic (forall/exists/and/or/not/implies) before UBH compilation

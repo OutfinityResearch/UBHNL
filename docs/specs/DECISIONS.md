@@ -40,7 +40,7 @@ Items marked with `[CONFIRMED]` have been explicitly approved.
 |----------|-----------|
 | CNL → DSL | Yes (for storage) |
 | DSL → CNL | Yes (for display/explanation) |
-| Round-trip guarantee | Yes (lossless) |
+| Round-trip guarantee | Yes for the CNL-core subset |
 
 ### 1.4 Lexicon Source of Truth [CONFIRMED]
 
@@ -97,7 +97,7 @@ load "../theories/core/logic.sys2"       // OK - can load .sys2
 
 | Use Case | Format | Rationale |
 |----------|--------|-----------|
-| **Domain theories** (medical, legal) | `.cnl` | Non-technical reviewers can validate rules |
+| **Domain theories** (medical, legal) | `.sys2` | Canonical, unambiguous storage |
 | **Core logic primitives** | `.sys2` | Stability critical, rarely changes |
 | **System configuration** | `.sys2` | Precise semantics, no ambiguity |
 | **User-authored rules** | `.cnl` | Natural language for ease of use |
@@ -510,6 +510,7 @@ end
 | **DSL Syntax** | `DS08-dsl.md` | Machine-readable format |
 | **CNL↔DSL Translation** | `DS18-cnl-translator.md` | Bidirectional mapping |
 | **Proof Format** | `DS20-proof-format.md` | Proof trace structure |
+| **Holographic Reasoning** | `DS21-holographic-reasoning.md` | VSA/HDC/HRR parallel engine |
 
 ### A.2 DS Numbering Scheme
 

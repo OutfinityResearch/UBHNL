@@ -4,7 +4,7 @@
 
 Define a **Controlled Natural Language (CNL)** that:
 - Looks and feels like natural English
-- Maps **deterministically** and **bijectively** to the DSL (DS-008)
+- Maps **deterministically** to the DSL (DS-008); DSL is a superset
 - Supports multiple styles: fully natural, semi-formal, and explicit
 - Is suitable for non-programmers and domain experts
 - Is **not** the source of truth for schemas/metadata (use Sys2 for that)
@@ -16,11 +16,12 @@ Define a **Controlled Natural Language (CNL)** that:
 ## 1.1 Non-Negotiable Rules
 
 1. **Deterministic parse**: Same input always produces same AST
-2. **Bijective with DSL**: Every CNL construct maps to exactly one DSL construct
+2. **CNL-core round-trip**: Every CNL-core construct maps to exactly one DSL construct; DSL may express more than CNL
 3. **Typed**: Every predicate argument has a declared type
 4. **No pronouns**: Anaphoric references (`he`, `she`, `it`, `they`) are FORBIDDEN
 5. **No ellipsis**: Incomplete sentences are FORBIDDEN
 6. **Finite domains**: Quantifiers range over declared finite domains
+7. **Explicit variables**: Variable references use `$` to disambiguate from constants
 
 ## 1.2 Three Styles of CNL
 
@@ -41,11 +42,13 @@ All three styles translate to the same DSL format.
 | **Purpose** | Human authoring | Machine storage |
 | **Schema/metadata** | Not authoritative | Canonical |
 | **Style** | Natural English | Symbolic |
-| **Variables** | Bare: `x`, `person1` | Prefixed: `$x`, `$person1` |
+| **Variables** | Prefixed: `$x`, `$person1` | Prefixed: `$x`, `$person1` |
 | **Quantifiers** | `Every`, `For any`, `For all` | `ForAll ... graph ... end` |
 | **Statements** | End with `.` | End with newline |
 | **Comments** | `//` | `#` |
 | **Grouping** | Parentheses `()` allowed | Braces `{ }` only |
+
+Note: CNL is a strict, human-friendly subset. DSL may contain constructs with no CNL equivalent; round-trip is guaranteed only for the CNL-core subset.
 
 ---
 
@@ -143,8 +146,8 @@ CNL uses **Python-style indentation** to determine scope and grouping. There are
 ### Single-level block
 ```cnl
 For any Person x:
-    x has Fever.          // Inside the ForAll block
-    x is sick.            // Also inside (same indent)
+    $x has Fever.          // Inside the ForAll block
+    $x is sick.            // Also inside (same indent)
 x is healthy.             // OUTSIDE - dedented, new statement
 ```
 -> DSL:
@@ -162,8 +165,8 @@ end
 ```cnl
 For any Person x:
     For any Person y:
-        If Trusts(x, y) then Knows(y, x).   // Nested 2 levels
-    x exists.                                // Back to level 1
+        If Trusts($x, $y) then Knows($y, $x).   // Nested 2 levels
+    $x exists.                                // Back to level 1
 ```
 -> DSL:
 ```sys2
@@ -219,6 +222,8 @@ For any Person x:
     If HasFlu(x) then HasFever(x).
     If HasFlu(x) then Coughs(x).
 ```
+
+**Block semantics**: when a block contains multiple statements, they are combined with an implicit `and`.
 
 ---
 
@@ -287,6 +292,36 @@ end
 @f1 HasFever p1
 ```
 
+## 1C.5 Variable References
+
+Variable references are **explicit** and use a `$` prefix in CNL:
+
+```cnl
+For any Person x:
+    If $x has Flu then $x has Fever.
+```
+
+Bare identifiers always refer to vocabulary/KB constants.
+Binders may be written as `x` or `$x`, but any **use** of the variable in a statement must be `$x`.
+Legacy examples that omit `$` in block bodies should be read as if `$` were present; canonical output must include `$`.
+
+## 1C.6 Surface Normalization and Alias Mapping
+
+Natural surface phrases map to predicate symbols deterministically:
+1) If the vocabulary defines an explicit alias for the phrase, use that alias.
+2) Otherwise, normalize by:
+   - splitting on spaces and hyphens,
+   - lowercasing the first token,
+   - capitalizing the first letter of subsequent tokens,
+   - concatenating the result (camelCase).
+
+Examples:
+- `gene A` → `geneA`
+- `protein P` → `proteinP`
+- `has fever` → `hasFever`
+
+If the normalized name is not in the vocabulary, the input is rejected with `E_CNL_UNKNOWN_ALIAS`.
+
 **Social network:**
 ```cnl
 // Input
@@ -319,12 +354,13 @@ end
 
 # PART 2: Theory Files (Authoritative)
 
-## 2.1 PREFERRED: CNL Theory Files
+## 2.1 PREFERRED: Sys2 Theory Files
 
-Domain knowledge should be expressed in `.cnl` files:
+Domain knowledge should be stored canonically in `.sys2` files. CNL is suitable for authoring,
+but persisted theory files in `/theories/` should be Sys2.
 
 ```cnl
-// theories/domains/medical.cnl
+// theories/domains/medical.sys2
 Patient is a Domain.
 Symptom is a Domain.
 
@@ -332,15 +368,15 @@ Flu is a Disease.
 Cold is a Disease.
 
 For any Patient p:
-    If p has Flu then p has Fever.
-    If p has Cold then p coughs.
+    If $p has Flu then $p has Fever.
+    If $p has Cold then $p coughs.
 ```
 
 **Location**: `/theories/domains/` for reusable theories.
 
-## 2.2 Sys2 Schema Files (Authoritative Vocabulary)
+## 2.2 Sys2 Vocabulary Blocks (Authoritative)
 
-Vocabulary is derived from Sys2 schema files (`.sys2`) using declarations and typing statements.
+Vocabulary is derived from Sys2 `Vocab` blocks (DS-008). Legacy `@... __Atom` + `IsA` is supported for compatibility.
 
 ```sys2
 @Person:Person __Atom
@@ -409,6 +445,25 @@ Person is a Domain.
 @Person:Person __Atom
 ```
 
+### Subtype Declaration
+```cnl
+Patient is a subtype of Person.
+```
+-> DSL:
+```sys2
+SubType Patient Person
+```
+
+### Alias Declaration
+Use an alias when a local name would otherwise collide with a global KB name.
+```cnl
+Alias localPatient as Patient.
+```
+-> DSL:
+```sys2
+Alias localPatient Patient
+```
+
 ## 3.2 Simple Facts (Subject-Verb-Object)
 
 ### Intransitive (1-arg predicates)
@@ -457,12 +512,16 @@ p1 is active.
 
 ## 3.3 Explicit Predicate Syntax (Fallback)
 
-When natural patterns don't fit, use explicit function-style:
+When natural patterns don't fit, use explicit function-style. Terms may include function applications and numeric literals:
 ```cnl
 HasFever(Alice).
 Trusts(Alice, Bob).
 Expresses(c0, p1).
+Age(p1, 16).
+Next(Yellow(p1)).
 ```
+
+Numeric literals follow the same lexical rules as DSL (integers, rationals `a/b`, or decimals).
 -> DSL:
 ```sys2
 @f1 HasFever Alice
@@ -612,7 +671,7 @@ For all Person x, Cell c, Protein p:
 ```cnl
 For all Person x:
     For all Person y:
-        If x trusts y then y trusts x.
+        If $x trusts $y then $y trusts $x.
 ```
 
 ## 6.3 Existential Quantifier
@@ -620,15 +679,15 @@ For all Person x:
 ### Assertion
 ```cnl
 There exists Person p:
-    p has Fever.
+    $p has Fever.
     
 Some Person has Fever.
 ```
 
 ### Query (with `?`)
 ```cnl
-Which Person p has Fever?
-Find a Person p such that p is sick?
+Which Person $p has Fever?
+Find a Person $p such that $p is sick?
 ```
 
 ---
@@ -722,6 +781,12 @@ Axiom SymmetricTrust:
         x trusts y if and only if y trusts x.
 ```
 
+## 8.4 Proof Blocks (CNL)
+
+Proofs are expressed in CNL using the format in DS-020 and are part of the language surface. Proof blocks are parsed into a proof AST and can be checked against the current theory.
+
+See: `docs/specs/DS/DS20-proof-format.md`
+
 ---
 
 # PART 9: Logical Connectives
@@ -800,6 +865,18 @@ c0 expresses p1.
 Every Cell expresses some Protein.
 ```
 
+## Minimal Anaphora (Allowed)
+
+To keep determinism while supporting common phrasing, a limited rule is allowed:
+- `that <Noun>` binds to the **nearest quantified noun phrase in the same sentence**.
+- This rule applies only within a single sentence and does not cross sentence boundaries.
+
+Example:
+```cnl
+Every Cell that expresses a Protein activates that Protein.
+```
+Here, `that Protein` binds to the closest quantified `Protein` in the same sentence.
+
 ---
 
 # PART 11: Grammar Summary (EBNF)
@@ -808,16 +885,22 @@ Every Cell expresses some Protein.
 document     := (block | statement)* ;
 
 statement    := declaration "."
+              | aliasDecl "."
+              | subtypeDecl "."
               | fact "."
               | simpleRule "."
               | conditional "."
-              | query "?" ;
+              | query "?"
+              | proofBlock ;
 
 // Declarations
 declaration  := "Let" IDENT "be" "a" TYPE
               | "Let" identList "be" TYPE ("s")?
               | IDENT "is" "a" TYPE
               | "Let" IDENT "be" "a" "Domain" ;
+
+aliasDecl    := "Alias" IDENT "as" IDENT ;
+subtypeDecl  := IDENT "is" "a" "subtype" "of" IDENT ;
 
 // Natural rules (single variable)
 simpleRule   := "Every" TYPE "with" pred "has" pred
@@ -829,13 +912,13 @@ simpleRule   := "Every" TYPE "with" pred "has" pred
 quantRule    := quantHead ":" INDENT (statement)+ DEDENT ;
 quantHead    := ("For" ("any"|"all"|"every"|"each") | "Each" | "Every")
                 binder ("," binder)* ;
-binder       := TYPE IDENT ("," IDENT)* ;
+binder       := TYPE (VAR | IDENT) ("," (VAR | IDENT))* ;
 
 // Facts
 fact         := subject predPhrase
               | subject "is" adjective
               | explicitPred ;
-explicitPred := PREDNAME "(" argList ")" ;
+explicitPred := PREDNAME "(" termList ")" ;
 
 // Conditionals
 conditional  := "If" expr "then" expr ;
@@ -845,6 +928,28 @@ expr         := orExpr (("implies"|"iff") orExpr)? ;
 orExpr       := andExpr ("or" andExpr)* ;
 andExpr      := unaryExpr ("and" unaryExpr)* ;
 unaryExpr    := ("not"|"does" "not"|"is" "not") unaryExpr | atomExpr ;
+
+// Terms
+term         := VAR
+              | IDENT
+              | NUMBER
+              | funcTerm
+              | "(" expr ")" ;
+funcTerm     := IDENT "(" termList ")" ;
+termList     := term ("," term)* ;
+
+VAR          := "$" IDENT ;
+
+// Phrase primitives (lexicon-driven; must match a registered pattern)
+verbPhrase   := predPhrase ;
+predPhrase   := IDENT (IDENT)* ;
+adjective    := IDENT ;
+
+// Proof blocks (see DS-020)
+proofBlock   := "Proof" IDENT ":" INDENT proofSection+ DEDENT ;
+proofSection := ("Given"|"Assume"|"Apply"|"Derive"|"Observed"|"Hypothesis"|
+                 "Verify"|"Constraint"|"Contradiction"|"Query"|"Found"|"Therefore")
+                 ":" INDENT (sentence)+ DEDENT ;
 ```
 
 ---

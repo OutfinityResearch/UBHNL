@@ -12,9 +12,9 @@ This DS defines behavior and data contracts; solver internals are covered by DS-
 
 ## Long-term vs Short-term Memory
 ### Long-term memory: Theory files
-Theory files are plain text files on disk, typically:
-- `*.sys2` (DS-008)
-- `*.cnl` (DS-005)
+Theory files are plain text files on disk, typically stored as:
+- `*.sys2` (DS-008) **canonical storage**
+- `*.cnl` (DS-005) for authoring only (translated to `.sys2` before persistence)
 
 Properties:
 - managed by the user (git, filesystem),
@@ -115,14 +115,14 @@ Not every loaded theory enables every goal kind; the planner decides applicabili
 Witnesses are returned for queries that introduce **existential binders**.
 
 ### How witness variables are introduced
-- **CNL (DS-005)**: witness queries use an interrogative form ending in `?`, e.g. `Which Person p has fever?`.
+- **CNL (DS-005)**: witness queries use an interrogative form ending in `?`, e.g. `Which Person $p has fever?`.
 - **DSL (DS-008)**: witness queries are expressed as an `Exists ... graph v ... end` block.
 
 Sys2 DSL has no special `?` token: the **binder variable** `v` introduced by `Exists ... graph v` is the witness variable.
 
 ### Witness typing
 Each witness variable must have a declared type/domain:
-- in CNL, the type is explicit in the query header (e.g., `Which Person p ... ?`);
+- in CNL, the type is explicit in the query header (e.g., `Which Person $p ... ?`);
 - in DSL, the type is explicit in `Exists TypeName graph v`.
 
 If the type cannot be determined deterministically: load error.
@@ -217,7 +217,7 @@ Expected:
   - the fact `@f1 geneA c0`.
 
 Query with witness:
-- `query("Which Cell c has protein P?", kind="Satisfy")`
+- `query("Which Cell $c has protein P?", kind="Satisfy")`
 
 Expected:
 - `SAT`
