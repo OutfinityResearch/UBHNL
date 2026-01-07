@@ -79,6 +79,9 @@ function injectPageDiagram() {
   const main = document.querySelector("main");
   if (!main) return;
 
+  const allowDiagram = document.body && document.body.classList.contains("with-diagram");
+  if (!allowDiagram) return;
+
   if (main.querySelector(".page-diagram-wrap")) return;
 
   const root = computeDocsRoot();
