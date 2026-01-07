@@ -4,6 +4,7 @@
 - Chat responses may be in Romanian.
 - Repository artifacts (code, comments, docs, specs, site pages) must be written in **English**.
 - Exception: temporary review notes placed at the repo root (when explicitly requested) may be in Romanian.
+- Do not use git commands.
 
 ---
 

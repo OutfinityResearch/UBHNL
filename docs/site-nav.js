@@ -35,27 +35,31 @@ function buildHeaderMenu(root) {
   menu.className = "site-nav";
 
   const links = [
-    ["Index", "index.html"],
-    ["Vision", "vision/index.html"],
+    ["Home", "index.html"],
     ["Architecture", "architecture.html"],
-    ["Languages", "languages.html"],
-    ["Session API", "session-api.html"],
     ["Reasoning", "reasoning.html"],
-    ["Examples", "examples.html"],
-    ["Wiki", "wiki/index.html"],
     ["Theory", "theory/index.html"],
-    ["GAMP", "gamp/metrics.html"],
-    ["Specs", "mdview.html?file=specs/src/system-spec.md"]
+    ["Syntax", "languages.html"],
+    ["APIs", "session-api.html"],
+    ["Wiki", "wiki/index.html"],
+    ["Specs", "gamp/metrics.html"],
+    ["Vision", "vision/index.html"]
   ];
 
   const here = normalizeHrefForCompare(window.location.href);
 
-  for (const [label, href] of links) {
+  for (let i = 0; i < links.length; i++) {
+    const [label, href] = links[i];
     const a = document.createElement("a");
     a.textContent = label;
     a.href = joinRoot(root, href);
     if (normalizeHrefForCompare(a.href) === here) a.className = "active";
     menu.appendChild(a);
+    
+    if (i < links.length - 1) {
+      const sep = document.createTextNode(" · ");
+      menu.appendChild(sep);
+    }
   }
 
   return menu;

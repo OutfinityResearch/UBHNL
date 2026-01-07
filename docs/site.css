@@ -227,6 +227,16 @@ hr {
   color: var(--muted);
 }
 
+.site-footer {
+  margin-top: 40px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.site-footer a {
+  color: var(--accent);
+}
+
 @media (max-width: 680px) {
   header { padding: 18px 14px 10px; }
   header h1 { font-size: 20px; }
