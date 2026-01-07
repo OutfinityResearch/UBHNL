@@ -124,3 +124,83 @@ end
 proteinP c0 c1
 ```
 Expected: `TypeError` (attempts `proteinP(c0, c1)` but `proteinP` is arity 1).
+
+### 6) Load directive with relative path
+Assume file structure: `tests/cases/test1.sys2` loading `../shared/vocab.sys2`
+
+Input (`tests/cases/test1.sys2`):
+```
+load "../shared/vocab.sys2"
+@f1 HasFever Alice
+```
+Expected:
+- parses successfully,
+- vocabulary from `vocab.sys2` is available.
+
+### 7) Absolute path rejected
+Input:
+```
+load "/absolute/path/file.sys2"
+```
+Expected: `ParseError` (`E_DSL_ABSOLUTE_PATH`).
+
+### 8) SubType declaration
+Input:
+```
+Vocab
+    Domain Person
+    Domain Patient
+    SubType Patient Person
+    Const p1 Patient
+end
+
+@f1 IsSick p1
+```
+Expected:
+- `Patient` is a subtype of `Person`,
+- `p1` can be used where `Person` is expected,
+- type hierarchy is respected in predicate resolution.
+
+### 9) Alias declaration
+Input:
+```
+Vocab
+    Domain Cell
+    Const c0 Cell
+    Alias myCell c0
+end
+
+@f1 Active myCell
+```
+Expected:
+- `myCell` is an alias for `c0`,
+- uses of `myCell` resolve to `c0`.
+
+### 10) SubType in Vocab block
+Input:
+```
+Vocab
+    Domain Entity
+    Domain Person
+    Domain Doctor
+    SubType Person Entity
+    SubType Doctor Person
+end
+```
+Expected:
+- `Doctor <: Person <: Entity` hierarchy established,
+- transitivity: `Doctor <: Entity` holds.
+
+### 11) Alias with KB name
+Input:
+```
+@alice:Alice __Atom
+@bob:Bob __Atom
+Alias AliceRef Alice
+
+@f1 Trusts AliceRef Bob
+```
+Expected:
+- `AliceRef` resolves to the KB name `Alice`,
+- `@f1` is equivalent to `Trusts Alice Bob`.
+

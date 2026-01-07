@@ -83,6 +83,43 @@ interface ErrorDetails {
 - `origin` must be included for user-provided text errors
 - `details` may be used by tooling/IDE integrations
 
+## Error Recovery Policy
+
+Error recovery behavior is **configurable** via session options:
+
+| Option | Value | Behavior |
+|--------|-------|----------|
+| `errorRecovery` | `"stop"` (default) | Stop at first error, return immediately |
+| `errorRecovery` | `"continue"` | Collect all errors, return list |
+| `errorRecovery` | `"bestEffort"` | Skip invalid statements, continue with valid ones |
+
+### Configuration
+
+```typescript
+session.configure({
+  errorRecovery: "continue",  // Collect all errors
+  maxErrors: 100              // Limit for "continue" mode
+});
+```
+
+### Behavior by Mode
+
+**stop** (default):
+- Parser/loader returns on first error
+- Fast fail for interactive use
+- Error report contains single error
+
+**continue**:
+- Parser attempts to recover and find more errors
+- Useful for batch validation and IDE integration
+- Error report contains array of errors (up to `maxErrors`)
+
+**bestEffort**:
+- Invalid statements are skipped with warnings
+- Valid statements are processed normally
+- Useful for partial file loading during development
+- Returns both errors (for skipped) and result (for processed)
+
 ## Error Codes (Complete List)
 
 ### CNL Parsing Errors
@@ -112,6 +149,9 @@ interface ErrorDetails {
 | `E_DSL_MISSING_RETURN` | Block without `return` | `ForAll ... end` |
 | `E_DSL_MISSING_END` | Block without `end` | Unclosed `ForAll` |
 | `E_DSL_ORPHAN_KB_NAME` | `@:name` without preceding expr | `@:foo` |
+| `E_DSL_ABSOLUTE_PATH` | Load uses absolute path | `load "/abs/path.sys2"` |
+| `E_DSL_CIRCULAR_LOAD` | Circular load dependency | A loads B loads A |
+| `E_DSL_SHADOW_VAR` | Variable shadows outer scope | Nested `graph x` when outer has `graph x` |
 
 ### Vocabulary / Typing Errors
 

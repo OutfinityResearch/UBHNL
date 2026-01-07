@@ -275,4 +275,5 @@ For testing, proofs are compared:
 - DS-005 (CNL syntax)
 - DS-008 (DSL syntax)
 - DS-006 (typed AST)
-- DS-010 (solver interface)
+- DS-002 (solver interface)
+- DS-010 (fragments and goals)

@@ -18,13 +18,24 @@ export function translate(cnlSource) {
         domains: [],    // names
         boundVars: [],  // Stack of scopes
         output: [],
+        implicitDomainUsed: false,
         counts: { rule: 1, f: 1, c: 1, inner: 1, logic: 1 }
     };
 
     const VAR_TOKEN = '\\$?[A-Za-z_]\\w*';
     const WORD_TOKEN = '[A-Za-z_]\\w*';
+    const IMPLICIT_DOMAIN = 'Entity';
 
-    function getVar(name) {
+    function noteImplicitVar(name, freeVars) {
+        if (!freeVars) return;
+        if (!freeVars.includes(name)) freeVars.push(name);
+    }
+
+    function ensureImplicitDomain() {
+        ctx.implicitDomainUsed = true;
+    }
+
+    function getVar(name, freeVars) {
         const explicit = name.startsWith('$');
         const rawName = explicit ? name.slice(1) : name;
         for (let i = ctx.boundVars.length - 1; i >= 0; i--) {
@@ -32,7 +43,13 @@ export function translate(cnlSource) {
             const v = scope.find(v => v.name === rawName);
             if (v) return `$${rawName}`;
         }
-        if (explicit) return '$error';
+        if (explicit) {
+            if (freeVars) {
+                noteImplicitVar(rawName, freeVars);
+                return `$${rawName}`;
+            }
+            return '$error';
+        }
         return rawName;
     }
 
@@ -50,7 +67,7 @@ export function translate(cnlSource) {
      *   - "A and B"          -> {And: [A, B]}
      *   - Fallback: Pred(x, y) explicit syntax still works
      */
-    function parseExpr(str) {
+    function parseExpr(str, freeVars) {
         str = str.trim();
         if (str.endsWith('.')) str = str.slice(0, -1);
         
@@ -60,32 +77,32 @@ export function translate(cnlSource) {
             if (inner.startsWith('(') && inner.endsWith(')')) {
                 inner = inner.substring(1, inner.length - 1);
             }
-            return { type: 'Not', arg: parseExpr(inner) };
+            return { type: 'Not', arg: parseExpr(inner, freeVars) };
         }
 
         // Biconditional: "A if and only if B" or "A iff B"
         if (str.includes(' if and only if ')) {
             const parts = str.split(' if and only if ');
             if (parts.length === 2) {
-                return { type: 'Iff', left: parseExpr(parts[0]), right: parseExpr(parts[1]) };
+                return { type: 'Iff', left: parseExpr(parts[0], freeVars), right: parseExpr(parts[1], freeVars) };
             }
         }
         if (str.includes(' iff ')) {
             const parts = str.split(' iff ');
             if (parts.length === 2) {
-                return { type: 'Iff', left: parseExpr(parts[0]), right: parseExpr(parts[1]) };
+                return { type: 'Iff', left: parseExpr(parts[0], freeVars), right: parseExpr(parts[1], freeVars) };
             }
         }
 
         // Disjunction: "A or B or C"
         if (str.includes(' or ')) {
-            const parts = str.split(' or ').map(s => parseExpr(s));
+            const parts = str.split(' or ').map(s => parseExpr(s, freeVars));
             return { type: 'Or', args: parts };
         }
 
         // Conjunction: "A and B and C"
         if (str.includes(' and ')) {
-            const parts = str.split(' and ').map(s => parseExpr(s));
+            const parts = str.split(' and ').map(s => parseExpr(s, freeVars));
             return { type: 'And', args: parts };
         }
 
@@ -94,7 +111,7 @@ export function translate(cnlSource) {
         if (funcMatch) {
             const pred = funcMatch[1];
             const argsStr = funcMatch[2];
-            const args = parseArgs(argsStr);
+            const args = parseArgs(argsStr, freeVars);
             return { type: 'Pred', pred, args };
         }
 
@@ -103,46 +120,46 @@ export function translate(cnlSource) {
         // "x is Parent of y" / "x is Ancestor of y"
         const relMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+is\\s+(${WORD_TOKEN})\\s+of\\s+(${VAR_TOKEN})$`));
         if (relMatch) {
-            return { type: 'Pred', pred: relMatch[2], args: [getVar(relMatch[1]), getVar(relMatch[3])] };
+            return { type: 'Pred', pred: relMatch[2], args: [getVar(relMatch[1], freeVars), getVar(relMatch[3], freeVars)] };
         }
         
         // "x is Mortal" / "x is Man" / "x is On" (adjective/state)
         const adjMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+is\\s+(${WORD_TOKEN})$`));
         if (adjMatch) {
-            return { type: 'Pred', pred: adjMatch[2], args: [getVar(adjMatch[1])] };
+            return { type: 'Pred', pred: adjMatch[2], args: [getVar(adjMatch[1], freeVars)] };
         }
         
         // "x has Fever" / "x has Flu" / "x has Cold"
         const hasMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+has\\s+(${WORD_TOKEN})$`));
         if (hasMatch) {
             const pred = 'Has' + capitalize(hasMatch[2]);
-            return { type: 'Pred', pred, args: [getVar(hasMatch[1])] };
+            return { type: 'Pred', pred, args: [getVar(hasMatch[1], freeVars)] };
         }
         
         // "x trusts y" / "x knows y" / "x expresses y" (transitive verb)
         const svoMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+(${WORD_TOKEN})\\s+(${VAR_TOKEN})$`));
         if (svoMatch) {
             const pred = capitalize(svoMatch[2]);
-            return { type: 'Pred', pred, args: [getVar(svoMatch[1]), getVar(svoMatch[3])] };
+            return { type: 'Pred', pred, args: [getVar(svoMatch[1], freeVars), getVar(svoMatch[3], freeVars)] };
         }
         
         // "x coughs" / "x moves" / "x accelerates" (intransitive verb)
         const svMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+(${WORD_TOKEN})$`));
         if (svMatch) {
             const pred = capitalize(svMatch[2]);
-            return { type: 'Pred', pred, args: [getVar(svMatch[1])] };
+            return { type: 'Pred', pred, args: [getVar(svMatch[1], freeVars)] };
         }
 
         // Single atom (variable or constant)
         if (str.match(new RegExp(`^${VAR_TOKEN}$`))) {
-            return { type: 'Atom', name: getVar(str) };
+            return { type: 'Atom', name: getVar(str, freeVars) };
         }
         
         return { type: 'Error', src: str };
     }
 
     // Parse comma-separated args for explicit Pred(a, b) fallback
-    function parseArgs(argsStr) {
+    function parseArgs(argsStr, freeVars) {
         const result = [];
         let depth = 0;
         let current = '';
@@ -150,25 +167,25 @@ export function translate(cnlSource) {
             if (ch === '(') depth++;
             else if (ch === ')') depth--;
             else if (ch === ',' && depth === 0) {
-                result.push(parseTerm(current.trim()));
+                result.push(parseTerm(current.trim(), freeVars));
                 current = '';
                 continue;
             }
             current += ch;
         }
-        if (current.trim()) result.push(parseTerm(current.trim()));
+        if (current.trim()) result.push(parseTerm(current.trim(), freeVars));
         return result;
     }
 
-    function parseTerm(str) {
+    function parseTerm(str, freeVars) {
         str = str.trim();
         const funcMatch = str.match(/^(\w+)\((.+)\)$/);
         if (funcMatch) {
             const funcName = funcMatch[1];
-            const innerArgs = parseArgs(funcMatch[2]);
+            const innerArgs = parseArgs(funcMatch[2], freeVars);
             return { type: 'Func', name: funcName, args: innerArgs };
         }
-        return getVar(str);
+        return getVar(str, freeVars);
     }
 
     function generateTerm(term, indent) {
@@ -218,6 +235,35 @@ export function translate(cnlSource) {
         return '$error';
     }
 
+    function openImplicitForAll(freeVars, indent, firstLabel) {
+        if (!freeVars || freeVars.length === 0) return { labels: [], indent };
+        ensureImplicitDomain();
+        const labels = [];
+        let currentIndent = indent;
+        for (let i = 0; i < freeVars.length; i++) {
+            const name = freeVars[i];
+            const label = (i === 0 && firstLabel) ? firstLabel : `@inner${ctx.counts.inner++}`;
+            labels.push(label);
+            add(`${currentIndent}${label} ForAll ${IMPLICIT_DOMAIN} graph ${name}`);
+            currentIndent += "    ";
+            ctx.boundVars.push([{name, type: IMPLICIT_DOMAIN}]);
+        }
+        return { labels, indent: currentIndent };
+    }
+
+    function closeImplicitForAll(labels, indent, bodyId) {
+        if (!labels || labels.length === 0) return bodyId;
+        if (bodyId) add(`${indent}return ${bodyId}`);
+        let currentIndent = indent;
+        for (let i = labels.length - 1; i >= 0; i--) {
+            ctx.boundVars.pop();
+            currentIndent = currentIndent.slice(0, -4);
+            add(`${currentIndent}end`);
+            if (i > 0) add(`${currentIndent}return $${labels[i].substring(1)}`);
+        }
+        return `$${labels[0].substring(1)}`;
+    }
+
     // ==================== PASS 0: Load directives ====================
     const loads = [];
     for (const line of lines) {
@@ -233,12 +279,6 @@ export function translate(cnlSource) {
             loads.push(path);
         }
     }
-    
-    // Output load directives first
-    for (const path of loads) {
-        add(`load "${path}"`);
-    }
-    if (loads.length > 0) add('');
 
     // ==================== PASS 1: Declarations ====================
     for (const line of lines) {
@@ -277,16 +317,7 @@ export function translate(cnlSource) {
         }
     }
 
-    // Generate declarations in DSL
-    const allTypes = new Set(ctx.domains);
-    for (const d of ctx.domains) add(`@${d}:${d} __Atom`);
-    for (const a of ctx.atoms) {
-        if (!allTypes.has(a.type)) { add(`@${a.type}:${a.type} __Atom`); allTypes.add(a.type); }
-    }
-    for (const a of ctx.atoms) add(`@${a.name}:${a.name} __Atom`);
-    if (ctx.atoms.length > 0) add('');
-    for (const a of ctx.atoms) add(`IsA ${a.name} ${a.type}`);
-    if (ctx.atoms.length > 0) add('');
+    // Declarations are emitted after logic is processed.
 
     // ==================== PASS 2: Logic ====================
     let ptr = 0;
@@ -331,14 +362,25 @@ export function translate(cnlSource) {
 
         // Simple conditional: "If X then Y."
         if (line.startsWith('If ')) {
-            const ruleId = `@rule${ctx.counts.rule++}`;
             const ifMatch = line.match(/^If\s+(.+)\s+then\s+(.+)\.?$/);
             if (ifMatch) {
-                const ant = parseExpr(ifMatch[1]);
-                const cons = parseExpr(ifMatch[2]);
-                const antId = generateLogic(ant, "");
-                const consId = generateLogic(cons, "");
-                add(`${ruleId} Implies ${antId} ${consId}`);
+                const freeVars = [];
+                const ant = parseExpr(ifMatch[1], freeVars);
+                const cons = parseExpr(ifMatch[2], freeVars);
+                if (freeVars.length > 0) {
+                    const ruleId = `@rule${ctx.counts.rule++}`;
+                    const implicit = openImplicitForAll(freeVars, "", ruleId);
+                    const antId = generateLogic(ant, implicit.indent);
+                    const consId = generateLogic(cons, implicit.indent);
+                    const impName = `imp${ctx.counts.logic++}`;
+                    add(`${implicit.indent}@${impName} Implies ${antId} ${consId}`);
+                    closeImplicitForAll(implicit.labels, implicit.indent, `$${impName}`);
+                } else {
+                    const ruleId = `@rule${ctx.counts.rule++}`;
+                    const antId = generateLogic(ant, "");
+                    const consId = generateLogic(cons, "");
+                    add(`${ruleId} Implies ${antId} ${consId}`);
+                }
             }
             ptr++;
             continue;
@@ -361,19 +403,66 @@ export function translate(cnlSource) {
         }
 
         // Fact: natural SVO or explicit Pred(args) or complex expression
-        const expr = parseExpr(line);
+        const freeVars = [];
+        const expr = parseExpr(line, freeVars);
         if (expr.type === 'Pred') {
-            const fid = `@f${ctx.counts.f++}`;
-            const argRefs = expr.args.map(a => generateTerm(a, ""));
-            add(`${fid} ${expr.pred} ${argRefs.join(' ')}`);
+            if (freeVars.length > 0) {
+                const ruleId = `@rule${ctx.counts.rule++}`;
+                const implicit = openImplicitForAll(freeVars, "", ruleId);
+                const exprId = generateLogic(expr, implicit.indent);
+                closeImplicitForAll(implicit.labels, implicit.indent, exprId);
+            } else {
+                const fid = `@f${ctx.counts.f++}`;
+                const argRefs = expr.args.map(a => generateTerm(a, ""));
+                add(`${fid} ${expr.pred} ${argRefs.join(' ')}`);
+            }
         } else if (expr.type === 'Not' || expr.type === 'And' || expr.type === 'Or' || expr.type === 'Iff') {
-            // Complex expression as a fact
-            generateLogic(expr, "");
+            if (freeVars.length > 0) {
+                const ruleId = `@rule${ctx.counts.rule++}`;
+                const implicit = openImplicitForAll(freeVars, "", ruleId);
+                const exprId = generateLogic(expr, implicit.indent);
+                closeImplicitForAll(implicit.labels, implicit.indent, exprId);
+            } else {
+                // Complex expression as a fact
+                generateLogic(expr, "");
+            }
         }
         ptr++;
     }
 
-    return ctx.output.join('\n');
+    const finalOutput = [];
+    if (loads.length > 0) {
+        for (const path of loads) {
+            finalOutput.push(`load "${path}"`);
+        }
+        finalOutput.push('');
+    }
+
+    if (ctx.implicitDomainUsed && !ctx.domains.includes(IMPLICIT_DOMAIN)) {
+        ctx.domains.push(IMPLICIT_DOMAIN);
+    }
+
+    const declLines = [];
+    const allTypes = new Set(ctx.domains);
+    for (const d of ctx.domains) declLines.push(`@${d}:${d} __Atom`);
+    for (const a of ctx.atoms) {
+        if (!allTypes.has(a.type)) {
+            declLines.push(`@${a.type}:${a.type} __Atom`);
+            allTypes.add(a.type);
+        }
+    }
+    for (const a of ctx.atoms) declLines.push(`@${a.name}:${a.name} __Atom`);
+    if (ctx.atoms.length > 0) declLines.push('');
+
+    const isALines = [];
+    for (const a of ctx.atoms) isALines.push(`IsA ${a.name} ${a.type}`);
+    if (ctx.implicitDomainUsed) {
+        for (const a of ctx.atoms) isALines.push(`IsA ${a.name} ${IMPLICIT_DOMAIN}`);
+    }
+    if (ctx.atoms.length > 0) isALines.push('');
+
+    finalOutput.push(...declLines, ...isALines, ...ctx.output);
+    return finalOutput.join('\n');
 
     // ==================== Process ForAll blocks ====================
     function processForAll(header, allLines, startPtr, baseIndent) {
@@ -411,27 +500,37 @@ export function translate(cnlSource) {
             });
 
             let resultId = "";
+            const freeVars = [];
             const ifMatch = stmt.match(/^If\s+(.+)\s+then\s+(.+)\.?$/);
             if (ifMatch) {
-                const antId = generateLogic(parseExpr(ifMatch[1]), indent);
-                const consId = generateLogic(parseExpr(ifMatch[2]), indent);
+                const antExpr = parseExpr(ifMatch[1], freeVars);
+                const consExpr = parseExpr(ifMatch[2], freeVars);
+                const implicit = openImplicitForAll(freeVars, indent);
+                const antId = generateLogic(antExpr, implicit.indent);
+                const consId = generateLogic(consExpr, implicit.indent);
                 const impName = `imp${ctx.counts.logic++}`;
-                add(`${indent}@${impName} Implies ${antId} ${consId}`);
-                resultId = `$${impName}`;
+                add(`${implicit.indent}@${impName} Implies ${antId} ${consId}`);
+                resultId = closeImplicitForAll(implicit.labels, implicit.indent, `$${impName}`);
             } else if (stmt.includes(' if and only if ') || stmt.includes(' iff ')) {
                 // Biconditional inside ForAll
-                const expr = parseExpr(stmt.replace(/\.$/, ''));
-                resultId = generateLogic(expr, indent);
+                const expr = parseExpr(stmt.replace(/\.$/, ''), freeVars);
+                const implicit = openImplicitForAll(freeVars, indent);
+                const exprId = generateLogic(expr, implicit.indent);
+                resultId = closeImplicitForAll(implicit.labels, implicit.indent, exprId);
             } else {
                 const notMatch = stmt.match(/^It is not the case that\s+(.+)\.?$/);
                 if (notMatch || stmt.startsWith('It is not')) {
-                    const expr = parseExpr(stmt.replace(/\.$/, ''));
-                    resultId = generateLogic(expr, indent);
+                    const expr = parseExpr(stmt.replace(/\.$/, ''), freeVars);
+                    const implicit = openImplicitForAll(freeVars, indent);
+                    const exprId = generateLogic(expr, implicit.indent);
+                    resultId = closeImplicitForAll(implicit.labels, implicit.indent, exprId);
                 } else {
                     // General expression (including Or, predicates, etc.)
-                    const expr = parseExpr(stmt.replace(/\.$/, ''));
+                    const expr = parseExpr(stmt.replace(/\.$/, ''), freeVars);
                     if (expr.type !== 'Error') {
-                        resultId = generateLogic(expr, indent);
+                        const implicit = openImplicitForAll(freeVars, indent);
+                        const exprId = generateLogic(expr, implicit.indent);
+                        resultId = closeImplicitForAll(implicit.labels, implicit.indent, exprId);
                     }
                 }
             }

@@ -23,7 +23,7 @@ Define the **DSL** (Domain-Specific Language) with extension `.sys2`, the canoni
 - **Extension**: `.sys2`
 - **Encoding**: UTF-8
 - **Line ending**: LF (Unix-style)
-- **Comments**: `#` to end of line
+- **Comments**: `#` or `//` to end of line (both forms supported)
 - **Indentation**: Spaces (2 or 4), significant only inside blocks
 
 ---
@@ -78,7 +78,7 @@ Examples: `"Modus Ponens on 1,2"`, `"Contradiction: ..."`
 | `$` | Reference to a working-memory name (bound variable or named expression) |
 | `:` | KB storage name / type annotation |
 | `{ }` | Anonymous expression grouping |
-| `#` | Comment to end of line |
+| `#` or `//` | Comment to end of line (both forms supported) |
 
 ## 1.5 FORBIDDEN Tokens
 
@@ -180,6 +180,57 @@ Rules:
 Legacy support:
 - `@name:kbName __Atom` + `IsA` may be used as a fallback schema source, but `Vocab` is normative.
 
+## Rule 0A.1: Multiple Vocab Blocks
+
+A single file may contain **multiple** `Vocab ... end` blocks. They are merged additively:
+
+```sys2
+Vocab
+    Domain Person
+    Const Alice Person
+end
+
+# ... other statements ...
+
+Vocab
+    Domain Cell
+    Pred Expresses Cell Protein
+end
+```
+
+Rules:
+- Multiple `Vocab` blocks are merged at load time
+- Duplicate declarations are errors
+- Order of blocks does not matter (merge is additive)
+
+## Rule 0A.2: Empty Vocab Blocks
+
+An empty `Vocab ... end` block is valid and has no effect:
+
+```sys2
+Vocab
+end
+```
+
+This is useful in generated code where the vocabulary may be conditionally empty.
+
+## Rule 0A.3: Blank Lines in Blocks
+
+Blank lines are allowed inside any block (including `ForAll`, `Exists`, `Vocab`, `Proof`, etc.) and are treated as no-ops:
+
+```sys2
+@rule1 ForAll Person graph x
+
+    @c1 HasFever $x
+
+    @c2 IsSick $x
+    @and And $c1 $c2
+    return $and
+end
+```
+
+Blank lines have no semantic effect and are equivalent to comments.
+
 ---
 
 ## Rule 1: Variable Declaration with `@`
@@ -271,6 +322,40 @@ Implies $a $b
 @:myImplication           # Names previous line as "myImplication" in KB
 ```
 
+## Rule 4A: Anonymous Fact Assertions
+
+An expression without an `@` declaration is an **anonymous fact** and is automatically asserted:
+
+```sys2
+HasFever Alice            # Anonymous fact - auto-asserted
+Trusts Alice Bob          # Anonymous fact - auto-asserted
+```
+
+This is equivalent to:
+```sys2
+@_anon1 HasFever Alice
+Assert _anon1
+@_anon2 Trusts Alice Bob
+Assert _anon2
+```
+
+Anonymous facts are useful for simple statements but cannot be referenced later. Use `@name` declarations for facts that need to be referenced in rules or proofs.
+
+## Rule 4B: Numeric Literals as Constants
+
+Numbers are valid constants anywhere in DSL expressions:
+
+```sys2
+Age Alice 25              # 25 is a numeric constant
+Temperature $p 38.5       # Decimal allowed
+Priority $task 1/2        # Rational allowed
+```
+
+Rules:
+- Integers, decimals, and rationals are all valid
+- Numbers are treated as constants (not variables)
+- Number comparison/arithmetic requires appropriate predicates (e.g., `LessThan`, `Add`)
+
 ## Rule 5: Predicate and Function Application (Space-Separated)
 
 Predicates and functions are applied with **space-separated** arguments. **NO PARENTHESES**.
@@ -326,6 +411,29 @@ A statement without `@` creates an anonymous assertion:
 HasFever Alice         # Anonymous fact (KB constant)
 Implies $c1 $c2        # Anonymous rule (named expressions)
 ```
+
+## Rule 8: Operator Precedence
+
+When braces `{ }` are omitted, operators have the following precedence (highest to lowest):
+
+| Precedence | Operator | Associativity |
+|------------|----------|---------------|
+| 4 (highest) | `Not` | prefix |
+| 3 | `And` | left |
+| 2 | `Or`, `Xor` | left |
+| 1 (lowest) | `Implies`, `Iff` | right |
+
+**Example without braces**:
+```sys2
+@r1 Implies Not $a And $b Or $c $d
+```
+
+Is parsed as:
+```sys2
+@r1 Implies { Or { And { Not $a } $b } $c } $d
+```
+
+**Recommendation**: Always use `{ }` for clarity. Precedence rules exist for compatibility but explicit grouping is preferred.
 
 ---
 
@@ -416,6 +524,28 @@ Examples:
     @expr1 ...
     @expr2 ...
     return $exprToReturn
+end
+```
+
+**Rules**:
+- `return` statement is **always required** (even for assertion-only blocks, use `return $CONST1`)
+- Variable shadowing is **forbidden**: a nested block cannot reuse an outer variable name
+
+**Variable Shadowing Error**:
+```sys2
+@rule1 ForAll Person graph x
+    @inner ForAll Person graph x    # ERROR: E_DSL_SHADOW_VAR
+        ...
+    end
+end
+```
+
+Use different variable names:
+```sys2
+@rule1 ForAll Person graph x
+    @inner ForAll Person graph y    # OK: different name
+        ...
+    end
 end
 ```
 
@@ -698,7 +828,13 @@ Alias rule:
 4. Quantifier domain must be a declared type
 5. Subtyping: if `SubType A B`, then any `A` is also a valid `B`
 
-## 5.4 KB Storage Semantics
+## 5.4 Operator Precedence
+
+DSL uses **explicit grouping** with `{ }`. When braces are used, there is no ambiguity. For expressions without braces (simple predicate applications), parsing is left-to-right.
+
+Note: Unlike CNL, DSL does not rely on operator precedence rules. All complex expressions should use `{ }` for grouping.
+
+## 5.5 KB Storage Semantics
 
 | Syntax | Effect |
 |--------|--------|
@@ -706,12 +842,27 @@ Alias rule:
 | `@name:kbName expr` | Creates AND stores in KB as `kbName` |
 | `@:kbName` (after expr) | Stores preceding expression in KB |
 
-## 5.5 Empty Domain Semantics
+## 5.6 Empty Domain Semantics
 
 | Quantifier | Empty Domain | Result |
 |------------|--------------|--------|
 | `ForAll X graph x: P` | `true` | Vacuously true |
 | `Exists X graph x: P` | `false` | No witness exists |
+
+## 5.7 Variable Shadowing Policy
+
+Variable shadowing in nested blocks is **forbidden**. If an inner block tries to bind a variable with the same name as an outer block, it is an error (`E_DSL_SHADOW_VAR`).
+
+Example (error):
+```sys2
+@rule1 ForAll Person graph x
+    @inner ForAll Person graph x    # ERROR: shadows outer x
+        ...
+    end
+end
+```
+
+Use distinct variable names in nested quantifiers.
 
 ---
 

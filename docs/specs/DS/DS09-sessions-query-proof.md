@@ -76,9 +76,50 @@ Loading responsibilities:
 - reject unknown vocabulary symbols,
 - produce typed semantic IR with origins,
 - register doc digest for caching.
+- detect circular loads (see Load Resolution Algorithm below),
 - evaluate any `Check` statements (see DS-008/DS-005);
   - if a check is `DISPROVED`, return `E_CHECK_DISPROVED`,
   - if a check is `UNKNOWN`, return `E_CHECK_UNKNOWN`.
+
+### Load Resolution Algorithm
+
+The loader detects circular dependencies using depth-first marking:
+
+```
+function loadFile(path, loadStack = []):
+    canonicalPath = resolvePath(path)
+    
+    if canonicalPath in loadStack:
+        return error(E_DSL_CIRCULAR_LOAD, 
+            "Circular load: " + loadStack.join(" -> ") + " -> " + path)
+    
+    if canonicalPath in loadedDocs:
+        return { ok: true, cached: true }  # Already loaded
+    
+    loadStack.push(canonicalPath)
+    
+    content = readFile(canonicalPath)
+    ast = parse(content)
+    
+    # Process nested loads first
+    for loadDirective in ast.loads:
+        result = loadFile(loadDirective.path, loadStack)
+        if not result.ok:
+            return result
+    
+    # Now process this file's statements
+    typecheck(ast)
+    register(canonicalPath, ast)
+    
+    loadStack.pop()
+    return { ok: true }
+```
+
+Rules:
+- Paths are canonicalized before comparison (resolve `..`, symlinks)
+- Circular detection uses the call stack, not just visited set
+- Duplicate loads are idempotent (second load returns cached)
+- Error includes full load chain for debugging
 
 ### Learn (session-only)
 ```

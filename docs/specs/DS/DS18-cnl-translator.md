@@ -260,6 +260,22 @@ If Alice has Flu then Alice has Fever.
 @imp1 Implies { HasFlu Alice } { HasFever Alice }
 ```
 
+## Rule T10B: Biconditional (If and Only If)
+
+| CNL | DSL |
+|-----|-----|
+| `A if and only if B.` | `@iffN Iff { A } { B }` |
+| `A iff B.` | `@iffN Iff { A } { B }` |
+
+**Example**:
+```cnl
+Alice is Active iff Alice is Running.
+```
+↔
+```sys2
+@iff1 Iff { Active Alice } { Running Alice }
+```
+
 ## Rule T11: Universal Quantifier
 
 | CNL | DSL |
@@ -402,6 +418,7 @@ end
 | CNL | DSL |
 |-----|-----|
 | `$x`, `$y`, `$p` (in quantifier scope) | `$x`, `$y`, `$p` |
+| `$x` (free in a statement) | wrap statement in `ForAll Entity graph x ... end` |
 
 **Example**:
 ```cnl
@@ -417,6 +434,23 @@ For all Cell c:
     return $imp
 end
 ```
+
+Implicit example:
+```cnl
+If $x is Man then $x is Mortal.
+```
+↔
+```sys2
+@Entity:Entity __Atom
+@rule1 ForAll Entity graph x
+    @c1 Man $x
+    @c2 Mortal $x
+    @imp Implies $c1 $c2
+    return $imp
+end
+```
+Front-ends introduce `Entity` if missing and add `IsA <const> Entity` for declared constants.
+`Entity` is treated as a top domain for implicit quantification.
 
 ## Rule T17: Query (Witness Search)
 
@@ -672,7 +706,7 @@ end
 | Error Code | Condition | Example |
 |------------|-----------|---------|
 | `E_TRANSLATE_UNKNOWN_ALIAS` | CNL phrase not in lexicon | "has headache" |
-| `E_TRANSLATE_SCOPE_ERROR` | Variable used outside scope | `$x` after block ends |
+| `E_TRANSLATE_SCOPE_ERROR` | Variable used outside scope in a context that forbids implicit quantification | `$x` in a ground-only context |
 | `E_TRANSLATE_TYPE_MISMATCH` | Argument type mismatch | Person used where Cell expected |
 | `E_TRANSLATE_ARITY_MISMATCH` | Wrong argument count | `Trusts Alice` (needs 2 args) |
 

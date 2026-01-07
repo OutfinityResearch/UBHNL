@@ -139,6 +139,34 @@ These are **minimum** targets for a reference development machine; adjust only w
 - Kernel memory: support at least 1e6 unique wire ids without crashing.
 - Simple query latency: under 200ms for a query over 1k facts and 100 rules.
 
+### 15) Load Directive (Theory Files)
+These tests validate the `load` directive in DS-005 (CNL) and DS-008 (DSL).
+
+- Relative path resolution:
+  - `load "../theories/vocab.sys2"` resolves relative to current file.
+  - Vocabulary from loaded file is available in current file.
+- Absolute path rejection:
+  - `load "/absolute/path.sys2"` yields `E_DSL_ABSOLUTE_PATH`.
+- Circular load detection:
+  - A loads B, B loads A yields `E_DSL_CIRCULAR_LOAD`.
+  - Error includes the cycle path for diagnostics.
+- Duplicate load is idempotent:
+  - Loading same file twice has no effect (no errors, no duplicates).
+- Missing file:
+  - `load "nonexistent.sys2"` yields appropriate file-not-found error.
+- CNL to DSL translation on load:
+  - `.cnl` files are translated before loading into kernel.
+  - Translation errors are reported with correct file path.
+
+### 16) Proof Blocks (DS-020)
+These tests validate proof block parsing and structure.
+
+- Parse deduction proof with Given/Apply/Derive/Therefore sections.
+- Parse contradiction proof with Assume/Constraint/Contradiction/Therefore.
+- Note strings are preserved in translation to DSL.
+- Step numbering (optional) is accepted.
+- Missing section yields parse error with helpful message.
+
 ## Tooling Notes
 - Keep the base suite deterministic; no randomness in the default run.
 - When a SAT backend is pluggable, run the same suite against:

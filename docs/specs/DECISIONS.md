@@ -210,11 +210,13 @@ load "../theories/core/logic.sys2"       // OK - can load .sys2
 | Existential | `Exists Type graph var ... return $expr end` |
 | Definition | `@name:name graph params ... return $expr end` |
 
-### 2.8 Comments
+### 2.8 Comments [UPDATED 2026-01-07]
 
-| Decision | DSL uses `#` for comments |
-|----------|--------------------------|
-| Example | `# This is a comment` |
+| Decision | Both `#` and `//` are valid comments in both DSL and CNL |
+|----------|----------------------------------------------------------|
+| DSL | `# comment` or `// comment` |
+| CNL | `// comment` or `# comment` |
+| Rationale | Flexibility for developers coming from different backgrounds |
 
 ### 2.9 Probabilistic DSL Syntax [CONFIRMED]
 
@@ -249,11 +251,11 @@ load "../theories/core/logic.sys2"       // OK - can load .sys2
 | Rationale | Natural English punctuation |
 | Example | `Alice has Fever.` |
 
-### 3.3 Comments
+### 3.3 Comments [UPDATED 2026-01-07]
 
-| Decision | CNL uses `//` for comments |
-|----------|---------------------------|
-| Rationale | Familiar to programmers, distinct from natural text |
+| Decision | CNL uses `//` or `#` for comments |
+|----------|-----------------------------------|
+| Rationale | Both forms supported for flexibility |
 
 ### 3.4 Block Syntax [CONFIRMED]
 
@@ -279,7 +281,11 @@ load "../theories/core/logic.sys2"       // OK - can load .sys2
 | Pronouns | **FORBIDDEN** | Ambiguous reference |
 | Ellipsis | **FORBIDDEN** | Incomplete sentences |
 | Passive without agent | **FORBIDDEN** | Missing subject |
-| Implicit quantification | **FORBIDDEN** | Use explicit `For all` |
+| Implicit quantification (free `$` vars) | **ALLOWED** | Desugars to `ForAll Entity graph v ...`; use explicit `For all` for typed domains |
+
+Note: Implicit quantification applies only to explicit `$` variables that are not bound by a quantifier.
+Front-ends introduce a default domain `Entity` when needed and add `IsA <const> Entity` for all declared constants.
+`Entity` is the implicit top domain and should not be used for a narrower meaning.
 
 ### 3.7 Natural Predicate Patterns [CONFIRMED 2026-01-07]
 
@@ -307,7 +313,7 @@ Use explicit `Pred(args)` only for:
 | Block end | Dedent to previous level |
 
 ```cnl
-For any Person x:
+For any Person $x:
     $x has Fever.      # Inside block (4 spaces)
     $x is sick.        # Also inside
 Alice is healthy.     # Outside (no indent)
@@ -495,6 +501,15 @@ end
 | 2026-01-07 | Learned constraint exchange policy recorded |
 | 2026-01-07 | Performance gates added to spec targets |
 | 2026-01-07 | **DS21**: Holographic Reasoning Engine (VSA/HDC/HRR) specification created |
+| 2026-01-07 | Terminology: "Vocabulary" preferred over "Lexicon" (except DS-005 title) |
+| 2026-01-07 | Terminology: "Working memory" preferred over "Session state" |
+| 2026-01-07 | Comments: Both `#` and `//` valid in CNL and DSL |
+| 2026-01-07 | Binders: `$` prefix required (`For any Person $x:`) |
+| 2026-01-07 | Blank lines allowed inside blocks (no-op) |
+| 2026-01-07 | Multiple Vocab blocks per file allowed (merged) |
+| 2026-01-07 | Empty Vocab blocks valid (no-op) |
+| 2026-01-07 | Anonymous facts auto-asserted |
+| 2026-01-07 | Numbers allowed as constants anywhere |
 
 ---
 

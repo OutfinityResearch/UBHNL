@@ -22,6 +22,7 @@ Define a **Controlled Natural Language (CNL)** that:
 5. **No ellipsis**: Incomplete sentences are FORBIDDEN
 6. **Finite domains**: Quantifiers range over declared finite domains
 7. **Explicit variables**: Variable references use `$` to disambiguate from constants
+8. **Implicit quantification for `$`**: A `$x` used outside any quantifier is treated as `ForAll Entity graph x` for that statement
 
 ## 1.2 Three Styles of CNL
 
@@ -30,8 +31,8 @@ The CNL supports three levels of naturality:
 | Style | When to Use | Example |
 |-------|-------------|---------|
 | **Natural** | Simple single-variable rules | `Every Person with Flu has Fever.` |
-| **Semi-formal** | Rules where variables need names | `For any Person x, y: If $x trusts $y then $y knows $x.` |
-| **Explicit** | Complex multi-variable rules | `For all Person x, Person y, Person z:` |
+| **Semi-formal** | Rules where variables need names | `For any Person $x, $y: If $x trusts $y then $y knows $x.` |
+| **Explicit** | Complex multi-variable rules | `For all Person $x, Person $y, Person $z:` |
 
 All three styles translate to the same DSL format.
 
@@ -45,7 +46,7 @@ All three styles translate to the same DSL format.
 | **Variables** | Prefixed: `$x`, `$person1` | Prefixed: `$x`, `$person1` |
 | **Quantifiers** | `Every`, `For any`, `For all` | `ForAll ... graph ... end` |
 | **Statements** | End with `.` | End with newline |
-| **Comments** | `//` | `#` |
+| **Comments** | `//` or `#` | `#` or `//` |
 | **Grouping** | Parentheses `()` allowed | Braces `{ }` only |
 
 Note: CNL is a strict, human-friendly subset. DSL may contain constructs with no CNL equivalent; round-trip is guaranteed only for the CNL-core subset.
@@ -145,7 +146,7 @@ CNL uses **Python-style indentation** to determine scope and grouping. There are
 
 ### Single-level block
 ```cnl
-For any Person x:
+For any Person $x:
     $x has Fever.          // Inside the ForAll block
     $x is sick.            // Also inside (same indent)
 Alice is healthy.         // OUTSIDE - dedented, new statement
@@ -163,8 +164,8 @@ end
 
 ### Nested blocks
 ```cnl
-For any Person x:
-    For any Person y:
+For any Person $x:
+    For any Person $y:
         If Trusts($x, $y) then Knows($y, $x).   // Nested 2 levels
     $x exists.                                // Back to level 1
 ```
@@ -184,28 +185,28 @@ end
 
 ### Definition blocks
 ```cnl
-Definition: Producer <Cell c> is:
-    For all Protein p:
+Definition: Producer <Cell $c> is:
+    For all Protein $p:
         If Expresses($c, $p) then Active($p).
 ```
 The indentation shows:
-- `For all Protein p:` is INSIDE the Definition
+- `For all Protein $p:` is INSIDE the Definition
 - `If Expresses...` is INSIDE the ForAll
 
 ## 1B.4 Common Mistakes
 
 ```cnl
 // WRONG - body not indented
-For any Person x:
+For any Person $x:
 $x has Fever.              // ERROR: should be indented
 
 // WRONG - inconsistent indentation  
-For any Person x:
+For any Person $x:
     $x has Fever.
   $x is sick.              // ERROR: 2 spaces, should be 4
 
 // CORRECT
-For any Person x:
+For any Person $x:
     $x has Fever.
     $x is sick.
 ```
@@ -218,7 +219,7 @@ Short rules can be written inline (no block needed):
 If Alice has Flu then Alice has Fever.
 
 // Block style (multiple statements need indentation)
-For any Person x:
+For any Person $x:
     If HasFlu($x) then HasFever($x).
     If HasFlu($x) then Coughs($x).
 ```
@@ -297,13 +298,31 @@ end
 Variable references are **explicit** and use a `$` prefix in CNL:
 
 ```cnl
-For any Person x:
+For any Person $x:
     If $x has Flu then $x has Fever.
 ```
 
 Bare identifiers always refer to vocabulary/KB constants.
-Binders may be written as `x` or `$x`, but any **use** of the variable in a statement must be `$x`.
-Legacy examples that omit `$` in block bodies should be read as if `$` were present; canonical output must include `$`.
+Binders must use `$` prefix (e.g., `For any Person $x:`), and any **use** of the variable in a statement must also be `$x`.
+If a `$`-prefixed variable appears outside any quantifier, it is **implicitly universally quantified**
+over the default domain `Entity` for that statement.
+
+Example (implicit quantifier):
+```cnl
+If $x is Man then $x is Mortal.
+```
+-> DSL:
+```sys2
+@Entity:Entity __Atom
+@rule1 ForAll Entity graph x
+    @c1 Man $x
+    @c2 Mortal $x
+    @imp Implies $c1 $c2
+    return $imp
+end
+```
+Front-ends introduce `Entity` if missing and add `IsA <const> Entity` for declared constants.
+`Entity` is treated as a top domain for implicit quantification and should not be repurposed for a narrower meaning.
 
 ## 1C.6 Surface Normalization and Alias Mapping
 
@@ -621,11 +640,11 @@ end
 
 # PART 5: Semi-Formal Rules (Named Variables)
 
-## 5.1 "For any X x, y:" Pattern
+## 5.1 "For any X $x, $y:" Pattern
 
 When you need to name variables:
 ```cnl
-For any Person x, y:
+For any Person $x, $y:
     If $x trusts $y then $y knows $x.
 ```
 -> DSL:
@@ -641,13 +660,13 @@ For any Person x, y:
 end
 ```
 
-Note: `For any Person x, y:` is shorthand for `For all Person x, Person y:`.
+Note: `For any Person $x, $y:` is shorthand for `For all Person $x, Person $y:`.
 
 ## 5.2 Three-Variable Rules
 
 For transitivity and similar patterns:
 ```cnl
-For any Person x, y, z:
+For any Person $x, $y, $z:
     If $x trusts $y and $y trusts $z then $x trusts $z.
 ```
 -> DSL:
@@ -672,11 +691,11 @@ end
 
 All these are equivalent:
 ```cnl
-For any Person x:        // Preferred for rules
-For all Person x:        // Explicit
-For every Person x:      // Natural
-Each Person x:           // Compact
-Every Person x:          // Natural (with colon)
+For any Person $x:        // Preferred for rules
+For all Person $x:        // Explicit
+For every Person $x:      // Natural
+Each Person $x:           // Compact
+Every Person $x:          // Natural (with colon)
 ```
 
 ---
@@ -687,15 +706,15 @@ Every Person x:          // Natural (with colon)
 
 When mixing types:
 ```cnl
-For all Person x, Cell c, Protein p:
+For all Person $x, Cell $c, Protein $p:
     If $c expresses $p then $p affects $x.
 ```
 
 ## 6.2 Nested Quantifiers
 
 ```cnl
-For all Person x:
-    For all Person y:
+For all Person $x:
+    For all Person $y:
         If $x trusts $y then $y trusts $x.
 ```
 
@@ -773,7 +792,7 @@ Translation note:
 
 ```cnl
 Rule TransitiveTrust:
-    For any Person x, y, z:
+    For any Person $x, $y, $z:
         If $x trusts $y and $y trusts $z then $x trusts $z.
 ```
 -> DSL:
@@ -815,7 +834,7 @@ Semantics:
 
 ```cnl
 Axiom SymmetricTrust:
-    For any Person x, y:
+    For any Person $x, $y:
         $x trusts $y if and only if $y trusts $x.
 ```
 
@@ -894,6 +913,9 @@ If Alice has Flu then Alice has Fever.
 | Ellipsis | `Alice trusts Bob and Charlie does too.` | Incomplete |
 | Passive without agent | `The protein is expressed.` | Missing subject |
 | Implicit bare quantification | `Cells express proteins.` | Use `Every Cell...` |
+
+Note: Implicit quantification via **explicit `$` variables** is allowed; this restriction
+applies only to bare plural sentences without a quantifier.
 
 Correct versions:
 ```cnl

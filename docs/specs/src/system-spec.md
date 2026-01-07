@@ -270,7 +270,7 @@ Assert GeneAImpliesProteinP
 Ion is a Person.
 Ion has flu.
 
-For any Person p:
+For any Person $p:
     If $p has flu then $p has fever.
 
 Which Person $p has fever?

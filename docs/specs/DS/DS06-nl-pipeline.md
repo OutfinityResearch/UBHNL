@@ -74,10 +74,15 @@ Given a vocabulary `L` (built from Sys2 schemas):
   - the result type is used in the surrounding context.
 - A term `t` resolves as:
   1) a bound variable if it is in the current quantifier environment, else
-  2) a constant if it is an element of some `L.domains[DomainName]`, else
-  3) a function application if it matches a known function symbol (with arity), else
-  4) a numeric literal (`NumLit`) if lexed as a number, else
-  5) error: unknown identifier.
+  2) if `t` is `$x`, introduce an implicit `ForAll Entity graph x` for the statement and treat it as bound, else
+  3) a constant if it is an element of some `L.domains[DomainName]`, else
+  4) a function application if it matches a known function symbol (with arity), else
+  5) a numeric literal (`NumLit`) if lexed as a number, else
+  6) error: unknown identifier.
+
+Implicit quantification requires a default domain `Entity`. When used, front-ends add `Entity` if missing
+and attach `IsA <const> Entity` to each declared constant so the domain is non-empty. `Entity` is treated
+as a top domain for implicit quantification.
 
 ## Error Handling (Required)
 Errors must be deterministic, categorized, and include source positions.
