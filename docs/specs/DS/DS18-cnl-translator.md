@@ -409,9 +409,9 @@ end
 Via lexicon `cnlPatterns`:
 ```json
 {
-  "has Fever": "HasFever($1)",
-  "is Parent of": "Parent($1, $2)",
-  "is Ancestor of": "Ancestor($1, $2)"
+  "has Fever": "HasFever $1",
+  "is Parent of": "Parent $1 $2",
+  "is Ancestor of": "Ancestor $1 $2"
 }
 ```
 

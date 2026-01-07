@@ -140,14 +140,15 @@ checker validates → explain (origins) → user output</code></pre>
           Each statement carries an origin so failures can be explained in terms of files and vocabulary.
         </p>
         <pre><code># 1) load files (long-term memory)
-loadTheoryFile("bio.dsl")
+loadTheoryFile("bio.sys2")
 
 # 2) learn (short-term delta)
-learn("@c2:Cell")
-learn("@c2 geneA")
+learn("@c2:c2 __Atom")
+learn("IsA c2 Cell")
+learn("@f1 GeneA c2")
 
 # 3) query (prove/refute/satisfy/…)
-query("proteinP(c2)", kind="Prove")
+query("ProteinP c2", kind="Prove")
 
 # 4) explain (origins + witness/core)
 explain(lastResult)</code></pre>

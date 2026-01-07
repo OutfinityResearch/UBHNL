@@ -28,8 +28,8 @@
 
         <h2>Quick Start (conceptual)</h2>
         <ol>
-          <li>Create a lexicon (vocabulary + types) as JSON.</li>
-          <li>Write a theory in <code>*.dsl</code> (or <code>*.cnl</code>).</li>
+          <li>Define vocabulary in CNL domain files (<code>*.cnl</code>) or a legacy JSON lexicon.</li>
+          <li>Write a theory in <code>*.sys2</code> (or <code>*.cnl</code>).</li>
           <li>Start a session, load theory files, then run <code>query</code>.</li>
           <li>Get a result + witness/certificate + explanation (via origins).</li>
         </ol>
@@ -39,23 +39,23 @@
 ubh session new --lexicon lexicon.json
 
 # load theories (long-term memory)
-ubh learn --file bio.dsl
+ubh learn --file bio.sys2
 ubh learn --file rules.cnl
 
 # query: prove/refute/satisfy/count/optimize
-ubh query --prove "proteinP(c0)"
-ubh query --satisfy "exists ?c in Cell: proteinP(?c)"
+ubh query --prove "proteinP c0"
+ubh query --satisfy "Which Cell c has ProteinP?"
 ubh query --explain last</code></pre>
 
         <h2>Target JS API (sketch)</h2>
         <pre><code>import { createSession } from "ubh";
 
 const session = await createSession({ lexiconPath: "lexicon.json" });
-await session.loadTheoryFile("bio.dsl");
+await session.loadTheoryFile("bio.sys2");
 
 const result = await session.query({
   kind: "Prove",
-  input: "proteinP(c0)"
+  input: "proteinP c0"
 });
 
 console.log(result.status);

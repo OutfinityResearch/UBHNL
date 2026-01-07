@@ -29,7 +29,7 @@
 
         <h2>Mental model</h2>
         <ul>
-          <li><strong>Theory files</strong>: <code>*.dsl</code>/<code>*.cnl</code> (long-term), loaded deterministically; contain axioms/facts/rules.</li>
+          <li><strong>Theory files</strong>: <code>*.sys2</code>/<code>*.cnl</code> (long-term), loaded deterministically; contain axioms/facts/rules.</li>
           <li><strong>Session</strong>: an ephemeral workspace (short-term) that can add transient facts and caches artifacts.</li>
           <li><strong>Orchestrator</strong>: plans and runs backends (SAT/SMT/QBF/MC/...) and validates certificates.</li>
         </ul>
@@ -80,13 +80,18 @@ session.query({
   options: { budget?, requireCertificate? }
 })</code></pre>
 
-        <h3>Holes (? variables)</h3>
-        <p>Holes are existential variables that are returned as witnesses:</p>
-        <pre><code>exists ?c in Cell: proteinP(?c)</code></pre>
+        <h3>Witness queries</h3>
+        <p>Witnesses are introduced by existential binders:</p>
+        <pre><code>Which Cell c has ProteinP?</code></pre>
+        <p>DSL form:</p>
+        <pre><code>@q1 Exists Cell graph c
+    @c1 ProteinP $c
+    return $c1
+end</code></pre>
         <p>The result must include:</p>
         <pre><code>{
   status: "SAT",
-  holeAssignments: { "?c": "c0" }
+  witnessAssignments: { "c": "c0" }
 }</code></pre>
 
         <h2>API: explain</h2>

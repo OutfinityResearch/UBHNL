@@ -29,7 +29,7 @@
         <h2>Example 1 — Propositional (UBH/SAT)</h2>
         <p><strong>Goal:</strong> <code>Prove: (A and B) implies C</code></p>
 
-        <h3>Lexicon (minimal)</h3>
+        <h3>Legacy lexicon (minimal, optional)</h3>
         <pre><code>{
   "domains": {},
   "constants": {},
@@ -40,12 +40,12 @@
   }
 }</code></pre>
 
-        <h3>Theory file: <code>t.dsl</code></h3>
-        <pre><code>A() implies C()
-B() implies C()</code></pre>
+        <h3>Theory file: <code>t.sys2</code></h3>
+        <pre><code>@imp1 Implies A C
+@imp2 Implies B C</code></pre>
 
         <h3>Query</h3>
-        <pre><code>Prove: (A() and B()) implies C()</code></pre>
+        <pre><code>Prove: Implies { And A B } C</code></pre>
 
         <h3>Expected</h3>
         <ul>
@@ -102,21 +102,25 @@ Safe:  s != 3</code></pre>
 
         <hr />
 
-        <h2>Example 4 — Hole filling (witness)</h2>
-        <p><strong>Goal:</strong> find a <code>?c</code> that satisfies a property.</p>
+        <h2>Example 4 — Witness finding</h2>
+        <p><strong>Goal:</strong> find a witness <code>c</code> that satisfies a property.</p>
 
-        <h3>Theory file: <code>bio.dsl</code></h3>
-        <pre><code>@c0:Cell
-@c1:Cell
-@c0 proteinP</code></pre>
+        <h3>Theory file: <code>bio.sys2</code></h3>
+        <pre><code>@Cell:Cell __Atom
+@c0:c0 __Atom
+@c1:c1 __Atom
+IsA c0 Cell
+IsA c1 Cell
+
+@f1 ProteinP c0</code></pre>
 
         <h3>Query</h3>
-        <pre><code>Satisfy: exists ?c in Cell: proteinP(?c)</code></pre>
+        <pre><code>Which Cell c has ProteinP?</code></pre>
 
         <h3>Expected</h3>
         <pre><code>{
   "status": "SAT",
-  "holeAssignments": { "?c": "c0" }
+  "witnessAssignments": { "c": "c0" }
 }</code></pre>
 
         <h2>Links</h2>

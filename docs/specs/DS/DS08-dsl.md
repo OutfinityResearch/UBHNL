@@ -46,6 +46,7 @@ And  Or  Not  Implies  Iff  Xor
 true  false
 IsA  __Atom
 Weight  ProbQuery  Ask  Given
+load
 ```
 
 ## 1.3 Number Literals (for probabilistic weights)

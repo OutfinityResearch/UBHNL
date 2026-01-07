@@ -42,8 +42,58 @@ All three styles translate to the same DSL format.
 | **Variables** | Bare: `x`, `person1` | Prefixed: `$x`, `$person1` |
 | **Quantifiers** | `Every`, `For any`, `For all` | `ForAll ... graph ... end` |
 | **Statements** | End with `.` | End with newline |
-| **Comments** | `//` or `#` | `#` |
+| **Comments** | `//` | `#` |
 | **Grouping** | Parentheses `()` allowed | Braces `{ }` only |
+
+---
+
+# PART 1A: Theory Loading
+
+## 1A.1 The `load` Directive
+
+CNL files can load other theory files using the `load` directive:
+
+```cnl
+load "theories/domains/medical.cnl"
+load "theories/core/logic.cnl"
+```
+
+### Syntax
+
+```
+load "<path>"
+```
+
+- Path is relative to project root or absolute
+- Supports both `.cnl` and `.sys2` files
+- `.cnl` files are translated to DSL before loading
+- Circular loads are detected and reported as errors
+
+### Semantics
+
+1. **Order matters**: Loaded theories are processed before subsequent statements
+2. **Namespace merge**: All declarations become available in current context
+3. **Idempotent**: Loading same file twice has no additional effect
+4. **Type checking**: Loaded declarations are type-checked at load time
+
+### Example
+
+```cnl
+// File: patient_diagnosis.cnl
+load "theories/domains/medical.cnl"
+
+// Now we can use Patient, Disease, Symptom from medical.cnl
+Let p1 be a Patient.
+p1 has Flu.
+// Rule from medical.cnl applies: If p has Flu then p has Fever.
+```
+
+### DSL Equivalent
+
+CNL `load` translates to DSL `load`:
+```sys2
+load "theories/domains/medical.sys2"
+```
 
 ---
 
@@ -67,16 +117,17 @@ CNL uses **Python-style indentation** to determine scope and grouping. There are
 ### Single-level block
 ```cnl
 For any Person x:
-    x has Fever.          # Inside the ForAll block
-    x is sick.            # Also inside (same indent)
-x is healthy.             # OUTSIDE - dedented, new statement
+    x has Fever.          // Inside the ForAll block
+    x is sick.            // Also inside (same indent)
+x is healthy.             // OUTSIDE - dedented, new statement
 ```
 -> DSL:
 ```sys2
 @rule1 ForAll Person graph x
     @c1 HasFever $x
     @c2 IsSick $x
-    return $c2
+    @and And $c1 $c2
+    return $and
 end
 @f1 IsHealthy x           # Separate statement
 ```
@@ -85,8 +136,8 @@ end
 ```cnl
 For any Person x:
     For any Person y:
-        If Trusts(x, y) then Knows(y, x).   # Nested 2 levels
-    x exists.                                # Back to level 1
+        If Trusts(x, y) then Knows(y, x).   // Nested 2 levels
+    x exists.                                // Back to level 1
 ```
 -> DSL:
 ```sys2
@@ -115,16 +166,16 @@ The indentation shows:
 ## 1B.4 Common Mistakes
 
 ```cnl
-# WRONG - body not indented
+// WRONG - body not indented
 For any Person x:
-x has Fever.              # ERROR: should be indented
+x has Fever.              // ERROR: should be indented
 
-# WRONG - inconsistent indentation  
+// WRONG - inconsistent indentation  
 For any Person x:
     x has Fever.
-  x is sick.              # ERROR: 2 spaces, should be 4
+  x is sick.              // ERROR: 2 spaces, should be 4
 
-# CORRECT
+// CORRECT
 For any Person x:
     x has Fever.
     x is sick.
@@ -134,10 +185,10 @@ For any Person x:
 
 Short rules can be written inline (no block needed):
 ```cnl
-# Inline (single statement, no colon needed for body)
+// Inline (single statement, no colon needed for body)
 If HasFlu(x) then HasFever(x).
 
-# Block style (multiple statements need indentation)
+// Block style (multiple statements need indentation)
 For any Person x:
     If HasFlu(x) then HasFever(x).
     If HasFlu(x) then Coughs(x).
@@ -171,23 +222,23 @@ Use `Pred(arg1, arg2)` only when:
 ## 1C.3 Examples - Natural vs Explicit
 
 ```cnl
-# NATURAL (preferred) - no parentheses
+// NATURAL (preferred) - no parentheses
 p1 has Fever.
 Alice trusts Bob.
 Socrates is Man.
 If p has Flu then p has Fever.
 
-# EXPLICIT (only when needed)
-Succ(n) is Nat.           # Nested function
-Age(p1, 16).               # Predicate with value
-Prob(Cloudy(today), 0.8).  # Complex annotation
+// EXPLICIT (only when needed)
+Succ(n) is Nat.           // Nested function
+Age(p1, 16).               // Predicate with value
+Prob(Cloudy(today), 0.8).  // Complex annotation
 ```
 
 ## 1C.4 Translation Examples
 
 **Medical diagnosis:**
 ```cnl
-# Input (natural CNL)
+// Input (natural CNL)
 For any Patient p:
     If p has Flu then p has Fever.
     If p has Cold then p coughs.
@@ -212,7 +263,7 @@ end
 
 **Social network:**
 ```cnl
-# Input
+// Input
 Alice trusts Bob.
 Bob trusts Charlie.
 For any User x, y, z:
@@ -247,7 +298,7 @@ end
 Domain knowledge should be expressed in `.cnl` files:
 
 ```cnl
-# theories/domains/medical.cnl
+// theories/domains/medical.cnl
 Patient is a Domain.
 Symptom is a Domain.
 
@@ -409,7 +460,7 @@ Expresses(c0, p1).
 For simple rules with one implied variable:
 ```cnl
 Every Person with Flu has Fever.
-Every Cell that expresses a Protein activates it.
+Every Cell that expresses a Protein activates that Protein.
 ```
 -> DSL:
 ```sys2

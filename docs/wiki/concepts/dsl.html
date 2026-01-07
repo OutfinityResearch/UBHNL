@@ -26,7 +26,7 @@
 
         <h2>Role</h2>
         <ul>
-          <li><strong>Stable textual IR</strong> for theories (long-term) and queries.</li>
+          <li><strong>Stable textual IR</strong> for theories (long-term) and queries (<code>.sys2</code> files).</li>
           <li><strong>Power-user format</strong> (more direct than CNL), but still strict and typed.</li>
           <li><strong>Bridge</strong>: CNL can be translated into DSL for audit/debug.</li>
         </ul>
@@ -37,28 +37,29 @@
             <thead><tr><th>Form</th><th>Meaning</th><th>Rule</th></tr></thead>
             <tbody>
               <tr><td><code>@name</code></td><td>the statement target (declaration / fact)</td><td>at most one <code>@</code> per line; must be the first token</td></tr>
-              <tr><td><code>$name</code></td><td>variable reference in scope</td><td>if not in scope → error</td></tr>
-              <tr><td><code>name</code></td><td>vocabulary lookup</td><td>if missing → error</td></tr>
+              <tr><td><code>$name</code></td><td>working-memory reference in scope</td><td>if not in scope → error</td></tr>
+              <tr><td><code>name</code></td><td>KB/vocabulary lookup</td><td>if missing → error</td></tr>
             </tbody>
           </table>
         </div>
 
         <h2>Main forms</h2>
         <ul>
-          <li><strong>Exported declaration</strong>: <code>@ion:Person</code> (adds a constant to the vocabulary)</li>
-          <li><strong>Fact statement (subject-first)</strong>: <code>@ion has_flu flu</code> ≡ <code>has_flu(ion, flu)</code> (assert true)</li>
-          <li><strong>Logic statement</strong>: <code>forall $c in Cell: geneA($c) implies proteinP($c)</code></li>
-          <li><strong>Holes</strong>: <code>exists ?c in Cell: proteinP(?c)</code> (returnable witness)</li>
+          <li><strong>KB declaration</strong>: <code>@Alice:Alice __Atom</code> (persistent vocabulary name)</li>
+          <li><strong>Working-memory name</strong>: <code>@tmp __Atom</code> (refer as <code>$tmp</code>)</li>
+          <li><strong>Fact statement</strong>: <code>@f1 HasFever Alice</code></li>
+          <li><strong>Logic block</strong>: <code>@rule1 ForAll Person graph p ... return $imp end</code></li>
+          <li><strong>Witness query</strong>: <code>@q Exists Person graph p ... return $expr end</code></li>
         </ul>
 
         <h2>Intentional error examples</h2>
         <pre><code># invalid: two @ tokens on the same line
 @p0 likes @p1
-# fix: use $p1 (if it is a variable) or bare p1 (if it is a vocabulary constant)
+# fix: use $p1 (working memory) or declare @p1:p1 __Atom and use bare p1
 
 # invalid: unknown vocabulary symbol
-@ion has_flu flu
-# if "flu" is not declared → load error</code></pre>
+@f1 HasFlu Bob
+# if "HasFlu" or "Bob" is not declared → load error</code></pre>
 
         <h2>Why “single @ per line”</h2>
         <p>
