@@ -102,15 +102,32 @@ function injectPageDiagram() {
   }
 }
 
+function injectFooter() {
+  const main = document.querySelector("main");
+  if (!main) return;
+  if (document.querySelector(".site-footer")) return;
+
+  const footer = document.createElement("footer");
+  footer.className = "site-footer";
+  footer.innerHTML = `
+    <hr />
+    <p>Research conducted by <a href="https://www.axiologic.net">Axiologic Research</a> as part of the European research project <a href="https://www.achilles-project.eu/">Achilles</a>.</p>
+    <p><strong>Disclaimer:</strong> This documentation was generated with AI assistance (LLMs) and may contain errors or hallucinations. The system is open source—verify claims by examining the code, evaluation suites, and automated tests.</p>
+  `;
+  main.appendChild(footer);
+}
+
 try {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
       injectHeaderNav();
       injectPageDiagram();
+      injectFooter();
     });
   } else {
     injectHeaderNav();
     injectPageDiagram();
+    injectFooter();
   }
 } catch {
   // ignore, site should still render without the menu

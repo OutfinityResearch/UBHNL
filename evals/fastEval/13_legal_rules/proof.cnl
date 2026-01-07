@@ -1,8 +1,8 @@
 Proof MinorCannotVote:
     Given:
         Age(p1, 16).
-        For all Person p: If Age(p, 16) then Minor(p).
-        For all Person p: If Minor(p) then CannotVote(p).
+        For all Person p: If Age($p, 16) then Minor($p).
+        For all Person p: If Minor($p) then CannotVote($p).
     Apply:
         Rule 1 on p1.
     Derive:

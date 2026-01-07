@@ -6,13 +6,13 @@ ball is a Object.
 
 # Causal chain - natural verbs
 For every Object o:
-    If o has Force then o accelerates.
+    If $o has Force then $o accelerates.
 
 For every Object o:
-    If o accelerates then o changes.
+    If $o accelerates then $o changes.
 
 For every Object o:
-    If o changes then o moves.
+    If $o changes then $o moves.
 
 # Initial condition
 ball has Force.

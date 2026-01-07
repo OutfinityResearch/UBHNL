@@ -1,7 +1,7 @@
 Proof ProbabilisticWeather:
     Given:
         Prob(Cloudy(today)) = 0.8.
-        For all Day d: If Cloudy(d) then Rain(d).
+        For all Day d: If Cloudy($d) then Rain($d).
     Apply:
         Probabilistic Modus Ponens.
     Derive:

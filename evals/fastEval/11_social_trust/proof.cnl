@@ -2,7 +2,7 @@ Proof TransitiveTrust:
     Given:
         Alice trusts Bob.
         Bob trusts Charlie.
-        For all User x, y, z: If x trusts y and y trusts z then x trusts z.
+        For all User x, y, z: If $x trusts $y and $y trusts $z then $x trusts $z.
     Apply:
         Transitivity Rule with x=Alice, y=Bob, z=Charlie.
     Derive:

@@ -6,7 +6,7 @@ Let Alice, Bob, Charlie be Users.
 
 # Transitivity rule - natural SVO
 For any User x, y, z:
-    If x trusts y and y trusts z then x trusts z.
+    If $x trusts $y and $y trusts $z then $x trusts $z.
 
 # Facts - natural SVO
 Alice trusts Bob.

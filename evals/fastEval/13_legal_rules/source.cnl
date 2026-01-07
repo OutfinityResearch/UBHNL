@@ -6,7 +6,7 @@ p1 is a Person.
 
 # Legal constraints - natural predicates
 Each Person p:
-    If p is Minor then p is Restricted.
+    If $p is Minor then $p is Restricted.
 
 # Fact - explicit Age(p, 16) still needed for 2-arg predicates with values
 p1 is Minor.
