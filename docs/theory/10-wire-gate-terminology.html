@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theory 10: Wires, Gates, and AST Nodes</title>
+    <link rel="stylesheet" href="../site.css" />
+    <script src="../site-nav.js" defer></script>
+  </head>
+  <body class="with-diagram">
+    <header>
+      <h1>Theory 10 — Wires, Gates, and AST Nodes</h1>
+      <p>Clear terminology for the UBH pipeline: syntax trees, circuit values, and operations.</p>
+    </header>
+    <main>
+      <div class="card">
+        <div class="nav">
+          <a href="09-explainability.html">Prev: Explainability</a>
+          <a href="index.html">Theory Index</a>
+          <a href="grounding-problem.html">Next: Grounding Problem</a>
+        </div>
+
+        <section>
+          <h2>Three Layers, Three Kinds of Nodes</h2>
+          <p>
+            UBHNL spans multiple layers, and each layer has its own notion of a “node.” To avoid ambiguity,
+            we use three distinct terms:
+          </p>
+          <ul>
+            <li><strong>AST node</strong>: a parser/translator artifact (ForAll, Implies, Predicate).</li>
+            <li><strong>Wire</strong>: a Boolean value in the UBH circuit.</li>
+            <li><strong>Gate</strong>: an operation that produces a wire (AND, XOR, VAR, CONST).</li>
+          </ul>
+          <p>
+            The kernel does not expose AST nodes. It only exposes <strong>wires</strong> and the gates
+            that produce them.
+          </p>
+        </section>
+
+        <section>
+          <h2>Wire IDs (Not Node IDs)</h2>
+          <p>
+            Each wire has a numeric identifier, a <strong>wire id</strong>. The id refers to the value,
+            not the operation. A wire may be a constant, an input variable, or the output of a gate.
+          </p>
+          <ul>
+            <li><strong>CONST0 / CONST1</strong>: singleton wires.</li>
+            <li><strong>VAR(name)</strong>: input wires keyed by a stable name.</li>
+            <li><strong>AND / XOR</strong>: gate-produced wires.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Why This Distinction Matters</h2>
+          <p>
+            Confusing wires with gates causes real bugs: a solver assigns values to <em>wires</em>, while
+            hash-consing deduplicates <em>gate-produced wires</em> based on canonical inputs. If we mix the
+            terms, proofs and diagnostics become hard to interpret and easier to mis-specify.
+          </p>
+        </section>
+
+        <section>
+          <h2>Quick Mapping</h2>
+          <p>From CNL/DSL to UBH, the mapping is:</p>
+          <ul>
+            <li>CNL / DSL sentence → AST nodes</li>
+            <li>AST nodes → UBH gates and wires</li>
+            <li>Wires → solver assignments and proof references</li>
+          </ul>
+        </section>
+
+        <div class="footer-links">
+          <p>Spec reference: <a href="../mdview.html?file=specs/DS/DS01-ir-hashcons.md">DS-001: IR and Hash-Consing</a>.</p>
+          <p>Wiki concept: <a href="../wiki/concepts/wire-nodeid.html">Wire / NodeId</a>.</p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
