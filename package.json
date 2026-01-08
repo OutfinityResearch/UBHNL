@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node src/index.mjs",
     "devtest": "node src/devtests/run.mjs",
-    "perfbench": "node evals/runPerfBench.mjs"
+    "perfbench": "node evals/runPerfBench.mjs",
+    "typedast": "node src/devtests/typed-ast-tests.mjs"
   }
 }

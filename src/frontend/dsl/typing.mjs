@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 import {
     assertStmt,
     pred,
@@ -14,6 +17,12 @@ import {
     boolLit
 } from '../logic/ast.mjs';
 import { Vocabulary } from '../schema/vocab.mjs';
+
+function makeError(message, code) {
+    const err = new Error(message);
+    if (code) err.code = code;
+    return err;
+}
 
 function stripComments(line) {
     const hash = line.indexOf('#');
@@ -41,43 +50,43 @@ function termDomain(term, vocab) {
 
 function validateFuncTerm(term, vocab) {
     const sig = vocab.getFuncSignature(term.name);
-    if (!sig) throw new Error(`Unknown function: ${term.name}`);
+    if (!sig) throw makeError(`Unknown function: ${term.name}`, 'E_UNKNOWN_PREDICATE');
     if (sig.args.length !== term.args.length) {
-        throw new Error(`Arity mismatch for function ${term.name}: expected ${sig.args.length}, got ${term.args.length}`);
+        throw makeError(`Arity mismatch for function ${term.name}: expected ${sig.args.length}, got ${term.args.length}`, 'E_ARITY_MISMATCH');
     }
     for (let i = 0; i < sig.args.length; i++) {
         const arg = term.args[i];
         const actual = termDomain(arg, vocab);
         if (!actual || !vocab.isCompatible(actual, sig.args[i])) {
-            throw new Error(`Type mismatch for function ${term.name} arg ${i}: expected ${sig.args[i]}, got ${actual}`);
+            throw makeError(`Type mismatch for function ${term.name} arg ${i}: expected ${sig.args[i]}, got ${actual}`, 'E_TYPE_MISMATCH');
         }
     }
 }
 
 function validatePredicate(name, args, vocab) {
     const sig = vocab.getPredSignature(name);
-    if (!sig) throw new Error(`Unknown predicate: ${name}`);
+    if (!sig) throw makeError(`Unknown predicate: ${name}`, 'E_UNKNOWN_PREDICATE');
     if (sig.length !== args.length) {
-        throw new Error(`Arity mismatch for ${name}: expected ${sig.length}, got ${args.length}`);
+        throw makeError(`Arity mismatch for ${name}: expected ${sig.length}, got ${args.length}`, 'E_ARITY_MISMATCH');
     }
     for (let i = 0; i < sig.length; i++) {
         const arg = args[i];
         if (arg?.kind === 'Func') validateFuncTerm(arg, vocab);
         const actual = termDomain(arg, vocab);
         if (!actual || !vocab.isCompatible(actual, sig[i])) {
-            throw new Error(`Type mismatch for ${name} arg ${i}: expected ${sig[i]}, got ${actual}`);
+            throw makeError(`Type mismatch for ${name} arg ${i}: expected ${sig[i]}, got ${actual}`, 'E_TYPE_MISMATCH');
         }
     }
 }
 
 function parseTermTokens(tokens, startIndex, scope, vocab, options) {
     const token = tokens[startIndex];
-    if (!token) throw new Error('Missing term');
+    if (!token) throw makeError('Missing term', 'E_DSL_SYNTAX');
 
     if (token.startsWith('$')) {
         const name = token.slice(1);
         const domain = scope.vars.get(name);
-        if (!domain) throw new Error(`Unbound variable: ${name}`);
+        if (!domain) throw makeError(`Unbound variable: ${name}`, 'E_DSL_UNBOUND_VAR');
         return { term: varRef(name, domain), nextIndex: startIndex + 1 };
     }
 
@@ -87,15 +96,18 @@ function parseTermTokens(tokens, startIndex, scope, vocab, options) {
         if (!vocab.hasConst(token) && options.allowNumericLiterals) {
             vocab.addConst(token, domain);
         }
-        if (!vocab.hasConst(token)) throw new Error(`Unknown numeric literal: ${token}`);
-        return { term: constRef(token, vocab.getConstDomain(token)), nextIndex: startIndex + 1 };
+        const constName = vocab.resolveConstName(token);
+        if (!constName) throw makeError(`Unknown numeric literal: ${token}`, 'E_UNKNOWN_SYMBOL');
+        return { term: constRef(constName, vocab.getConstDomain(constName)), nextIndex: startIndex + 1 };
     }
 
-    if (vocab.hasConst(token)) {
-        return { term: constRef(token, vocab.getConstDomain(token)), nextIndex: startIndex + 1 };
+    const constName = vocab.resolveConstName(token);
+    if (constName) {
+        return { term: constRef(constName, vocab.getConstDomain(constName)), nextIndex: startIndex + 1 };
     }
 
-    const funcSig = vocab.getFuncSignature(token);
+    const funcName = vocab.resolveFuncName(token);
+    const funcSig = funcName ? vocab.getFuncSignature(funcName) : null;
     if (funcSig) {
         let idx = startIndex + 1;
         const args = [];
@@ -104,22 +116,22 @@ function parseTermTokens(tokens, startIndex, scope, vocab, options) {
             args.push(parsed.term);
             idx = parsed.nextIndex;
         }
-        const term = { kind: 'Func', name: token, args };
+        const term = { kind: 'Func', name: funcName, args };
         validateFuncTerm(term, vocab);
         return { term, nextIndex: idx };
     }
 
-    throw new Error(`Unknown term: ${token}`);
+    throw makeError(`Unknown term: ${token}`, 'E_UNKNOWN_SYMBOL');
 }
 
 function resolveExprRef(token, scope) {
     if (token === 'true' || token === 'false') return boolLit(token === 'true');
     if (!token.startsWith('$')) {
-        throw new Error(`Expected expression reference, got ${token}`);
+        throw makeError(`Expected expression reference, got ${token}`, 'E_DSL_SYNTAX');
     }
     const name = token.slice(1);
     const expr = scope.exprs.get(name);
-    if (!expr) throw new Error(`Unknown expression reference: ${name}`);
+    if (!expr) throw makeError(`Unknown expression reference: ${name}`, 'E_DSL_UNBOUND_VAR');
     return expr;
 }
 
@@ -134,32 +146,33 @@ function foldBinary(op, args) {
 
 function parseExpressionTokens(tokens, scope, vocab, options) {
     const head = tokens[0];
-    if (!head) throw new Error('Empty expression');
+    if (!head) throw makeError('Empty expression', 'E_DSL_SYNTAX');
 
     if (head === 'Not') {
-        if (tokens.length !== 2) throw new Error('Not expects one operand');
+        if (tokens.length !== 2) throw makeError('Not expects one operand', 'E_DSL_SYNTAX');
         return notExpr(resolveExprRef(tokens[1], scope));
     }
     if (head === 'And' || head === 'Or') {
-        if (tokens.length < 3) throw new Error(`${head} expects at least two operands`);
+        if (tokens.length < 3) throw makeError(`${head} expects at least two operands`, 'E_DSL_SYNTAX');
         const args = tokens.slice(1).map((t) => resolveExprRef(t, scope));
         return foldBinary(head, args);
     }
     if (head === 'Implies' || head === 'Iff') {
-        if (tokens.length !== 3) throw new Error(`${head} expects two operands`);
+        if (tokens.length !== 3) throw makeError(`${head} expects two operands`, 'E_DSL_SYNTAX');
         const left = resolveExprRef(tokens[1], scope);
         const right = resolveExprRef(tokens[2], scope);
         return head === 'Implies' ? impliesExpr(left, right) : iffExpr(left, right);
     }
     if (head === 'Eq') {
-        if (tokens.length < 3) throw new Error('Eq expects two terms');
+        if (tokens.length < 3) throw makeError('Eq expects two terms', 'E_DSL_SYNTAX');
         const left = parseTermTokens(tokens, 1, scope, vocab, options).term;
         const right = parseTermTokens(tokens, 2, scope, vocab, options).term;
         return eqExpr(left, right);
     }
 
-    const sig = vocab.getPredSignature(head);
-    if (!sig) throw new Error(`Unknown predicate: ${head}`);
+    const predName = vocab.resolvePredName(head);
+    if (!predName) throw makeError(`Unknown predicate: ${head}`, 'E_UNKNOWN_PREDICATE');
+    const sig = vocab.getPredSignature(predName);
     let idx = 1;
     const args = [];
     for (let i = 0; i < sig.length; i++) {
@@ -168,10 +181,10 @@ function parseExpressionTokens(tokens, scope, vocab, options) {
         idx = parsed.nextIndex;
     }
     if (idx < tokens.length) {
-        throw new Error(`Too many arguments for predicate ${head}`);
+        throw makeError(`Too many arguments for predicate ${predName}`, 'E_ARITY_MISMATCH');
     }
-    validatePredicate(head, args, vocab);
-    return pred(head, args);
+    validatePredicate(predName, args, vocab);
+    return pred(predName, args);
 }
 
 function parseVocabBlock(lines, startIndex, vocab) {
@@ -188,6 +201,9 @@ function parseVocabBlock(lines, startIndex, vocab) {
         if (head === 'Domain' && tokens[1]) {
             vocab.addDomain(tokens[1]);
         } else if (head === 'Const' && tokens.length >= 3) {
+            if (!vocab.domains.has(tokens[2])) {
+                throw makeError(`Unknown domain: ${tokens[2]}`, 'E_UNKNOWN_TYPE');
+            }
             vocab.addConst(tokens[1], tokens[2]);
         } else if (head === 'Pred' && tokens.length >= 2) {
             vocab.addPred(tokens[1], tokens.slice(2));
@@ -197,25 +213,30 @@ function parseVocabBlock(lines, startIndex, vocab) {
             vocab.addFunc(tokens[1], args, ret);
         } else if (head === 'SubType' && tokens.length >= 3) {
             vocab.addSubType(tokens[1], tokens[2]);
+        } else if (head === 'Alias' && tokens.length >= 3) {
+            vocab.addAlias(tokens[1], tokens[2]);
         }
         idx++;
     }
-    throw new Error('Unclosed Vocab block');
+    throw makeError('Unclosed Vocab block', 'E_DSL_MISSING_END');
 }
 
 function parseNamedLine(line) {
     const parts = line.split(/\s+/u);
     const namePart = parts[0];
-    const name = namePart.slice(1).split(':')[0];
+    const raw = namePart.slice(1);
+    const split = raw.split(':');
+    const name = split[0];
+    const kbName = split[1] || null;
     const rest = parts.slice(1);
-    return { name, rest };
+    return { name, kbName, rest };
 }
 
 function parseForAllLine(rest) {
-    if (rest.length < 4) throw new Error('Malformed ForAll/Exists line');
+    if (rest.length < 4) throw makeError('Malformed ForAll/Exists line', 'E_DSL_SYNTAX');
     const kind = rest[0];
     const domain = rest[1];
-    if (rest[2] !== 'graph') throw new Error('Expected graph in quantifier header');
+    if (rest[2] !== 'graph') throw makeError('Expected graph in quantifier header', 'E_DSL_SYNTAX');
     const varName = rest[3];
     return { kind, domain, varName };
 }
@@ -248,9 +269,22 @@ function parseBlock(lines, startIndex, vocab, scope, options) {
             continue;
         }
 
+        if (line.startsWith('Alias ')) {
+            const tokens = line.split(/\s+/u);
+            if (tokens.length >= 3) vocab.addAlias(tokens[1], tokens[2]);
+            idx++;
+            continue;
+        }
+
         if (line.startsWith('IsA ')) {
             const tokens = line.split(/\s+/u);
-            if (tokens.length >= 3) vocab.addConst(tokens[1], tokens[2]);
+            if (tokens.length >= 3) {
+                const constName = vocab.resolveAlias(tokens[1]);
+                if (!vocab.domains.has(tokens[2])) {
+                    throw makeError(`Unknown domain: ${tokens[2]}`, 'E_UNKNOWN_TYPE');
+                }
+                vocab.addConst(constName, tokens[2]);
+            }
             idx++;
             continue;
         }
@@ -260,10 +294,25 @@ function parseBlock(lines, startIndex, vocab, scope, options) {
             continue;
         }
 
-        const { name, rest } = parseNamedLine(line);
-        if (rest[0] === '__Atom' || rest[0] === 'graph') {
+        const { name, kbName, rest } = parseNamedLine(line);
+        if (rest[0] === '__Atom') {
+            const atomName = kbName || name;
+            if (!vocab.hasConst(atomName) && options.implicitDomain) {
+                if (!vocab.domains.has(options.implicitDomain)) {
+                    vocab.addDomain(options.implicitDomain);
+                }
+                vocab.addConst(atomName, options.implicitDomain);
+            }
             idx++;
             continue;
+        }
+        if (rest[0] === 'graph') {
+            idx++;
+            continue;
+        }
+
+        if (rest.some((token) => token.startsWith('@'))) {
+            throw makeError('Two @ tokens on one line', 'E_DSL_TWO_AT');
         }
 
         if (rest[0] === 'ForAll' || rest[0] === 'Exists') {
@@ -272,7 +321,7 @@ function parseBlock(lines, startIndex, vocab, scope, options) {
             localScope.vars.set(quant.varName, quant.domain);
             const inner = parseBlock(lines, idx + 1, vocab, localScope, options);
             localScope.vars.delete(quant.varName);
-            if (!inner.expr) throw new Error(`Missing return in block for ${name}`);
+            if (!inner.expr) throw makeError(`Missing return in block for ${name}`, 'E_DSL_MISSING_RETURN');
             const expr = quant.kind === 'Exists'
                 ? exists(quant.varName, quant.domain, inner.expr)
                 : forAll(quant.varName, quant.domain, inner.expr);
@@ -286,7 +335,7 @@ function parseBlock(lines, startIndex, vocab, scope, options) {
         idx++;
     }
 
-    throw new Error('Unclosed block (missing end)');
+    throw makeError('Unclosed block (missing end)', 'E_DSL_MISSING_END');
 }
 
 function parseTopLevel(lines, vocab, options) {
@@ -303,6 +352,10 @@ function parseTopLevel(lines, vocab, options) {
         }
 
         if (line.startsWith('load ')) {
+            const match = line.match(/^load\s+"([^"]+)"$/);
+            if (match && path.isAbsolute(match[1])) {
+                throw makeError(`Absolute paths are forbidden: ${match[1]}`, 'E_DSL_ABSOLUTE_PATH');
+            }
             idx++;
             continue;
         }
@@ -312,9 +365,22 @@ function parseTopLevel(lines, vocab, options) {
             continue;
         }
 
+        if (line.startsWith('Alias ')) {
+            const tokens = line.split(/\s+/u);
+            if (tokens.length >= 3) vocab.addAlias(tokens[1], tokens[2]);
+            idx++;
+            continue;
+        }
+
         if (line.startsWith('IsA ')) {
             const tokens = line.split(/\s+/u);
-            if (tokens.length >= 3) vocab.addConst(tokens[1], tokens[2]);
+            if (tokens.length >= 3) {
+                const constName = vocab.resolveAlias(tokens[1]);
+                if (!vocab.domains.has(tokens[2])) {
+                    throw makeError(`Unknown domain: ${tokens[2]}`, 'E_UNKNOWN_TYPE');
+                }
+                vocab.addConst(constName, tokens[2]);
+            }
             idx++;
             continue;
         }
@@ -326,10 +392,25 @@ function parseTopLevel(lines, vocab, options) {
             continue;
         }
 
-        const { name, rest } = parseNamedLine(line);
-        if (rest[0] === '__Atom' || rest[0] === 'graph') {
+        const { name, kbName, rest } = parseNamedLine(line);
+        if (rest[0] === '__Atom') {
+            const atomName = kbName || name;
+            if (!vocab.hasConst(atomName) && options.implicitDomain) {
+                if (!vocab.domains.has(options.implicitDomain)) {
+                    vocab.addDomain(options.implicitDomain);
+                }
+                vocab.addConst(atomName, options.implicitDomain);
+            }
             idx++;
             continue;
+        }
+        if (rest[0] === 'graph') {
+            idx++;
+            continue;
+        }
+
+        if (rest.some((token) => token.startsWith('@'))) {
+            throw makeError('Two @ tokens on one line', 'E_DSL_TWO_AT');
         }
 
         if (rest[0] === 'ForAll' || rest[0] === 'Exists') {
@@ -338,7 +419,7 @@ function parseTopLevel(lines, vocab, options) {
             scope.vars.set(quant.varName, quant.domain);
             const inner = parseBlock(lines, idx + 1, vocab, scope, options);
             scope.vars.delete(quant.varName);
-            if (!inner.expr) throw new Error(`Missing return in block for ${name}`);
+            if (!inner.expr) throw makeError(`Missing return in block for ${name}`, 'E_DSL_MISSING_RETURN');
             const expr = quant.kind === 'Exists'
                 ? exists(quant.varName, quant.domain, inner.expr)
                 : forAll(quant.varName, quant.domain, inner.expr);
@@ -359,9 +440,40 @@ export function parseDslToTypedAst(dslSource, options = {}) {
     const vocab = options.vocab || new Vocabulary();
     const cfg = {
         numericDomain: options.numericDomain || 'Int',
-        allowNumericLiterals: options.allowNumericLiterals !== false
+        allowNumericLiterals: options.allowNumericLiterals !== false,
+        implicitDomain: options.implicitDomain || 'Entity',
+        baseDir: options.baseDir || process.cwd(),
+        loadFiles: options.loadFiles === true,
+        visited: options.visited || new Set()
     };
     const lines = dslSource.split(/\r?\n/u);
-    const statements = parseTopLevel(lines, vocab, cfg);
+    const statements = [];
+
+    if (cfg.loadFiles) {
+        for (const line of lines) {
+            const match = stripComments(line).match(/^load\s+"([^"]+)"$/);
+            if (!match) continue;
+            const loadPath = match[1];
+            if (path.isAbsolute(loadPath)) {
+                throw makeError(`Absolute paths are forbidden: ${loadPath}`, 'E_DSL_ABSOLUTE_PATH');
+            }
+            const resolved = path.resolve(cfg.baseDir, loadPath);
+            if (cfg.visited.has(resolved)) continue;
+            cfg.visited.add(resolved);
+            const content = fs.readFileSync(resolved, 'utf8');
+            const loaded = parseDslToTypedAst(content, {
+                vocab,
+                numericDomain: cfg.numericDomain,
+                allowNumericLiterals: cfg.allowNumericLiterals,
+                implicitDomain: cfg.implicitDomain,
+                baseDir: path.dirname(resolved),
+                loadFiles: true,
+                visited: cfg.visited
+            });
+            statements.push(...loaded.statements);
+        }
+    }
+
+    statements.push(...parseTopLevel(lines, vocab, cfg));
     return { vocab, statements };
 }

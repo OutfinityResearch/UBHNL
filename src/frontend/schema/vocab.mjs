@@ -5,6 +5,7 @@ export class Vocabulary {
         this.predicates = new Map();
         this.functions = new Map();
         this.subtypes = new Map();
+        this.aliases = new Map();
     }
 
     addDomain(name) {
@@ -28,6 +29,38 @@ export class Vocabulary {
         this.predicates.set(name, [...argTypes]);
     }
 
+    addAlias(localName, globalName) {
+        if (!localName || !globalName) {
+            throw new Error('Alias requires local and global names');
+        }
+        this.aliases.set(localName, globalName);
+    }
+
+    resolveAlias(name) {
+        let current = name;
+        const seen = new Set();
+        while (this.aliases.has(current) && !seen.has(current)) {
+            seen.add(current);
+            current = this.aliases.get(current);
+        }
+        return current;
+    }
+
+    resolveConstName(name) {
+        const resolved = this.resolveAlias(name);
+        return this.consts.has(resolved) ? resolved : null;
+    }
+
+    resolvePredName(name) {
+        const resolved = this.resolveAlias(name);
+        return this.predicates.has(resolved) ? resolved : null;
+    }
+
+    resolveFuncName(name) {
+        const resolved = this.resolveAlias(name);
+        return this.functions.has(resolved) ? resolved : null;
+    }
+
     addFunc(name, argTypes, returnType) {
         if (!name || !Array.isArray(argTypes) || !returnType) {
             throw new Error('Function name, argTypes[], and returnType are required');
@@ -42,19 +75,22 @@ export class Vocabulary {
     }
 
     getPredSignature(name) {
-        return this.predicates.get(name) || null;
+        const resolved = this.resolvePredName(name) || name;
+        return this.predicates.get(resolved) || null;
     }
 
     getFuncSignature(name) {
-        return this.functions.get(name) || null;
+        const resolved = this.resolveFuncName(name) || name;
+        return this.functions.get(resolved) || null;
     }
 
     hasConst(name) {
-        return this.consts.has(name);
+        return this.resolveConstName(name) !== null;
     }
 
     getConstDomain(name) {
-        return this.consts.get(name) || null;
+        const resolved = this.resolveConstName(name) || name;
+        return this.consts.get(resolved) || null;
     }
 
     isSubtype(child, parent) {

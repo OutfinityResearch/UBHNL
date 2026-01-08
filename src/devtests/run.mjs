@@ -5,6 +5,7 @@ import { spawnSync } from 'child_process';
 async function main() {
   const args = process.argv.slice(2);
   const perfIndex = args.indexOf('--perf');
+  const typedIndex = args.indexOf('--typed-ast');
 
   if (perfIndex !== -1) {
     const perfArgs = args.slice(perfIndex + 1);
@@ -17,8 +18,19 @@ async function main() {
     return;
   }
 
+  if (typedIndex !== -1) {
+    const result = spawnSync(process.execPath, ['src/devtests/typed-ast-tests.mjs'], {
+      stdio: 'inherit'
+    });
+    if (result.status !== 0) {
+      process.exitCode = result.status ?? 1;
+    }
+    return;
+  }
+
   console.log('No dev tests implemented yet.');
   console.log('Use: node src/devtests/run.mjs --perf [--bench=1,2,3,4] [--runs=5]');
+  console.log('Use: node src/devtests/run.mjs --typed-ast');
 }
 
 main().catch((err) => {

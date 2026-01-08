@@ -13,6 +13,12 @@ import {
     boolLit
 } from '../logic/ast.mjs';
 
+function makeError(message, code) {
+    const err = new Error(message);
+    if (code) err.code = code;
+    return err;
+}
+
 function stripComments(line) {
     const hash = line.indexOf('#');
     const slash = line.indexOf('//');
@@ -51,6 +57,29 @@ function normalizePlural(type) {
     return type;
 }
 
+function isDeclarationLine(text) {
+    if (text.startsWith('load ')) return true;
+    if (text.match(/^Let\s+(\w+)\s+be\s+a\s+Domain\.$/i)) return true;
+    if (text.match(/^(\w+)\s+is\s+a\s+Domain\.$/i)) return true;
+    if (text.match(/^Let\s+(\w+)\s+be\s+a\s+(\w+)\.$/i)) return true;
+    if (text.match(/^(\w+)\s+is\s+a\s+(\w+)\.$/i)) return true;
+    if (text.match(/^Let\s+(.+)\s+be\s+(\w+)\.$/i)) return true;
+    return false;
+}
+
+function normalizePhraseVariants(phrase) {
+    const tokens = phrase
+        .split(/[\s-]+/u)
+        .map((token) => token.trim())
+        .filter(Boolean)
+        .map((token) => token.toLowerCase());
+    const camel = tokens
+        .map((token, idx) => (idx === 0 ? token : capitalize(token)))
+        .join('');
+    const snake = tokens.join('_');
+    return { camel, snake };
+}
+
 function findBoundVar(boundVars, name) {
     for (let i = boundVars.length - 1; i >= 0; i--) {
         const domain = boundVars[i].get(name);
@@ -79,11 +108,11 @@ function resolveTerm(token, vocab, options, boundVars, freeVars) {
         return { kind: 'NumLit', value: token, domain };
     }
 
-    const constDomain = vocab.getConstDomain(token);
-    if (!constDomain) {
-        throw new Error(`Unknown constant: ${token}`);
+    const constName = vocab.resolveConstName(token);
+    if (!constName) {
+        throw makeError(`Unknown constant: ${token}`, 'E_UNKNOWN_SYMBOL');
     }
-    return constRef(token, constDomain);
+    return constRef(constName, vocab.getConstDomain(constName));
 }
 
 function parseArgsList(argStr) {
@@ -117,56 +146,84 @@ function termDomain(term, vocab) {
 
 function validateFuncTerm(term, vocab) {
     const sig = vocab.getFuncSignature(term.name);
-    if (!sig) throw new Error(`Unknown function: ${term.name}`);
+    if (!sig) throw makeError(`Unknown function: ${term.name}`, 'E_UNKNOWN_PREDICATE');
     if (sig.args.length !== term.args.length) {
-        throw new Error(`Arity mismatch for function ${term.name}: expected ${sig.args.length}, got ${term.args.length}`);
+        throw makeError(`Arity mismatch for function ${term.name}: expected ${sig.args.length}, got ${term.args.length}`, 'E_ARITY_MISMATCH');
     }
     for (let i = 0; i < sig.args.length; i++) {
         const arg = term.args[i];
         const actual = termDomain(arg, vocab);
         if (!actual || !vocab.isCompatible(actual, sig.args[i])) {
-            throw new Error(`Type mismatch for function ${term.name} arg ${i}: expected ${sig.args[i]}, got ${actual}`);
+            throw makeError(`Type mismatch for function ${term.name} arg ${i}: expected ${sig.args[i]}, got ${actual}`, 'E_TYPE_MISMATCH');
         }
     }
 }
 
 function validatePredicate(name, args, vocab) {
     const sig = vocab.getPredSignature(name);
-    if (!sig) throw new Error(`Unknown predicate: ${name}`);
+    if (!sig) throw makeError(`Unknown predicate: ${name}`, 'E_UNKNOWN_PREDICATE');
     if (sig.length !== args.length) {
-        throw new Error(`Arity mismatch for ${name}: expected ${sig.length}, got ${args.length}`);
+        throw makeError(`Arity mismatch for ${name}: expected ${sig.length}, got ${args.length}`, 'E_ARITY_MISMATCH');
     }
     for (let i = 0; i < sig.length; i++) {
         const arg = args[i];
         if (arg?.kind === 'Func') validateFuncTerm(arg, vocab);
         const actual = termDomain(arg, vocab);
         if (!actual || !vocab.isCompatible(actual, sig[i])) {
-            throw new Error(`Type mismatch for ${name} arg ${i}: expected ${sig[i]}, got ${actual}`);
+            throw makeError(`Type mismatch for ${name} arg ${i}: expected ${sig[i]}, got ${actual}`, 'E_TYPE_MISMATCH');
         }
     }
 }
 
-function resolveHasPredicate(subject, propToken, vocab) {
-    const derived = `Has${capitalize(propToken)}`;
-    const hasSig = vocab.getPredSignature('Has');
-    if (vocab.getPredSignature(derived)) {
-        return pred(derived, [subject]);
+function resolvePredicateName(candidates, vocab) {
+    for (const candidate of candidates) {
+        const resolved = vocab.resolvePredName(candidate);
+        if (resolved) return resolved;
     }
-    if (hasSig && hasSig.length === 2 && vocab.hasConst(propToken)) {
-        return pred('Has', [subject, constRef(propToken, vocab.getConstDomain(propToken))]);
+    return null;
+}
+
+function resolveHasPredicate(subject, propPhrase, vocab) {
+    let prop = propPhrase.trim();
+    if (prop.startsWith('(') && prop.endsWith(')')) {
+        prop = prop.slice(1, -1).trim();
     }
-    throw new Error(`Unknown has-pattern predicate for property: ${propToken}`);
+    const { camel, snake } = normalizePhraseVariants(prop);
+    const derived = `Has${capitalize(camel)}`;
+    const derivedAlt = `Has${capitalize(snake)}`;
+    const hasName = resolvePredicateName(['Has'], vocab);
+
+    const direct = resolvePredicateName([derived, derivedAlt], vocab);
+    if (direct) return pred(direct, [subject]);
+
+    if (hasName) {
+        const constName = vocab.resolveConstName(prop)
+            || vocab.resolveConstName(camel)
+            || vocab.resolveConstName(snake);
+        if (constName) {
+            return pred(hasName, [subject, constRef(constName, vocab.getConstDomain(constName))]);
+        }
+    }
+
+    const propPred = resolvePredicateName([camel, snake], vocab);
+    if (propPred) return pred(propPred, [subject]);
+
+    const hasPhrase = resolvePredicateName([`has${capitalize(camel)}`, `has_${snake}`], vocab);
+    if (hasPhrase) return pred(hasPhrase, [subject]);
+
+    throw makeError(`Unknown has-pattern predicate for property: ${prop}`, 'E_CNL_UNKNOWN_ALIAS');
 }
 
 function parsePredicateCall(text, vocab, options, boundVars, freeVars) {
     const match = text.match(/^(\w+)\((.+)\)$/);
     if (!match) return null;
     const name = match[1];
-    const sig = vocab.getPredSignature(name);
-    if (!sig) throw new Error(`Unknown predicate: ${name}`);
+    const resolved = vocab.resolvePredName(name);
+    if (!resolved) throw makeError(`Unknown predicate: ${name}`, 'E_UNKNOWN_PREDICATE');
+    const sig = vocab.getPredSignature(resolved);
     const args = parseArgsList(match[2]).map((arg) => parseTerm(arg, vocab, options, boundVars, freeVars));
-    validatePredicate(name, args, vocab);
-    return pred(name, args);
+    validatePredicate(resolved, args, vocab);
+    return pred(resolved, args);
 }
 
 function parseTerm(text, vocab, options, boundVars, freeVars) {
@@ -174,10 +231,11 @@ function parseTerm(text, vocab, options, boundVars, freeVars) {
     const funcMatch = trimmed.match(/^(\w+)\((.+)\)$/);
     if (funcMatch) {
         const name = funcMatch[1];
-        const sig = vocab.getFuncSignature(name);
-        if (!sig) throw new Error(`Unknown function: ${name}`);
+        const resolved = vocab.resolveFuncName(name);
+        if (!resolved) throw makeError(`Unknown function: ${name}`, 'E_UNKNOWN_PREDICATE');
+        const sig = vocab.getFuncSignature(resolved);
         const args = parseArgsList(funcMatch[2]).map((arg) => parseTerm(arg, vocab, options, boundVars, freeVars));
-        const term = { kind: 'Func', name, args };
+        const term = { kind: 'Func', name: resolved, args };
         validateFuncTerm(term, vocab);
         return term;
     }
@@ -228,21 +286,36 @@ function parseExpr(text, vocab, options, boundVars, freeVars) {
         return parts.reduce((acc, next) => (acc ? andExpr(acc, next) : next), null);
     }
 
+    if (/\)\s+\w+\(/.test(src)) {
+        throw makeError(`Missing connector in expression: ${src}`, 'E_CNL_MISSING_CONNECTOR');
+    }
+
     const predFallback = parsePredicateCall(src, vocab, options, boundVars, freeVars);
     if (predFallback) return predFallback;
+
+    const notHasMatch = src.match(/^(.+)\s+does\s+not\s+have\s+(.+)$/i);
+    if (notHasMatch) {
+        const subject = parseTerm(notHasMatch[1], vocab, options, boundVars, freeVars);
+        const prop = notHasMatch[2];
+        const expr = resolveHasPredicate(subject, prop, vocab);
+        validatePredicate(expr.name, expr.args, vocab);
+        return notExpr(expr);
+    }
 
     const notVerbMatch = src.match(/^(.+)\s+does\s+not\s+(\w+)(?:\s+(.+))?$/i);
     if (notVerbMatch) {
         const subject = parseTerm(notVerbMatch[1], vocab, options, boundVars, freeVars);
-        const verb = capitalize(notVerbMatch[2]);
+        const verb = notVerbMatch[2];
+        const resolvedVerb = resolvePredicateName([verb, verb.toLowerCase(), capitalize(verb)], vocab);
+        if (!resolvedVerb) throw makeError(`Unknown predicate: ${verb}`, 'E_UNKNOWN_PREDICATE');
         if (notVerbMatch[3]) {
             const obj = parseTerm(notVerbMatch[3], vocab, options, boundVars, freeVars);
-            const expr = pred(verb, [subject, obj]);
-            validatePredicate(verb, expr.args, vocab);
+            const expr = pred(resolvedVerb, [subject, obj]);
+            validatePredicate(resolvedVerb, expr.args, vocab);
             return notExpr(expr);
         }
-        const expr = pred(verb, [subject]);
-        validatePredicate(verb, expr.args, vocab);
+        const expr = pred(resolvedVerb, [subject]);
+        validatePredicate(resolvedVerb, expr.args, vocab);
         return notExpr(expr);
     }
 
@@ -250,8 +323,13 @@ function parseExpr(text, vocab, options, boundVars, freeVars) {
     if (notAdjMatch) {
         const subject = parseTerm(notAdjMatch[1], vocab, options, boundVars, freeVars);
         const adj = notAdjMatch[2];
-        const expr = pred(adj, [subject]);
-        validatePredicate(adj, expr.args, vocab);
+        const resolvedAdj = resolvePredicateName(
+            [adj, adj.toLowerCase(), capitalize(adj), `Is${capitalize(adj)}`],
+            vocab
+        );
+        if (!resolvedAdj) throw makeError(`Unknown predicate: ${adj}`, 'E_UNKNOWN_PREDICATE');
+        const expr = pred(resolvedAdj, [subject]);
+        validatePredicate(resolvedAdj, expr.args, vocab);
         return notExpr(expr);
     }
 
@@ -259,13 +337,15 @@ function parseExpr(text, vocab, options, boundVars, freeVars) {
     if (relMatch) {
         const subject = parseTerm(relMatch[1], vocab, options, boundVars, freeVars);
         const rel = relMatch[2];
+        const resolvedRel = resolvePredicateName([rel, rel.toLowerCase(), capitalize(rel)], vocab);
+        if (!resolvedRel) throw makeError(`Unknown predicate: ${rel}`, 'E_UNKNOWN_PREDICATE');
         const obj = parseTerm(relMatch[3], vocab, options, boundVars, freeVars);
-        const expr = pred(rel, [subject, obj]);
-        validatePredicate(rel, expr.args, vocab);
+        const expr = pred(resolvedRel, [subject, obj]);
+        validatePredicate(resolvedRel, expr.args, vocab);
         return expr;
     }
 
-    const hasMatch = src.match(/^(.+)\s+has\s+(\w+)$/i);
+    const hasMatch = src.match(/^(.+)\s+has\s+(.+)$/i);
     if (hasMatch) {
         const subject = parseTerm(hasMatch[1], vocab, options, boundVars, freeVars);
         const prop = hasMatch[2];
@@ -278,24 +358,34 @@ function parseExpr(text, vocab, options, boundVars, freeVars) {
     if (adjMatch) {
         const subject = parseTerm(adjMatch[1], vocab, options, boundVars, freeVars);
         const adj = adjMatch[2];
-        const expr = pred(adj, [subject]);
-        validatePredicate(adj, expr.args, vocab);
+        const resolvedAdj = resolvePredicateName(
+            [adj, adj.toLowerCase(), capitalize(adj), `Is${capitalize(adj)}`],
+            vocab
+        );
+        if (!resolvedAdj) throw makeError(`Unknown predicate: ${adj}`, 'E_UNKNOWN_PREDICATE');
+        const expr = pred(resolvedAdj, [subject]);
+        validatePredicate(resolvedAdj, expr.args, vocab);
         return expr;
     }
 
     const svoMatch = src.match(/^(.+)\s+(\w+)\s+(.+)$/i);
     if (svoMatch) {
         const subject = parseTerm(svoMatch[1], vocab, options, boundVars, freeVars);
-        const verb = capitalize(svoMatch[2]);
+        const verb = svoMatch[2];
+        const resolvedVerb = resolvePredicateName([verb, verb.toLowerCase(), capitalize(verb)], vocab);
+        if (!resolvedVerb) throw makeError(`Unknown predicate: ${verb}`, 'E_UNKNOWN_PREDICATE');
         const obj = parseTerm(svoMatch[3], vocab, options, boundVars, freeVars);
-        const expr = pred(verb, [subject, obj]);
-        validatePredicate(verb, expr.args, vocab);
+        const expr = pred(resolvedVerb, [subject, obj]);
+        validatePredicate(resolvedVerb, expr.args, vocab);
         return expr;
     }
 
     if (src === 'true' || src === 'false') return boolLit(src === 'true');
 
-    throw new Error(`Unable to parse expression: ${src}`);
+    if (/\)\s+\w+\(/.test(src)) {
+        throw makeError(`Missing connector in expression: ${src}`, 'E_CNL_MISSING_CONNECTOR');
+    }
+    throw makeError(`Unable to parse expression: ${src}`, 'E_CNL_SYNTAX');
 }
 
 function wrapWithQuantifiers(expr, quantifiers) {
@@ -337,14 +427,24 @@ function parseStatements(lines, startIndex, baseIndent, vocab, options, boundVar
         }
         if (indent < baseIndent) break;
         if (indent > baseIndent) {
-            throw new Error(`Unexpected indentation at line ${idx + 1}`);
+            throw makeError(`Unexpected indentation at line ${idx + 1}`, 'E_CNL_SYNTAX');
+        }
+
+        if (isDeclarationLine(text)) {
+            idx++;
+            continue;
+        }
+
+        const needsPeriod = !text.endsWith(':') && !text.endsWith('?');
+        if (needsPeriod && !text.endsWith('.')) {
+            throw makeError(`Missing period at line ${idx + 1}`, 'E_CNL_MISSING_PERIOD');
         }
 
         const quant = parseQuantifierLine(text);
         if (quant) {
             if (!vocab.domains.has(quant.domain)) {
                 if (options.updateVocab) vocab.addDomain(quant.domain);
-                else throw new Error(`Unknown domain: ${quant.domain}`);
+                else throw makeError(`Unknown domain: ${quant.domain}`, 'E_UNKNOWN_TYPE');
             }
             const newScope = new Map();
             newScope.set(quant.varName, quant.domain);
@@ -359,9 +459,37 @@ function parseStatements(lines, startIndex, baseIndent, vocab, options, boundVar
             continue;
         }
 
+        const whichMatch = text.match(/^Which\s+(\w+)\s+(\$\w+)\s+(.+)\?$/i);
+        if (whichMatch) {
+            const domain = whichMatch[1];
+            const varName = whichMatch[2].slice(1);
+            if (!vocab.domains.has(domain)) {
+                if (options.updateVocab) vocab.addDomain(domain);
+                else throw makeError(`Unknown domain: ${domain}`, 'E_UNKNOWN_TYPE');
+            }
+            const newScope = new Map();
+            newScope.set(varName, domain);
+            boundVars.push(newScope);
+            const freeVars = [];
+            const expr = parseExpr(`${whichMatch[2]} ${whichMatch[3]}`, vocab, options, boundVars, freeVars);
+            boundVars.pop();
+            let wrapped = exists(varName, domain, expr);
+            if (freeVars.length > 0) {
+                const quantifiers = freeVars.map((name) => ({
+                    kind: 'ForAll',
+                    varName: name,
+                    domain: options.implicitDomain
+                }));
+                wrapped = wrapWithQuantifiers(wrapped, quantifiers);
+            }
+            statements.push(assertStmt(wrapped));
+            idx++;
+            continue;
+        }
+
         if (text.startsWith('If ')) {
             const ifMatch = text.match(/^If\s+(.+)\s+then\s+(.+)\.?$/i);
-            if (!ifMatch) throw new Error(`Malformed If statement at line ${idx + 1}`);
+            if (!ifMatch) throw makeError(`Malformed If statement at line ${idx + 1}`, 'E_CNL_SYNTAX');
             const freeVars = [];
             const left = parseExpr(ifMatch[1], vocab, options, boundVars, freeVars);
             const right = parseExpr(ifMatch[2], vocab, options, boundVars, freeVars);

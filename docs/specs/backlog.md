@@ -4,35 +4,36 @@ Remaining work for UBHNL specification cleanup and implementation readiness.
 
 ---
 
-## Chapter 1: CLI & User Interaction Specification
+## Chapter 1: Interactive Session CLI Specification
 
 **Priority:** High (Blocking User Interaction)
 **Status:** Missing
 
 ### Problem
-While the architecture (`DS00`) defines the internal layers (CNL -> Orchestrator -> Kernel), there is no specification for the actual Command Line Interface (CLI) or entry point for the end-user. We do not know:
-- The binary name and subcommands structure.
-- How to pass arguments (files, verbosity, output formats).
-- Exit codes and standard stream usage (stdout vs stderr).
-- Environment variables configuration.
-- Interactive mode (REPL) behavior if supported.
+While `DS09` defines the logical concept of a Session and its API (`load`, `learn`, `query`, `explain`), there is no specification for the concrete user interface. Users expect a "chat-like" experience (REPL) where they can interactively build theories and ask questions, not just a batch compiler.
+
+We need to define:
+- **REPL Behavior**: Prompt style, multi-line input handling (crucial for blocks), history, auto-completion triggers.
+- **Output Formatting**: How to display proofs, witnesses (models), and error diagnostics in a terminal friendly way.
+- **Commands**: Mapping "slash commands" (e.g., `/load`, `/reset`, `/debug`) to Session API calls versus treating input as CNL/DSL.
+- **Stream Protocol**: If this CLI is intended to drive a UI later, should we define a JSON-RPC over stdout/stdin protocol?
 
 ### Proposed Solutions
 
-1.  **Strict Subcommand Structure (Rust-style)**
-    - Use `clap` or similar library.
-    - `ubhnl compile <file>`
-    - `ubhnl solve <file>`
-    - `ubhnl check <file>` (verify certificates)
-    - `ubhnl repl`
-    
-2.  **Unified Driver (GCC-style)**
-    - `ubhnl <file> -o <output>`
-    - Flags control the stage: `--parse-only`, `--emit-dsl`, `--solve`.
-    
-3.  **Language Server Protocol (LSP) First**
-    - The binary primarily acts as an LSP server.
-    - CLI is just a thin wrapper around LSP commands.
+1.  **Dedicated REPL (The "Chat" Interface)**
+    - Default mode when running `ubhnl` without arguments.
+    - specialized logic for multi-line inputs (detecting open blocks/parentheses).
+    - "Slash commands" for meta-operations: `/load <file>`, `/clear`, `/help`.
+    - Distinct visual styles for System (responses), Logic (CNL/DSL), and Errors.
+
+2.  **LSP + Editor Integration**
+    - Skip a complex CLI and focus on a Language Server Protocol implementation.
+    - The "Chat" happens inside an IDE (like VS Code chat view) or a specialized web UI.
+    - *Cons:* Heavy dependency on external tools for basic usage.
+
+3.  **Hybrid "Notebook" Mode**
+    - A CLI that can run in "interactive mode" (REPL) or "server mode" (JSON-RPC).
+    - Allows a simple terminal chat for quick checks, but powers richer UIs via the server mode.
 
 ---
 
