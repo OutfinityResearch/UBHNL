@@ -82,11 +82,11 @@ Examples: `"Modus Ponens on 1,2"`, `"Contradiction: ..."`
 
 ## 1.5 FORBIDDEN Tokens
 
-| Token | Reason | Error Code |
-|-------|--------|------------|
-| `( )` | Use space-separated args or `{ }` | `E_DSL_FORBIDDEN_PAREN` |
-| `[ ]` | Reserved for future use | `E_DSL_FORBIDDEN_BRACKET` |
-| `;` | Newlines separate statements | `E_DSL_FORBIDDEN_SEMICOLON` |
+| Token | Reason | Handling |
+|-------|--------|----------|
+| `( )` | Use space-separated args or `{ }` | Error (see DS-016) |
+| `[ ]` | Reserved for future use | Error (see DS-016) |
+| `;` | Newlines separate statements | Error (see DS-016) |
 
 ---
 
@@ -113,7 +113,7 @@ load "<relative-path>"
 | Rule | Description |
 |------|-------------|
 | **Relative to current file** | Path is resolved relative to the directory containing the current file |
-| **No absolute paths** | Absolute paths are **FORBIDDEN** (`E_DSL_ABSOLUTE_PATH`) |
+| **No absolute paths** | Absolute paths are **FORBIDDEN** (see DS-016) |
 | **Both formats supported** | Can load `.sys2` or `.cnl` files |
 | **Extension required** | Must include `.sys2` or `.cnl` extension |
 
@@ -134,7 +134,7 @@ load "../theories/domains/family.cnl"     # OK - translate CNL then load
 load "local/helpers.sys2"                 # OK - subdirectory
 
 # FORBIDDEN:
-# load "/absolute/path/file.sys2"         # ERROR: E_DSL_ABSOLUTE_PATH
+# load "/absolute/path/file.sys2"         # ERROR: absolute paths are forbidden (see DS-016)
 ```
 
 ### Semantics
@@ -144,9 +144,9 @@ load "local/helpers.sys2"                 # OK - subdirectory
 3. **Order preserved**: Multiple loads processed in declaration order
 4. **Idempotent**: Loading same file twice has no effect (deduplication by path)
 5. **No shadowing**: A KB name may be introduced only once across all loaded files
-6. **Conflict policy**: If two files introduce the same KB name or predicate with different meaning, it is a hard error (`E_DSL_REDECLARATION`)
+6. **Conflict policy**: If two files introduce the same KB name or predicate with different meaning, it is a hard error (see DS-016)
 7. **No automatic namespaces**: Use explicit name prefixes (e.g., `Medical_Patient`) or explicit aliases (`Alias local global`) to avoid collisions
-8. **Circular detection**: Circular loads reported as `E_DSL_CIRCULAR_LOAD`
+8. **Circular detection**: Circular loads reported as an error (see DS-016)
 
 ---
 
@@ -303,8 +303,8 @@ The `@` token is **forbidden** inside any expression. It can only appear at the 
 @f1 Trusts $alice $bob
 
 # WRONG - @ inside expression
-Trusts @alice @bob        # ERROR: E_DSL_AT_IN_EXPR
-@rule Implies @a @b       # ERROR: E_DSL_AT_IN_EXPR
+Trusts @alice @bob        # ERROR: @ is not allowed inside expressions (see DS-016)
+@rule Implies @a @b       # ERROR: @ is not allowed inside expressions (see DS-016)
 ```
 
 ## Rule 4: KB Storage with `:`
@@ -334,9 +334,9 @@ Trusts Alice Bob          # Anonymous fact - auto-asserted
 This is equivalent to:
 ```sys2
 @_anon1 HasFever Alice
-Assert _anon1
+Assert $_anon1
 @_anon2 Trusts Alice Bob
-Assert _anon2
+Assert $_anon2
 ```
 
 Anonymous facts are useful for simple statements but cannot be referenced later. Use `@name` declarations for facts that need to be referenced in rules or proofs.
@@ -534,7 +534,7 @@ end
 **Variable Shadowing Error**:
 ```sys2
 @rule1 ForAll Person graph x
-    @inner ForAll Person graph x    # ERROR: E_DSL_SHADOW_VAR
+    @inner ForAll Person graph x    # ERROR: variable shadowing is forbidden (see DS-016)
         ...
     end
 end
@@ -656,20 +656,7 @@ end
 
 Proof blocks serialize CNL proofs into DSL form for storage and checking.
 
-```sys2
-@Proof1 Proof
-    Given
-        HasFever Alice
-    Apply
-        Note "Modus Ponens on rule FluCausesFever."
-    Therefore
-        HasFever Alice
-end
-```
-
-Rules:
-- Each section contains one or more `expr` entries or `Note "..."`.
-- `Note` is intended for narrative; machine checking should rely on explicit expressions and named rules.
+**See DS-020 for the complete proof format specification.**
 
 ## 3.9 Assert / Check Statements
 
@@ -677,6 +664,10 @@ Explicit assertion and obligation forms:
 ```sys2
 Assert { Implies $a $b }
 Check { Implies $a $b }
+
+@rule1 Implies $a $b
+Assert $rule1
+
 @T1 Check { Implies { And $g1 $g2 } $c }
 ```
 
@@ -685,6 +676,12 @@ Semantics:
 - `Check expr` is an **obligation**; it is **not** added as a constraint.
   The session must attempt to prove it at load/learn time (DS-009).
 
+Notes:
+- `@name expr` defines a **working-memory name** and must be referenced as `$name`.
+- `@name:kbName expr` defines a **KB/vocabulary name** and is referenced as `kbName` (bare).
+- Both `Assert { expr }` and `Assert $name` are valid; use braces for inline expressions and `$name`
+  when referencing a named expression.
+
 Legacy behavior:
 - A top-level `expr` or `@name expr` is treated as an implicit `Assert` unless it appears inside
   a `Definition` or `Proof` block.
@@ -692,6 +689,8 @@ Legacy behavior:
 ---
 
 # PART 4: Complete Grammar (EBNF)
+
+This section is a **summary**. The complete grammar is defined in **DS-022**.
 
 ```ebnf
 program      := (statement)* ;
@@ -814,7 +813,7 @@ Inside a `ForAll`/`Exists` block, the graph variable is in scope for all nested 
 
 1. `$name` looks up **working-memory names** in scope (bound variables or local named expressions)
 2. If not found locally, looks in enclosing scopes
-3. If still not found, error `E_DSL_UNBOUND_VAR`
+3. If still not found, error (see DS-016)
 4. Bare identifiers resolve **only** to KB/vocabulary names (after alias expansion)
 
 Alias rule:
@@ -851,7 +850,7 @@ Note: Unlike CNL, DSL does not rely on operator precedence rules. All complex ex
 
 ## 5.7 Variable Shadowing Policy
 
-Variable shadowing in nested blocks is **forbidden**. If an inner block tries to bind a variable with the same name as an outer block, it is an error (`E_DSL_SHADOW_VAR`).
+Variable shadowing in nested blocks is **forbidden**. If an inner block tries to bind a variable with the same name as an outer block, it is an error (see DS-016).
 
 Example (error):
 ```sys2
@@ -1030,21 +1029,8 @@ end
 
 # PART 7: Error Codes
 
-| Code | Condition | Example |
-|------|-----------|---------|
-| `E_DSL_SYNTAX` | General parse error | Missing keyword |
-| `E_DSL_FORBIDDEN_PAREN` | Parentheses `()` used | `Pred(a, b)` |
-| `E_DSL_FORBIDDEN_BRACKET` | Brackets `[]` used | `Pred[a]` |
-| `E_DSL_AT_IN_EXPR` | `@` inside expression | `Implies @a @b` |
-| `E_DSL_REDECLARATION` | Same `@name` declared twice | `@a __Atom` twice |
-| `E_DSL_UNBOUND_VAR` | `$x` not in scope | Reference before declaration |
-| `E_DSL_MISSING_RETURN` | Block without `return` | `ForAll ... end` (no return) |
-| `E_DSL_MISSING_END` | Block without `end` | Unclosed `ForAll` |
-| `E_DSL_ORPHAN_KB_NAME` | `@:name` without preceding expr | `@:foo` on first line |
-| `E_UNKNOWN_SYMBOL` | Bare name not in vocabulary | `UnknownPred $x` |
-| `E_UNKNOWN_TYPE` | Type not declared | `IsA x Unknown` |
-| `E_ARITY_MISMATCH` | Wrong argument count | `Trusts $x` (needs 2) |
-| `E_TYPE_MISMATCH` | Argument type wrong | `HasFever $cell` (needs Person) |
+Error codes are defined in DS-016. This document only describes the conditions that trigger
+errors; refer to DS-016 for the canonical codes and diagnostics.
 
 ---
 

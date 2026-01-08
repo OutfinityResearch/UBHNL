@@ -237,7 +237,7 @@ The CNL translator automatically converts natural English patterns to DSL predic
 
 | CNL Pattern | Example | DSL Output |
 |-------------|---------|------------|
-| `X has Y` | `p1 has Fever` | `HasFever p1` |
+| `X has Y` | `p1 has Fever` | `HasFever p1` (if declared) or `Has p1 Fever` (fallback) |
 | `X is Y` | `Socrates is Mortal` | `Mortal Socrates` |
 | `X verb Y` | `Alice trusts Bob` | `Trusts Alice Bob` |
 | `X is Y of Z` | `p1 is Parent of p2` | `Parent p1 p2` |
@@ -339,7 +339,77 @@ Examples:
 - `protein P` → `proteinP`
 - `has fever` → `hasFever`
 
-If the normalized name is not in the vocabulary, the input is rejected with `E_CNL_UNKNOWN_ALIAS`.
+If the normalized name is not in the vocabulary, the input is rejected (see DS-016).
+
+## 1C.7 Disambiguation and "has" Resolution
+
+CNL uses parentheses to remove ambiguity in natural text:
+
+### Multi-word properties (use parentheses)
+```cnl
+Alice has (High Fever).
+Alice has (Blood Type A).
+```
+
+### Compound subjects (use parentheses)
+```cnl
+(Alice and Bob) trust Charlie.
+(The patient) has Fever.
+```
+
+### Nested predicates
+```cnl
+If Alice has (Chronic Flu) then Alice has (High Fever).
+```
+
+### "has" resolution (hybrid rule)
+For `X has Y`:
+1. If the vocabulary defines a unary predicate `HasY`, use `HasY X`.
+2. Else if the vocabulary defines a binary predicate `Has` and a constant `Y`, use `Has X Y`.
+3. Otherwise reject the statement (unknown predicate or property).
+
+Property terms in parentheses are normalized into a single token before lookup (alias or camelCase).
+
+Example (fallback):
+```cnl
+If $x has (High Fever) then $x is Severe.
+```
+-> DSL:
+```sys2
+@rule1 ForAll Entity graph x
+    @c1 Has $x HighFever
+    @c2 Severe $x
+    @imp Implies $c1 $c2
+    return $imp
+end
+```
+Front-ends introduce `Entity` if needed and ensure `Has` and `HighFever` are declared in the vocabulary.
+Recommended: define a `Property` domain and declare property constants there when using the generic `Has`.
+
+## 1C.8 Adding New Patterns
+
+To add a new CNL pattern:
+
+1. Define the pattern in the translator configuration.
+2. Register the predicate in the vocabulary (Sys2 `Vocab`).
+3. Document the new pattern in DS-005 for reference.
+
+Example - adding "X suffers from Y":
+```javascript
+// Translator config (conceptual)
+patterns.add({
+  cnl: "X suffers from Y",
+  dsl: "SuffersFrom $1 $2",
+  types: ["Person", "Disease"]
+});
+```
+
+Then add to the vocabulary:
+```sys2
+Vocab
+    Pred SuffersFrom Person Disease
+end
+```
 
 **Social network:**
 ```cnl
@@ -709,6 +779,21 @@ When mixing types:
 For all Person $x, Cell $c, Protein $p:
     If $c expresses $p then $p affects $x.
 ```
+-> DSL:
+```sys2
+@rule1 ForAll Person graph x
+    @inner1 ForAll Cell graph c
+        @inner2 ForAll Protein graph p
+            @c1 Expresses $c $p
+            @c2 Affects $p $x
+            @imp Implies $c1 $c2
+            return $imp
+        end
+        return $inner2
+    end
+    return $inner1
+end
+```
 
 ## 6.2 Nested Quantifiers
 
@@ -716,6 +801,18 @@ For all Person $x, Cell $c, Protein $p:
 For all Person $x:
     For all Person $y:
         If $x trusts $y then $y trusts $x.
+```
+-> DSL:
+```sys2
+@rule1 ForAll Person graph x
+    @inner1 ForAll Person graph y
+        @c1 Trusts $x $y
+        @c2 Trusts $y $x
+        @imp Implies $c1 $c2
+        return $imp
+    end
+    return $inner1
+end
 ```
 
 ## 6.3 Existential Quantifier
@@ -727,11 +824,29 @@ There exists Person p:
     
 Some Person has Fever.
 ```
+-> DSL:
+```sys2
+@ex1 Exists Person graph p
+    @c1 HasFever $p
+    return $c1
+end
+```
 
 ### Query (with `?`)
 ```cnl
 Which Person $p has Fever?
 Find a Person $p such that $p is sick?
+```
+-> DSL:
+```sys2
+@query1 Exists Person graph p
+    @c1 HasFever $p
+    return $c1
+end
+@query2 Exists Person graph p
+    @c2 IsSick $p
+    return $c2
+end
 ```
 
 ---
@@ -773,76 +888,38 @@ Define Ancestor(Person x, Person y) as:
     $x is Parent of $y
     or (there exists Person z: $x is Parent of $z and $z is Ancestor of $y).
 ```
+-> DSL:
+```sys2
+@Ancestor:Ancestor graph x y
+    @c1 Parent $x $y
+    @inner Exists Person graph z
+        @c2 Parent $x $z
+        @c3 Ancestor $z $y
+        @and1 And $c2 $c3
+        return $and1
+    end
+    @or1 Or $c1 $inner
+    return $or1
+end
+```
 
 ---
 
-# PART 8: Named Blocks (Rules, Theorems, Axioms)
+# PART 8: Proof Blocks
 
-Named blocks are stored as **KB names** so they can be referenced in proofs and explanations.
-Use unlabeled forms when you do not want a persistent name.
+CNL supports proof blocks for documenting reasoning steps.
 
-Semantics:
-- `Rule` and `Axiom` are **assertions** (constraints).
-- `Theorem` is a **check** (obligation) and is not asserted; it is proved at load/learn time (DS-009).
-Translation note:
-- Rules/Axioms are emitted as named expressions plus `Assert Name`.
-- Theorems are emitted as named expressions plus `Check Name`.
+**See DS-020 for the complete proof format specification.**
 
-## 8.1 Named Rules
-
+Quick example:
 ```cnl
-Rule TransitiveTrust:
-    For any Person $x, $y, $z:
-        If $x trusts $y and $y trusts $z then $x trusts $z.
-```
--> DSL:
-```sys2
-@TransitiveTrust:TransitiveTrust ForAll Person graph x
-    @inner1 ForAll Person graph y
-        @inner2 ForAll Person graph z
-            @c1 Trusts $x $y
-            @c2 Trusts $y $z
-            @and And $c1 $c2
-            @c3 Trusts $x $z
-            @imp Implies $and $c3
-            return $imp
-        end
-        return $inner2
-    end
-    return $inner1
-end
-Assert TransitiveTrust
-```
-
-## 8.2 Theorems (with Given/Conclude)
-
-```cnl
-Theorem SocratesIsMortal:
+Proof SocratesIsMortal:
     Given:
         Socrates is a Man.
         Every Man is Mortal.
-    Conclude:
+    Therefore:
         Socrates is Mortal.
 ```
-
-Semantics:
-- Translate `Given` statements into a conjunction `G`.
-- Translate `Conclude` statements into a conjunction `C`.
-- Emit a `Check` obligation for `Implies(G, C)`.
-
-## 8.3 Axioms
-
-```cnl
-Axiom SymmetricTrust:
-    For any Person $x, $y:
-        $x trusts $y if and only if $y trusts $x.
-```
-
-## 8.4 Proof Blocks (CNL)
-
-Proofs are expressed in CNL using the format in DS-020 and are part of the language surface. Proof blocks are parsed into a proof AST and can be checked against the current theory.
-
-See: `docs/specs/DS/DS20-proof-format.md`
 
 ---
 
@@ -940,6 +1017,8 @@ Here, `that Protein` binds to the closest quantified `Protein` in the same sente
 ---
 
 # PART 11: Grammar Summary (EBNF)
+
+This section is a **summary**. The complete grammar is defined in **DS-022**.
 
 ```ebnf
 document     := (block | statement)* ;

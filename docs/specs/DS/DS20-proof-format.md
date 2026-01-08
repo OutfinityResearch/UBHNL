@@ -2,7 +2,7 @@
 
 ## Goal
 
-Define the format for **proof traces** in CNL that:
+Define the format for **proof traces** in CNL and their DSL serialization that:
 - Document the reasoning steps taken by the solver
 - Are human-readable and verifiable
 - Follow a consistent structure across different proof types
@@ -111,6 +111,25 @@ Within proof blocks, use CNL statement syntax:
 
 Non-formal narrative lines are allowed only inside `Apply:` and are treated as notes.
 When translated to DSL, these lines become `Note "..."` entries in a proof block.
+
+## 2.4 DSL Serialization (Canonical Form)
+
+Proof blocks may be serialized to DSL for storage and checking:
+
+```sys2
+@Proof1 Proof
+    Given
+        HasFever Alice
+    Apply
+        Note "Modus Ponens on rule FluCausesFever."
+    Therefore
+        HasFever Alice
+end
+```
+
+Rules:
+- Each section contains one or more `expr` entries or `Note "..."`.
+- `Note` is for narrative only; checking relies on explicit expressions and named rules.
 
 ## 2.3 Step Numbering (Optional)
 

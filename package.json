@@ -6,6 +6,7 @@
   "description": "Universal Boolean Hypergraph core and tooling.",
   "scripts": {
     "start": "node src/index.mjs",
-    "devtest": "node src/devtests/run.mjs"
+    "devtest": "node src/devtests/run.mjs",
+    "perfbench": "node evals/runPerfBench.mjs"
   }
 }

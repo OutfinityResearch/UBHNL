@@ -32,14 +32,14 @@
         <section>
           <h2>Hash-Consing: Canonical Deduplication</h2>
           <p>
-            Our kernel, <strong>UBH</strong> (Universal Boolean Hypergraph), implements this compression through a technique called <strong>Hash-Consing</strong>. During the construction of the Boolean circuit, every new logical gate (XOR or AND) is queried against a global hash table. If a gate with the same inputs and operator already exists, the kernel returns the existing node's unique identifier. To maximize the effectiveness of this deduplication, inputs are canonicalized—sorting by node ID—to handle commutativity. This ensures that <code>AND(A, B)</code> and <code>AND(B, A)</code> always resolve to the same physical node.
+            Our kernel, <strong>UBH</strong> (Universal Boolean Hypergraph), implements this compression through a technique called <strong>Hash-Consing</strong>. During the construction of the Boolean circuit, every new logical gate (XOR or AND) is queried against a global hash table. If a gate with the same inputs and operator already exists, the kernel returns the existing wire's unique identifier. To maximize the effectiveness of this deduplication, inputs are canonicalized—sorting by wire ID—to handle commutativity. This ensures that <code>AND(A, B)</code> and <code>AND(B, A)</code> always resolve to the same physical wire.
           </p>
         </section>
 
         <section>
           <h2>Wires and Nodes: The Unified IR</h2>
           <p>
-            The UBH Intermediate Representation is structured as an immutable Directed Acyclic Graph (DAG) of nodes, referred to as <strong>Wires</strong>. Each wire carries a unique identifier and represents a specific Boolean value within the circuit. A wire can be an atomic <strong>Constant</strong> (0 or 1), a <strong>Variable</strong> representing an external input or quantifier binder, or a <strong>Gate</strong> representing the result of an algebraic operation. Because wires are immutable, their semantic meaning is fixed upon creation, which simplifies the application of global optimizations and simplifies the verification of the resulting proofs.
+            The UBH Intermediate Representation is structured as an immutable Directed Acyclic Graph (DAG) of wires. Each wire carries a unique identifier and represents a specific Boolean value within the circuit. A wire can be an atomic <strong>Constant</strong> (0 or 1), a <strong>Variable</strong> representing an external input or quantifier binder, or the output of a <strong>Gate</strong> representing an algebraic operation. Because wires are immutable, their semantic meaning is fixed upon creation, which simplifies the application of global optimizations and simplifies the verification of the resulting proofs.
           </p>
         </section>
 

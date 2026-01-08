@@ -3,6 +3,15 @@
 This document records all design decisions made during specification development.
 Items marked with `[CONFIRMED]` have been explicitly approved.
 
+> **NOTE**: This document is a **summary** of design decisions.
+> The DS specification files (DS-005, DS-008, etc.) are the **normative source**.
+> If there is any conflict, the DS spec takes precedence.
+>
+> **How to use this document**:
+> - For quick reference: use tables here
+> - For implementation details: use DS specs
+> - For understanding rationale: read explanations here
+
 ---
 
 ## 1. Language Design
@@ -294,7 +303,7 @@ CNL supports natural English patterns that translate to DSL predicates.
 
 | CNL Pattern | Example | DSL Output |
 |-------------|---------|------------|
-| `X has Y` | `p1 has Fever` | `HasFever p1` |
+| `X has Y` | `p1 has Fever` | `HasFever p1` (if declared) or `Has p1 Fever` (fallback) |
 | `X is Y` | `Socrates is Mortal` | `Mortal Socrates` |
 | `X verb Y` | `Alice trusts Bob` | `Trusts Alice Bob` |
 | `X is Y of Z` | `p1 is Parent of p2` | `Parent p1 p2` |
@@ -303,6 +312,9 @@ CNL supports natural English patterns that translate to DSL predicates.
 Use explicit `Pred(args)` only for:
 - Nested functions: `Succ(n)`, `Next(Yellow(x))`
 - Multi-arg with values: `Age(p1, 16)`
+
+Note: The `has` pattern is resolved with the vocabulary. If `Has<Property>` exists, it is preferred.
+Otherwise the translator falls back to a generic binary `Has` predicate with a property constant.
 
 ### 3.8 Python-Style Indentation [CONFIRMED 2026-01-07]
 
@@ -381,7 +393,7 @@ end
 | CNL | DSL |
 |-----|-----|
 | `Let Alice be a Person.` | `Const Alice Person` (inside `Vocab`) |
-| `Alice has Fever.` | `@fN HasFever Alice` |
+| `Alice has Fever.` | `@fN HasFever Alice` (if declared) or `@fN Has Alice Fever` (fallback) |
 | `For all Person p: ...` | `ForAll Person graph p ... end` |
 | `If A then B.` | `Implies { A } { B }` |
 | Variables: `$p` | Variables: prefixed `$p` |

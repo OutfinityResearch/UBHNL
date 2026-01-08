@@ -17,7 +17,7 @@ BodyPart is a Domain.
 # =============================================================================
 
 # Patient state:
-#   X has Y           -> HasY X (symptom/condition)
+#   X has Y           -> HasY X (if declared) or Has X Y (fallback)
 #   X is Y            -> Y X (state like Critical, Stable)
 
 # Causal relations:

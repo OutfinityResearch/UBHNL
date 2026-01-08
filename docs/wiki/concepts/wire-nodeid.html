@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Wiki: Wire / NodeId</title>
+    <title>Wiki: Wire / WireId</title>
     <link rel="stylesheet" href="../../site.css" />
       <script src="../../site-nav.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Wire / NodeId</h1>
-      <p>The identity of a UBH node: a “wire” evaluable in {0,1}.</p>
+      <h1>Wire / WireId</h1>
+      <p>The identity of a UBH wire: a Boolean value evaluable in {0,1}.</p>
     </header>
     <main>
       <div class="card">
@@ -26,24 +26,25 @@
         <h2>Definition</h2>
         <p>
           A <strong>wire</strong> is a Boolean value (bit) produced by a constant, an input variable, or a gate (XOR/AND).
-          A <strong>NodeId</strong> is an integer identifier that refers to that wire.
+          A <strong>WireId</strong> is an integer identifier that refers to that wire.
         </p>
 
         <h2>Contracts</h2>
         <ul>
-          <li><strong>Instance stability</strong>: within a UBH kernel instance, creating the same node (same op and canonicalized children) returns the same <code>id</code>.</li>
+          <li><strong>Instance stability</strong>: within a UBH kernel instance, creating the same gate wire (same op and canonicalized children) returns the same <code>id</code>.</li>
           <li><strong>Ids are not persistent</strong> across runs: persistence is a session/theory-store responsibility.</li>
           <li><strong>Canonicalized commutativity</strong>: for XOR/AND, <code>(a,b)</code> are ordered to avoid duplicates.</li>
         </ul>
 
         <h2>Why it matters</h2>
         <ul>
-          <li>NodeId is the common “currency”: the solver, checker, and origin mapping all refer to these ids.</li>
+          <li>WireId is the common “currency”: the solver, checker, and origin mapping all refer to these ids.</li>
           <li>Explanations must reconstruct user terms (predicate instances) from ids, hence the session-level mappings.</li>
         </ul>
 
         <h2>See also</h2>
         <ul>
+          <li><a href="../../theory/10-wire-gate-terminology.html">Theory: Wires, Gates, and AST Nodes</a></li>
           <li><a href="hash-consing.html">Hash-consing</a> (why ids are deduplicated)</li>
           <li><a href="origin.html">Origin</a> (how constraints carry provenance)</li>
           <li><a href="model-witness.html">Model</a> (assignments over wires)</li>

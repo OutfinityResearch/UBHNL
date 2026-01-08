@@ -73,7 +73,7 @@ Pure CNF encoding of XOR is expensive; mixed reasoning matches UBH core.
 ## Mixed Solving Loop (Reference)
 This is the high-level control loop; details depend on the SAT backend.
 
-1) Maintain a partial assignment `A` over UBH node ids.
+1) Maintain a partial assignment `A` over UBH wire ids.
 2) Repeat until fixpoint:
    - Run CNF unit propagation given `A`; add implied assignments to `A`.
    - Feed any new assignments into XOR backend; run XOR propagation; add implied assignments to `A`.

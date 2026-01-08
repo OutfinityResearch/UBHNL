@@ -139,6 +139,13 @@ This catalog is the minimum the system must model explicitly. Backends/tactics c
   - probabilistic models (factor graphs, probabilistic programs)
   - backends: exact (WMC), approximate (BP/SMC/MCMC/VI)
   - certificates: exact via WMC/KC; approximate via confidence bounds + audit metadata
+- `Frag_HDC` (Holographic / Vector-Symbolic):
+  - sorts: hypervector representations
+  - constraints: similarity queries, analogical reasoning, clustering
+  - backends: VSA operations (binding, bundling, permutation)
+  - lowerings: approximate boolean fragments for pattern matching
+  - certificates: similarity thresholds, confidence scores
+  - reference: DS-021 (Holographic Reasoning Engine)
 
 ### Optimization over Boolean Constraints
 - `Frag_Opt`:

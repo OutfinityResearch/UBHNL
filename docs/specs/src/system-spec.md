@@ -111,6 +111,21 @@ Roles:
 - **Theory files** (long-term memory): canonical storage is DSL (`.sys2`); CNL is for authoring and is translated before persistence.
 - **Session** (short-term memory): working set with loaded theories, transient additions, and caches.
 
+## Planned Implementation Modules
+
+| Module | Purpose | Spec Reference |
+|--------|---------|----------------|
+| `src/cnlTranslator/parser.mjs` | CNL tokenizer and parser | DS-005 |
+| `src/cnlTranslator/translator.mjs` | CNL → DSL translation | DS-018 |
+| `src/dslLoader/loader.mjs` | DSL file loading, circular detection | DS-008, DS-009 |
+| `src/dslLoader/vocab.mjs` | Vocabulary management | DS-008 |
+| `src/kernel/ubh.mjs` | UBH IR, hash-consing | DS-001 |
+| `src/kernel/solver.mjs` | SAT+XOR solving | DS-002 |
+| `src/session/session.mjs` | Session state, learn/query | DS-009 |
+| `src/orchestrator/orchestrator.mjs` | Backend routing | DS-012 |
+
+Each module should have a corresponding spec in `docs/specs/src/`.
+
 ## 3) End-to-End Data Flow (CNL/DSL → Result)
 
 ```

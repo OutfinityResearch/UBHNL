@@ -39,10 +39,10 @@
 
 # The translator automatically handles these patterns:
 
-# Pattern: "X has Y" -> HasY(X)
+# Pattern: "X has Y" -> HasY(X) if predicate exists, else Has(X, Y)
 # Examples:
-#   p1 has Fever.        -> HasFever p1
-#   Alice has Flu.       -> HasFlu Alice
+#   p1 has Fever.        -> HasFever p1 (if declared) or Has p1 Fever
+#   Alice has Flu.       -> HasFlu Alice (if declared) or Has Alice Flu
 
 # Pattern: "X is Y" -> Y(X)  
 # Examples:

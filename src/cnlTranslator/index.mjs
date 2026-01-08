@@ -10,7 +10,7 @@
  * NO parentheses in CNL! Natural SVO word order.
  */
 
-export function translate(cnlSource) {
+export function translate(cnlSource, options = {}) {
     const lines = cnlSource.split('\n');
     
     const ctx = {
@@ -19,7 +19,8 @@ export function translate(cnlSource) {
         boundVars: [],  // Stack of scopes
         output: [],
         implicitDomainUsed: false,
-        counts: { rule: 1, f: 1, c: 1, inner: 1, logic: 1 }
+        counts: { rule: 1, f: 1, c: 1, inner: 1, logic: 1 },
+        vocab: options && typeof options === 'object' ? options.vocab : null
     };
 
     const VAR_TOKEN = '\\$?[A-Za-z_]\\w*';
@@ -55,6 +56,19 @@ export function translate(cnlSource) {
 
     function add(str) { ctx.output.push(str); }
     function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+    function hasVocabSet(set, key) { return set && typeof set.has === 'function' && set.has(key); }
+
+    function resolveHasPredicate(propName) {
+        const hasName = 'Has';
+        const derived = hasName + capitalize(propName);
+        if (!ctx.vocab) return { pred: derived, arity: 1 };
+        if (hasVocabSet(ctx.vocab.predicates, derived)) return { pred: derived, arity: 1 };
+        if (hasVocabSet(ctx.vocab.predicates, hasName)) {
+            if (ctx.vocab.consts && !hasVocabSet(ctx.vocab.consts, propName)) return null;
+            return { pred: hasName, arity: 2 };
+        }
+        return null;
+    }
 
     /**
      * Parse a natural language expression into AST
@@ -132,8 +146,14 @@ export function translate(cnlSource) {
         // "x has Fever" / "x has Flu" / "x has Cold"
         const hasMatch = str.match(new RegExp(`^(${VAR_TOKEN})\\s+has\\s+(${WORD_TOKEN})$`));
         if (hasMatch) {
-            const pred = 'Has' + capitalize(hasMatch[2]);
-            return { type: 'Pred', pred, args: [getVar(hasMatch[1], freeVars)] };
+            const propName = hasMatch[2];
+            const subject = getVar(hasMatch[1], freeVars);
+            const resolved = resolveHasPredicate(propName);
+            if (!resolved) return { type: 'Error', src: str };
+            if (resolved.arity === 1) {
+                return { type: 'Pred', pred: resolved.pred, args: [subject] };
+            }
+            return { type: 'Pred', pred: resolved.pred, args: [subject, propName] };
         }
         
         // "x trusts y" / "x knows y" / "x expresses y" (transitive verb)

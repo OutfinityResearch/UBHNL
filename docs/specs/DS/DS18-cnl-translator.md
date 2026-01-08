@@ -161,7 +161,7 @@ end
 
 | CNL | DSL |
 |-----|-----|
-| `Subject has Predicate.` | `@fN Predicate Subject` |
+| `Subject has Predicate.` | `@fN Has<Property> Subject` (if declared) or `@fN Has Subject Property` (fallback) |
 | `Subject verb Object.` | `@fN Verb Subject Object` |
 
 **Example**:
@@ -178,6 +178,20 @@ p1 is Parent of p2.
 ```
 
 **Note**: CNL uses Subject-Verb-Object order. DSL uses Predicate-Args order.
+If `HasFever` is not declared in the vocabulary, the first line becomes:
+```sys2
+@f1 Has Alice Fever
+```
+
+## Rule T05A: "has" Resolution (Hybrid)
+
+For `X has Y`, the translator resolves the target using the vocabulary:
+1) If a unary predicate `HasY` exists (after alias/normalization), emit `HasY X`.
+2) Else if a binary predicate `Has` exists and a constant `Y` exists, emit `Has X Y`.
+3) Otherwise raise an error (see DS-016).
+
+Recommended: declare a `Property` domain and use it as the range for property constants when using
+the generic `Has`.
 
 ## Rule T06: Adjective Facts
 
@@ -212,6 +226,10 @@ Bob is not sick.
 ```sys2
 @n1 Not { HasFever Alice }
 @n2 Not { IsSick Bob }
+```
+If `HasFever` is not declared in the vocabulary, the first line becomes:
+```sys2
+@n1 Not { Has Alice Fever }
 ```
 
 ## Rule T08: Conjunction
@@ -703,12 +721,8 @@ end
 
 # PART 5: Error Handling
 
-| Error Code | Condition | Example |
-|------------|-----------|---------|
-| `E_TRANSLATE_UNKNOWN_ALIAS` | CNL phrase not in lexicon | "has headache" |
-| `E_TRANSLATE_SCOPE_ERROR` | Variable used outside scope in a context that forbids implicit quantification | `$x` in a ground-only context |
-| `E_TRANSLATE_TYPE_MISMATCH` | Argument type mismatch | Person used where Cell expected |
-| `E_TRANSLATE_ARITY_MISMATCH` | Wrong argument count | `Trusts Alice` (needs 2 args) |
+Error codes are defined in DS-016. Translation errors map to those codes based on the
+failure condition (unknown predicate, scope violation, type mismatch, arity mismatch, etc.).
 
 ---
 

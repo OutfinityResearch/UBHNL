@@ -424,9 +424,21 @@ Symbolic would need: explicit CapitalOf(Berlin, Germany) fact
 
 ---
 
-## 9. Implementation Notes
+## 9. Integration with Fragment System
 
-### 9.1 Technology Options
+This engine is registered as `Frag_HDC` in the fragment catalog (DS-010).
+
+The orchestrator may route queries to this backend when:
+- the query involves similarity or analogy,
+- approximate answers are acceptable,
+- clustering or pattern completion is needed,
+- a vector-symbolic prior can guide a symbolic proof.
+
+---
+
+## 10. Implementation Notes
+
+### 10.1 Technology Options
 
 | Component | Options |
 |-----------|---------|
@@ -435,7 +447,7 @@ Symbolic would need: explicit CapitalOf(Berlin, Germany) fact
 | Binding | Circular convolution (FFT), XOR, MAP |
 | Language | Python (prototype), Rust (production) |
 
-### 9.2 Performance Considerations
+### 10.2 Performance Considerations
 
 | Operation | Complexity | Notes |
 |-----------|------------|-------|
@@ -444,7 +456,7 @@ Symbolic would need: explicit CapitalOf(Berlin, Germany) fact
 | Similarity | O(d) | Dot product |
 | Nearest neighbor | O(n·d) or O(log n) | Brute force or ANN index |
 
-### 9.3 File Format
+### 10.3 File Format
 
 HDC state can be serialized:
 
@@ -458,9 +470,9 @@ theories/hdc/
 
 ---
 
-## 10. Future Extensions
+## 11. Future Extensions
 
-### 10.1 Planned Features
+### 11.1 Planned Features
 
 | Feature | Description | Priority |
 |---------|-------------|----------|
@@ -470,7 +482,7 @@ theories/hdc/
 | **Temporal** | Time-aware sequences | Low |
 | **Distributed** | Sharded vector storage | Low |
 
-### 10.2 Research Directions
+### 11.2 Research Directions
 
 - Neural-symbolic integration (HDC as differentiable layer)
 - Probabilistic HDC (uncertainty in vectors)
@@ -479,7 +491,7 @@ theories/hdc/
 
 ---
 
-## 11. Glossary
+## 12. Glossary
 
 | Term | Definition |
 |------|------------|
@@ -493,7 +505,7 @@ theories/hdc/
 
 ---
 
-## 12. References
+## 13. References
 
 1. Kanerva, P. (2009). Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors.
 2. Plate, T. (2003). Holographic Reduced Representation: Distributed Representation for Cognitive Structures.
@@ -502,7 +514,7 @@ theories/hdc/
 
 ---
 
-## Change Log
+## 14. Change Log
 
 | Date | Version | Change |
 |------|---------|--------|

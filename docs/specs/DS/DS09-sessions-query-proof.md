@@ -78,8 +78,8 @@ Loading responsibilities:
 - register doc digest for caching.
 - detect circular loads (see Load Resolution Algorithm below),
 - evaluate any `Check` statements (see DS-008/DS-005);
-  - if a check is `DISPROVED`, return `E_CHECK_DISPROVED`,
-  - if a check is `UNKNOWN`, return `E_CHECK_UNKNOWN`.
+  - if a check is `DISPROVED`, return an error (see DS-016),
+  - if a check is `UNKNOWN`, return an error (see DS-016).
 
 ### Load Resolution Algorithm
 
@@ -90,8 +90,7 @@ function loadFile(path, loadStack = []):
     canonicalPath = resolvePath(path)
     
     if canonicalPath in loadStack:
-        return error(E_DSL_CIRCULAR_LOAD, 
-            "Circular load: " + loadStack.join(" -> ") + " -> " + path)
+        return error("Circular load: " + loadStack.join(" -> ") + " -> " + path)
     
     if canonicalPath in loadedDocs:
         return { ok: true, cached: true }  # Already loaded

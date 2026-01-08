@@ -10,8 +10,10 @@ This DS defines compilation from the **typed core logic AST** (DS-006) into:
 
 The compilation target is intentionally tiny. Everything else (sessions, schemas, proofs) is layered above.
 
-Note: terms involving functions or numeric literals must be lowered by a higher-level front-end (e.g., SMT/BV);
-this DS only covers boolean predicate instances over finite-domain constants.
+Note: terms involving functions or numeric literals typically require lowering by a higher-level front-end (e.g., SMT/BV).
+Numeric literals may be treated as constants if the numeric domain is declared and the literal is admitted as a constant.
+Function terms require an explicit resolver that maps each **ground** application to a vocabulary constant; otherwise they
+are rejected. This DS still only covers boolean predicate instances over finite-domain constants.
 
 ## Decisions
 - All CNL/DSL types are lowered by **explicit enumeration** before UBH compilation (DS-003).
