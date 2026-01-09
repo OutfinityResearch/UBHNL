@@ -444,7 +444,8 @@ export function parseDslToTypedAst(dslSource, options = {}) {
         implicitDomain: options.implicitDomain || 'Entity',
         baseDir: options.baseDir || process.cwd(),
         loadFiles: options.loadFiles === true,
-        visited: options.visited || new Set()
+        visited: options.visited || new Set(),
+        stack: options.stack || []
     };
     const lines = dslSource.split(/\r?\n/u);
     const statements = [];
@@ -458,8 +459,12 @@ export function parseDslToTypedAst(dslSource, options = {}) {
                 throw makeError(`Absolute paths are forbidden: ${loadPath}`, 'E_DSL_ABSOLUTE_PATH');
             }
             const resolved = path.resolve(cfg.baseDir, loadPath);
+            if (cfg.stack.includes(resolved)) {
+                throw makeError(`Circular load detected: ${resolved}`, 'E_DSL_CIRCULAR_LOAD');
+            }
             if (cfg.visited.has(resolved)) continue;
             cfg.visited.add(resolved);
+            cfg.stack.push(resolved);
             const content = fs.readFileSync(resolved, 'utf8');
             const loaded = parseDslToTypedAst(content, {
                 vocab,
@@ -468,8 +473,10 @@ export function parseDslToTypedAst(dslSource, options = {}) {
                 implicitDomain: cfg.implicitDomain,
                 baseDir: path.dirname(resolved),
                 loadFiles: true,
-                visited: cfg.visited
+                visited: cfg.visited,
+                stack: cfg.stack
             });
+            cfg.stack.pop();
             statements.push(...loaded.statements);
         }
     }

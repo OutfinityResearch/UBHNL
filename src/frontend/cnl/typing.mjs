@@ -57,6 +57,10 @@ function normalizePlural(type) {
     return type;
 }
 
+function stripVarToken(token) {
+    return token.startsWith('$') ? token.slice(1) : token;
+}
+
 function isDeclarationLine(text) {
     if (text.startsWith('load ')) return true;
     if (text.match(/^Let\s+(\w+)\s+be\s+a\s+Domain\.$/i)) return true;
@@ -400,17 +404,44 @@ function wrapWithQuantifiers(expr, quantifiers) {
 }
 
 function parseQuantifierLine(text) {
-    const forMatch = text.match(/^For\s+(all|any|every|each)\s+(\w+)\s+(\w+)\s*:\s*$/i);
+    const normalized = text.endsWith(':') ? text.slice(0, -1).trim() : text.trim();
+    const forMatch = normalized.match(/^For\s+(all|any|every|each)\s+(.+)$/i);
     if (forMatch) {
-        return { kind: 'ForAll', domain: forMatch[2], varName: forMatch[3] };
+        const rest = forMatch[2].trim();
+        const segments = rest.split(',').map((s) => s.trim()).filter(Boolean);
+        const explicitBindings = [];
+        let explicitOk = segments.length > 0;
+        for (const segment of segments) {
+            const parts = segment.split(/\s+/).filter(Boolean);
+            if (parts.length !== 2) {
+                explicitOk = false;
+                break;
+            }
+            explicitBindings.push({ domain: parts[0], varName: stripVarToken(parts[1]) });
+        }
+        if (explicitOk && explicitBindings.length > 0) {
+            return { kind: 'ForAll', bindings: explicitBindings };
+        }
+        const tokens = rest.replace(/,/g, ' ').split(/\s+/).filter(Boolean);
+        if (tokens.length < 2) return null;
+        const domain = tokens[0];
+        const vars = tokens.slice(1).map(stripVarToken).filter(Boolean);
+        if (vars.length === 0) return null;
+        return { kind: 'ForAll', bindings: vars.map((varName) => ({ domain, varName })) };
     }
-    const eachMatch = text.match(/^(Each|Every)\s+(\w+)\s+(\w+)\s*:\s*$/i);
+    const eachMatch = normalized.match(/^(Each|Every)\s+(\w+)\s+(\$?\w+)$/i);
     if (eachMatch) {
-        return { kind: 'ForAll', domain: eachMatch[2], varName: eachMatch[3] };
+        return {
+            kind: 'ForAll',
+            bindings: [{ domain: eachMatch[2], varName: stripVarToken(eachMatch[3]) }]
+        };
     }
-    const existsMatch = text.match(/^(There\s+exists|Exists)\s+(?:an?\s+)?(\w+)\s+(\w+)\s*:\s*$/i);
+    const existsMatch = normalized.match(/^(There\s+exists|Exists)\s+(?:an?\s+)?(\w+)\s+(\$?\w+)$/i);
     if (existsMatch) {
-        return { kind: 'Exists', domain: existsMatch[2], varName: existsMatch[3] };
+        return {
+            kind: 'Exists',
+            bindings: [{ domain: existsMatch[2], varName: stripVarToken(existsMatch[3]) }]
+        };
     }
     return null;
 }
@@ -442,17 +473,24 @@ function parseStatements(lines, startIndex, baseIndent, vocab, options, boundVar
 
         const quant = parseQuantifierLine(text);
         if (quant) {
-            if (!vocab.domains.has(quant.domain)) {
-                if (options.updateVocab) vocab.addDomain(quant.domain);
-                else throw makeError(`Unknown domain: ${quant.domain}`, 'E_UNKNOWN_TYPE');
+            const scopeBindings = new Map();
+            for (const binding of quant.bindings) {
+                if (!vocab.domains.has(binding.domain)) {
+                    if (options.updateVocab) vocab.addDomain(binding.domain);
+                    else throw makeError(`Unknown domain: ${binding.domain}`, 'E_UNKNOWN_TYPE');
+                }
+                scopeBindings.set(binding.varName, binding.domain);
             }
-            const newScope = new Map();
-            newScope.set(quant.varName, quant.domain);
-            boundVars.push(newScope);
+            boundVars.push(scopeBindings);
             const inner = parseStatements(lines, idx + 1, baseIndent + 4, vocab, options, boundVars);
             boundVars.pop();
             for (const stmt of inner.statements) {
-                const wrapped = wrapWithQuantifiers(stmt.expr, [quant]);
+                const quantifiers = quant.bindings.map((binding) => ({
+                    kind: quant.kind,
+                    varName: binding.varName,
+                    domain: binding.domain
+                }));
+                const wrapped = wrapWithQuantifiers(stmt.expr, quantifiers);
                 statements.push(assertStmt(wrapped));
             }
             idx = inner.nextIndex;
